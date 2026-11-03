@@ -1,0 +1,1144 @@
+[
+  {
+    "id": "C01",
+    "fase": "Fase 0: Caracterización",
+    "momento": "ENTRADA",
+    "dimension": "00. Caracterización",
+    "capacidad": "Tipo de organización · Única",
+    "insignia": "No aplica · no puntúa",
+    "puntoCiego": "-",
+    "pregunta": "¿Qué tipo de organización son?",
+    "opciones": [
+      {
+        "letra": "A",
+        "texto": "Empresa privada",
+        "arquetipo": "No aplica",
+        "rol": "Todas las empresas"
+      },
+      {
+        "letra": "B",
+        "texto": "Empresa pública o mixta",
+        "arquetipo": "No aplica",
+        "rol": "Todas las empresas"
+      },
+      {
+        "letra": "C",
+        "texto": "Universidad o institución de educación superior",
+        "arquetipo": "No aplica",
+        "rol": "Todas las empresas"
+      },
+      {
+        "letra": "D",
+        "texto": "Centro independiente de investigación o desarrollo tecnológico",
+        "arquetipo": "No aplica",
+        "rol": "Todas las empresas"
+      },
+      {
+        "letra": "E",
+        "texto": "Organización social o fundación",
+        "arquetipo": "No aplica",
+        "rol": "Todas las empresas"
+      },
+      {
+        "letra": "F",
+        "texto": "Entidad pública (no empresa)",
+        "arquetipo": "No aplica",
+        "rol": "Todas las empresas"
+      },
+      {
+        "letra": "G",
+        "texto": "Equipo o iniciativa sin constituir",
+        "arquetipo": "No aplica",
+        "rol": "Todas las empresas"
+      },
+      {
+        "letra": "H",
+        "texto": "Profesional independiente",
+        "arquetipo": "No aplica",
+        "rol": "Todas las empresas"
+      },
+      {
+        "letra": "I",
+        "texto": "Otra",
+        "arquetipo": "No aplica",
+        "rol": "Todas las empresas"
+      },
+      {
+        "letra": "J",
+        "texto": "No estoy seguro",
+        "arquetipo": "No aplica",
+        "rol": "Todas las empresas"
+      }
+    ]
+  },
+  {
+    "id": "C02",
+    "fase": "Fase 0: Caracterización",
+    "momento": "ENTRADA",
+    "dimension": "00. Caracterización",
+    "capacidad": "Aporte al ecosistema · Un aporte principal y, si corresponde, uno secundario distinto; por definir es excluyente",
+    "insignia": "No aplica · no puntúa",
+    "puntoCiego": "-",
+    "pregunta": "¿Qué aporta su organización?",
+    "opciones": [
+      {
+        "letra": "A",
+        "texto": "Desarrollamos, adaptamos u operamos tecnología",
+        "arquetipo": "No aplica",
+        "rol": "Todas las organizaciones · Si trae una necesidad sin oferta, proponer orientación a Intra, con confirmación de la persona y validación del equipo. No aplicar por defecto preguntas de una oferta tecnológica."
+      },
+      {
+        "letra": "B",
+        "texto": "Aportamos investigación, diseño, formación o conocimiento especializado",
+        "arquetipo": "No aplica",
+        "rol": "Todas las organizaciones · Si trae una necesidad sin oferta, proponer orientación a Intra, con confirmación de la persona y validación del equipo. No aplicar por defecto preguntas de una oferta tecnológica."
+      },
+      {
+        "letra": "C",
+        "texto": "Conectamos actores y acompañamos su colaboración",
+        "arquetipo": "No aplica",
+        "rol": "Todas las organizaciones · Si trae una necesidad sin oferta, proponer orientación a Intra, con confirmación de la persona y validación del equipo. No aplicar por defecto preguntas de una oferta tecnológica."
+      },
+      {
+        "letra": "D",
+        "texto": "Traemos una necesidad pública y buscamos apoyo",
+        "arquetipo": "No aplica",
+        "rol": "Todas las organizaciones · Si trae una necesidad sin oferta, proponer orientación a Intra, con confirmación de la persona y validación del equipo. No aplicar por defecto preguntas de una oferta tecnológica."
+      },
+      {
+        "letra": "E",
+        "texto": "Aún estamos definiendo nuestro aporte",
+        "arquetipo": "No aplica",
+        "rol": "Todas las organizaciones · Si trae una necesidad sin oferta, proponer orientación a Intra, con confirmación de la persona y validación del equipo. No aplicar por defecto preguntas de una oferta tecnológica."
+      },
+      {
+        "letra": "F",
+        "texto": "Otro aporte",
+        "arquetipo": "No aplica",
+        "rol": "Todas las organizaciones · Si trae una necesidad sin oferta, proponer orientación a Intra, con confirmación de la persona y validación del equipo. No aplicar por defecto preguntas de una oferta tecnológica."
+      }
+    ]
+  },
+  {
+    "id": "C03",
+    "fase": "Fase 0: Caracterización",
+    "momento": "ENTRADA",
+    "dimension": "00. Caracterización",
+    "capacidad": "Sector de aplicación · Múltiple + sector principal",
+    "insignia": "No aplica · no puntúa",
+    "puntoCiego": "-",
+    "pregunta": "¿En qué sectores puede aplicarse su oferta?",
+    "opciones": [
+      {
+        "letra": "A",
+        "texto": "Salud (HealthTech)",
+        "arquetipo": "No aplica",
+        "rol": "Todas las empresas"
+      },
+      {
+        "letra": "B",
+        "texto": "Educación (EdTech)",
+        "arquetipo": "No aplica",
+        "rol": "Todas las empresas"
+      },
+      {
+        "letra": "C",
+        "texto": "Participación y gestión cívica (CivicTech)",
+        "arquetipo": "No aplica",
+        "rol": "Todas las empresas"
+      },
+      {
+        "letra": "D",
+        "texto": "Ciudad y movilidad (UrbanTech / MobilityTech)",
+        "arquetipo": "No aplica",
+        "rol": "Todas las empresas"
+      },
+      {
+        "letra": "E",
+        "texto": "Ambiente y clima (ClimateTech)",
+        "arquetipo": "No aplica",
+        "rol": "Todas las empresas"
+      },
+      {
+        "letra": "F",
+        "texto": "Agro y alimentación (AgriTech)",
+        "arquetipo": "No aplica",
+        "rol": "Todas las empresas"
+      },
+      {
+        "letra": "G",
+        "texto": "Finanzas (FinTech)",
+        "arquetipo": "No aplica",
+        "rol": "Todas las empresas"
+      },
+      {
+        "letra": "H",
+        "texto": "Seguridad y emergencias",
+        "arquetipo": "No aplica",
+        "rol": "Todas las empresas"
+      },
+      {
+        "letra": "I",
+        "texto": "Gestión interna de entidades",
+        "arquetipo": "No aplica",
+        "rol": "Todas las empresas"
+      },
+      {
+        "letra": "J",
+        "texto": "Varios sectores / oferta transversal",
+        "arquetipo": "No aplica",
+        "rol": "Todas las empresas"
+      },
+      {
+        "letra": "K",
+        "texto": "Otro: ¿cuál?",
+        "arquetipo": "No aplica",
+        "rol": "Todas las empresas"
+      },
+      {
+        "letra": "L",
+        "texto": "Aún por definir",
+        "arquetipo": "No aplica",
+        "rol": "Todas las empresas"
+      }
+    ]
+  },
+  {
+    "id": "C04",
+    "fase": "Fase 0: Caracterización",
+    "momento": "ENTRADA",
+    "dimension": "00. Caracterización",
+    "capacidad": "Experiencia pública · Múltiple; ninguna es excluyente",
+    "insignia": "No aplica · no puntúa",
+    "puntoCiego": "-",
+    "pregunta": "¿Cómo han trabajado con entidades públicas?",
+    "opciones": [
+      {
+        "letra": "A",
+        "texto": "Aún no hemos trabajado con ellas",
+        "arquetipo": "No aplica",
+        "rol": "Todas las empresas"
+      },
+      {
+        "letra": "B",
+        "texto": "Conversaciones o propuestas",
+        "arquetipo": "No aplica",
+        "rol": "Todas las empresas"
+      },
+      {
+        "letra": "C",
+        "texto": "Retos, pruebas o pilotos",
+        "arquetipo": "No aplica",
+        "rol": "Todas las empresas"
+      },
+      {
+        "letra": "D",
+        "texto": "Contratos directos",
+        "arquetipo": "No aplica",
+        "rol": "Todas las empresas"
+      },
+      {
+        "letra": "E",
+        "texto": "A través de otra organización",
+        "arquetipo": "No aplica",
+        "rol": "Todas las empresas"
+      },
+      {
+        "letra": "F",
+        "texto": "Otra experiencia",
+        "arquetipo": "No aplica",
+        "rol": "Todas las empresas"
+      }
+    ]
+  },
+  {
+    "id": "C05",
+    "fase": "Fase 0: Caracterización",
+    "momento": "ENTRADA",
+    "dimension": "00. Caracterización",
+    "capacidad": "Experiencia vivida · Única + comentario opcional",
+    "insignia": "No aplica · no puntúa",
+    "puntoCiego": "-",
+    "pregunta": "¿Cómo fue su experiencia pública más reciente?",
+    "opciones": [
+      {
+        "letra": "A",
+        "texto": "Avanzó como esperábamos",
+        "arquetipo": "No aplica",
+        "rol": "Solo si C04 indica alguna experiencia; omitir si responde ninguna · Seguimiento opcional: ¿qué facilitó o dificultó el proceso? Puede mencionar claridad de la necesidad, coordinación, trámites, integración, pagos, equipo u otro aspecto. No solicitar datos confidenciales."
+      },
+      {
+        "letra": "B",
+        "texto": "Avanzó con dificultades importantes",
+        "arquetipo": "No aplica",
+        "rol": "Solo si C04 indica alguna experiencia; omitir si responde ninguna · Seguimiento opcional: ¿qué facilitó o dificultó el proceso? Puede mencionar claridad de la necesidad, coordinación, trámites, integración, pagos, equipo u otro aspecto. No solicitar datos confidenciales."
+      },
+      {
+        "letra": "C",
+        "texto": "No avanzó o terminó antes de lo esperado",
+        "arquetipo": "No aplica",
+        "rol": "Solo si C04 indica alguna experiencia; omitir si responde ninguna · Seguimiento opcional: ¿qué facilitó o dificultó el proceso? Puede mencionar claridad de la necesidad, coordinación, trámites, integración, pagos, equipo u otro aspecto. No solicitar datos confidenciales."
+      },
+      {
+        "letra": "D",
+        "texto": "Sigue en curso; es pronto para evaluarla",
+        "arquetipo": "No aplica",
+        "rol": "Solo si C04 indica alguna experiencia; omitir si responde ninguna · Seguimiento opcional: ¿qué facilitó o dificultó el proceso? Puede mencionar claridad de la necesidad, coordinación, trámites, integración, pagos, equipo u otro aspecto. No solicitar datos confidenciales."
+      },
+      {
+        "letra": "E",
+        "texto": "Prefiero no responder",
+        "arquetipo": "No aplica",
+        "rol": "Solo si C04 indica alguna experiencia; omitir si responde ninguna · Seguimiento opcional: ¿qué facilitó o dificultó el proceso? Puede mencionar claridad de la necesidad, coordinación, trámites, integración, pagos, equipo u otro aspecto. No solicitar datos confidenciales."
+      }
+    ]
+  },
+  {
+    "id": "C06",
+    "fase": "Fase 0: Caracterización",
+    "momento": "ENTRADA",
+    "dimension": "00. Caracterización",
+    "capacidad": "Equipo total · Única; opcional",
+    "insignia": "No aplica · no puntúa",
+    "puntoCiego": "-",
+    "pregunta": "¿Cuántas personas trabajan habitualmente en su organización?",
+    "opciones": [
+      {
+        "letra": "A",
+        "texto": "Ninguna de forma habitual todavía",
+        "arquetipo": "No aplica",
+        "rol": "Todas las empresas"
+      },
+      {
+        "letra": "B",
+        "texto": "1",
+        "arquetipo": "No aplica",
+        "rol": "Todas las empresas"
+      },
+      {
+        "letra": "C",
+        "texto": "2 a 10",
+        "arquetipo": "No aplica",
+        "rol": "Todas las empresas"
+      },
+      {
+        "letra": "D",
+        "texto": "11 a 50",
+        "arquetipo": "No aplica",
+        "rol": "Todas las empresas"
+      },
+      {
+        "letra": "E",
+        "texto": "51 a 200",
+        "arquetipo": "No aplica",
+        "rol": "Todas las empresas"
+      },
+      {
+        "letra": "F",
+        "texto": "Más de 200",
+        "arquetipo": "No aplica",
+        "rol": "Todas las empresas"
+      },
+      {
+        "letra": "G",
+        "texto": "No sé / prefiero no responder",
+        "arquetipo": "No aplica",
+        "rol": "Todas las empresas"
+      }
+    ]
+  },
+  {
+    "id": "C07",
+    "fase": "Fase 0: Caracterización",
+    "momento": "ENTRADA",
+    "dimension": "00. Caracterización",
+    "capacidad": "Territorio · Dos campos, opcionales",
+    "insignia": "No aplica · no puntúa",
+    "puntoCiego": "-",
+    "pregunta": "¿Dónde operan y dónde quieren trabajar?",
+    "opciones": [
+      {
+        "letra": "A",
+        "texto": "Ciudad y país de operación: texto",
+        "arquetipo": "No aplica",
+        "rol": "Todas las empresas"
+      },
+      {
+        "letra": "B",
+        "texto": "Territorios de interés: selección múltiple o texto",
+        "arquetipo": "No aplica",
+        "rol": "Todas las empresas"
+      }
+    ]
+  },
+  {
+    "id": "C08",
+    "fase": "Fase 0: Caracterización",
+    "momento": "ENTRADA",
+    "dimension": "00. Caracterización",
+    "capacidad": "Expectativa de entrada · Única; opcional",
+    "insignia": "No aplica · no puntúa",
+    "puntoCiego": "-",
+    "pregunta": "¿Qué parte del servicio les aporta más valor?",
+    "opciones": [
+      {
+        "letra": "A",
+        "texto": "Conocer nuestro punto de partida GovTech",
+        "arquetipo": "No aplica",
+        "rol": "Todas las empresas"
+      },
+      {
+        "letra": "B",
+        "texto": "Entender cómo trabajar con entidades públicas",
+        "arquetipo": "No aplica",
+        "rol": "Todas las empresas"
+      },
+      {
+        "letra": "C",
+        "texto": "Fortalecer o probar nuestra oferta",
+        "arquetipo": "No aplica",
+        "rol": "Todas las empresas"
+      },
+      {
+        "letra": "D",
+        "texto": "Encontrar oportunidades para colaborar",
+        "arquetipo": "No aplica",
+        "rol": "Todas las empresas"
+      },
+      {
+        "letra": "E",
+        "texto": "Entender cómo sustentar y obtener un reconocimiento",
+        "arquetipo": "No aplica",
+        "rol": "Todas las empresas"
+      },
+      {
+        "letra": "F",
+        "texto": "Aún no lo sabemos",
+        "arquetipo": "No aplica",
+        "rol": "Todas las empresas"
+      },
+      {
+        "letra": "G",
+        "texto": "Otro componente",
+        "arquetipo": "No aplica",
+        "rol": "Todas las empresas"
+      }
+    ]
+  },
+  {
+    "id": "P1",
+    "fase": "Fase 1: Propósito y Misionalidad",
+    "momento": "SER",
+    "dimension": "01. Propósito público",
+    "capacidad": "Cap. 1.1: Causa raíz vs. Síntoma",
+    "insignia": "Brújula Pública",
+    "puntoCiego": "Fiebre vs. Enfermedad",
+    "pregunta": "Hay filas para hacer un trámite. ¿Por dónde empezarían?",
+    "opciones": [
+      {
+        "letra": "A",
+        "texto": "Revisar el trámite, sus datos y las reglas legales para diseñar una solución viable.",
+        "arquetipo": "Proveedor Tecnológico de Escala",
+        "rol": "Operador de certeza y arquitectura técnica"
+      },
+      {
+        "letra": "B",
+        "texto": "Observar a usuarios y funcionarios para detectar causas de exclusión y rediseñar antes de automatizar.",
+        "arquetipo": "Solucionador GovTech",
+        "rol": "Analista de retos adaptativos"
+      },
+      {
+        "letra": "C",
+        "texto": "Aportar un diagnóstico especializado para identificar el cuello de botella técnico.",
+        "arquetipo": "Aliado Especializado",
+        "rol": "Evaluador analítico especializado"
+      },
+      {
+        "letra": "D",
+        "texto": "Implementar una interfaz accesible para atender solicitudes repetidas y reducir las filas.",
+        "arquetipo": "Potencial GovTech",
+        "rol": "Desbloqueador de agilidad temprana"
+      }
+    ]
+  },
+  {
+    "id": "P2",
+    "fase": "Fase 1: Propósito y Misionalidad",
+    "momento": "SER",
+    "dimension": "01. Propósito público",
+    "capacidad": "Cap. 1.2: Medición de Valor Público",
+    "insignia": "Brújula Pública",
+    "puntoCiego": "Superación de métricas banales",
+    "pregunta": "¿Qué evidencia priorizan para saber si generaron valor público?",
+    "opciones": [
+      {
+        "letra": "A",
+        "texto": "Ahorros verificados, menos tiempo de trámite y operaciones trazables.",
+        "arquetipo": "Proveedor Tecnológico de Escala",
+        "rol": "Optimizador de eficiencia institucional"
+      },
+      {
+        "letra": "B",
+        "texto": "Mejor calidad de vida, menos cargas burocráticas y un trato más digno.",
+        "arquetipo": "Solucionador GovTech",
+        "rol": "Custodio del valor sustantivo"
+      },
+      {
+        "letra": "C",
+        "texto": "Indicadores técnicos o sectoriales para auditar y comparar el desempeño.",
+        "arquetipo": "Aliado Especializado",
+        "rol": "Proveedor de rigor métrico"
+      },
+      {
+        "letra": "D",
+        "texto": "Más personas completan el trámite sin barreras y cuentan cómo resolvieron su necesidad.",
+        "arquetipo": "Potencial GovTech",
+        "rol": "Verificador de cercanía ciudadana"
+      }
+    ]
+  },
+  {
+    "id": "P17",
+    "fase": "Fase 1: Propósito y Misionalidad",
+    "momento": "SER",
+    "dimension": "01. Propósito público",
+    "capacidad": "Cap. 1.3: Prioridad al elegir un proyecto público",
+    "insignia": "Brújula Pública",
+    "puntoCiego": "Distinguir la motivación de entrada del diagnóstico del problema y de la medición de resultados.",
+    "pregunta": "Al elegir un proyecto público, ¿qué pesa más en su decisión?",
+    "opciones": [
+      {
+        "letra": "A",
+        "texto": "Una necesidad institucional definida que encaje con nuestra solución y permita sostener el servicio.",
+        "arquetipo": "Proveedor Tecnológico de Escala"
+      },
+      {
+        "letra": "B",
+        "texto": "Un problema que afecta a las personas y la posibilidad de abordarlo junto con la entidad y la comunidad.",
+        "arquetipo": "Solucionador GovTech"
+      },
+      {
+        "letra": "C",
+        "texto": "Una necesidad donde nuestro conocimiento especializado pueda aportar a una solución pública.",
+        "arquetipo": "Aliado Especializado"
+      },
+      {
+        "letra": "D",
+        "texto": "Una oportunidad de probar nuestra tecnología en un problema público y aprender cómo aportar.",
+        "arquetipo": "Potencial GovTech"
+      }
+    ]
+  },
+  {
+    "id": "P0.3",
+    "fase": "Fase 2: Métodos de Trabajo",
+    "momento": "HACER",
+    "dimension": "03. Colaboración y cocreación",
+    "capacidad": "Cap. 0.3: Esquema de relacionamiento B2G",
+    "insignia": "Relación por revisar",
+    "puntoCiego": "-",
+    "pregunta": "¿Cómo trabajan con los funcionarios de una entidad?",
+    "opciones": [
+      {
+        "letra": "A",
+        "texto": "Seguimos el contrato, las entregas y los acuerdos de servicio bajo supervisión formal.",
+        "arquetipo": "Proveedor Tecnológico de Escala",
+        "rol": "Contratista transaccional disciplinado"
+      },
+      {
+        "letra": "B",
+        "texto": "Diseñamos en equipos mixtos y decidimos juntos los ajustes del proyecto.",
+        "arquetipo": "Solucionador GovTech",
+        "rol": "Socio de co-creación pública"
+      },
+      {
+        "letra": "C",
+        "texto": "Participamos como especialistas, coordinando nuestro aporte con otras áreas y empresas.",
+        "arquetipo": "Aliado Especializado",
+        "rol": "Especialista en consorcios mixtos"
+      },
+      {
+        "letra": "D",
+        "texto": "Buscamos acompañamiento para entender el sector público y adaptar nuestra forma de trabajar.",
+        "arquetipo": "Potencial GovTech",
+        "rol": "Aprendiz de dinámicas públicas"
+      }
+    ]
+  },
+  {
+    "id": "P3",
+    "fase": "Fase 2: Exploración, Prototipado y Colaboración",
+    "momento": "HACER",
+    "dimension": "02. Exploración y prototipado",
+    "capacidad": "Cap. 2.1: Experimentación e hipótesis",
+    "insignia": "Explorador de Hipótesis",
+    "puntoCiego": "Sandboxes y pruebas en campo",
+    "pregunta": "Antes de invertir en el desarrollo, ¿cómo prueban lo que aún no saben?",
+    "opciones": [
+      {
+        "letra": "A",
+        "texto": "Probamos arquitectura, conexión con sistemas antiguos y carga en un entorno protegido.",
+        "arquetipo": "Proveedor Tecnológico de Escala",
+        "rol": "Evaluador de factibilidad técnica"
+      },
+      {
+        "letra": "B",
+        "texto": "Probamos supuestos de uso en pocas semanas, en un entorno controlado o una comunidad acotada.",
+        "arquetipo": "Solucionador GovTech",
+        "rol": "Experimentador de choque"
+      },
+      {
+        "letra": "C",
+        "texto": "Hacemos simulaciones, auditorías o pruebas especializadas de usabilidad y seguridad.",
+        "arquetipo": "Aliado Especializado",
+        "rol": "Validador de estándares de nicho"
+      },
+      {
+        "letra": "D",
+        "texto": "Mostramos una versión preliminar a voluntarios y observamos cómo la usan.",
+        "arquetipo": "Potencial GovTech",
+        "rol": "Iterador ágil de producto"
+      }
+    ]
+  },
+  {
+    "id": "P4",
+    "fase": "Fase 2: Exploración, Prototipado y Colaboración",
+    "momento": "HACER",
+    "dimension": "02. Exploración y prototipado",
+    "capacidad": "Cap. 2.2: Pivoteo basado en evidencia",
+    "insignia": "Explorador de Hipótesis",
+    "puntoCiego": "Adaptabilidad orientada por datos",
+    "pregunta": "En un piloto, la gente usa otra función y deja de lado la principal. ¿Qué hacen?",
+    "opciones": [
+      {
+        "letra": "A",
+        "texto": "Registramos el cambio, revisamos su efecto en el contrato y pedimos autorización para ajustar el alcance.",
+        "arquetipo": "Proveedor Tecnológico de Escala",
+        "rol": "Administrador de configuración y riesgos"
+      },
+      {
+        "letra": "B",
+        "texto": "Ajustamos el flujo en el siguiente ciclo de desarrollo para potenciar el uso que apareció.",
+        "arquetipo": "Solucionador GovTech",
+        "rol": "Pivoteador adaptativo"
+      },
+      {
+        "letra": "C",
+        "texto": "Analizamos los datos y proponemos un rediseño técnico que conecte el uso real con el objetivo público.",
+        "arquetipo": "Aliado Especializado",
+        "rol": "Optimizador de interacción"
+      },
+      {
+        "letra": "D",
+        "texto": "Adaptamos de inmediato la interfaz al uso observado y documentamos lo aprendido.",
+        "arquetipo": "Potencial GovTech",
+        "rol": "Acompañante de adopción ciudadana"
+      }
+    ]
+  },
+  {
+    "id": "P5",
+    "fase": "Fase 2: Exploración, Prototipado y Colaboración",
+    "momento": "HACER",
+    "dimension": "03. Colaboración y cocreación",
+    "capacidad": "Cap. 3.1: Cocreación multiactor",
+    "insignia": "Articulador de Alianzas",
+    "puntoCiego": "Burocracia creativa y horizontalidad",
+    "pregunta": "¿Cómo reúnen a distintas áreas públicas para diseñar juntas?",
+    "opciones": [
+      {
+        "letra": "A",
+        "texto": "Con mesas técnicas, agendas, responsables y acuerdos documentados.",
+        "arquetipo": "Proveedor Tecnológico de Escala",
+        "rol": "Articulador de gobernanza formal"
+      },
+      {
+        "letra": "B",
+        "texto": "Con talleres entre pares, reduciendo jerarquías para diseñar en conjunto.",
+        "arquetipo": "Solucionador GovTech",
+        "rol": "Facilitador de inteligencia colectiva"
+      },
+      {
+        "letra": "C",
+        "texto": "Con sesiones especializadas para enseñar cómo integrar nuestro componente.",
+        "arquetipo": "Aliado Especializado",
+        "rol": "Capacitador de nicho"
+      },
+      {
+        "letra": "D",
+        "texto": "Con espacios informales donde funcionarios prueban y validan ideas continuamente.",
+        "arquetipo": "Potencial GovTech",
+        "rol": "Constructor de cercanía operativa"
+      }
+    ]
+  },
+  {
+    "id": "P6",
+    "fase": "Fase 2: Exploración, Prototipado y Colaboración",
+    "momento": "HACER",
+    "dimension": "03. Colaboración y cocreación",
+    "capacidad": "Cap. 3.2: Gestión de divergencias",
+    "insignia": "Articulador de Alianzas",
+    "puntoCiego": "Defensa de la voz ciudadana",
+    "pregunta": "La dirección pide algo distinto de lo que necesitan los usuarios. ¿Qué hacen?",
+    "opciones": [
+      {
+        "letra": "A",
+        "texto": "Reunimos un comité para contrastar lo solicitado con el contrato y el presupuesto.",
+        "arquetipo": "Proveedor Tecnológico de Escala",
+        "rol": "Conciliador institucional"
+      },
+      {
+        "letra": "B",
+        "texto": "Presentamos evidencia y testimonios de usuarios para defender sus necesidades en el diseño.",
+        "arquetipo": "Solucionador GovTech",
+        "rol": "Defensor de la voz ciudadana"
+      },
+      {
+        "letra": "C",
+        "texto": "Entregamos un informe independiente con ventajas, desventajas y riesgos de cada alternativa.",
+        "arquetipo": "Aliado Especializado",
+        "rol": "Asesor técnico objetivo"
+      },
+      {
+        "letra": "D",
+        "texto": "Probamos dos alternativas sencillas con usuarios para decidir con evidencia.",
+        "arquetipo": "Potencial GovTech",
+        "rol": "Mediador mediante prototipos"
+      }
+    ]
+  },
+  {
+    "id": "P0.1",
+    "fase": "Fase 3: Capacidad Técnica y Confianza",
+    "momento": "TENER",
+    "dimension": "07. Capacidad de entrega",
+    "capacidad": "Cap. 0.1: Modelo de oferta y producto",
+    "insignia": "Relación por revisar",
+    "puntoCiego": "-",
+    "pregunta": "¿Qué ofrecen principalmente a una entidad que quiere mejorar un servicio?",
+    "opciones": [
+      {
+        "letra": "A",
+        "texto": "Una solución propia, probada y lista para implementar, con alcance y garantías definidos.",
+        "arquetipo": "Proveedor Tecnológico de Escala",
+        "rol": "Operador de certeza y catálogo"
+      },
+      {
+        "letra": "B",
+        "texto": "Desarrollo flexible para construir, adaptar y probar una solución a la medida de la entidad.",
+        "arquetipo": "Solucionador GovTech",
+        "rol": "Co-creador adaptativo de innovación"
+      },
+      {
+        "letra": "C",
+        "texto": "Un componente tecnológico especializado o un estudio que complementa una solución mayor.",
+        "arquetipo": "Aliado Especializado",
+        "rol": "Habilitador de nicho técnico e I+D"
+      },
+      {
+        "letra": "D",
+        "texto": "Una tecnología emergente que busca su primera prueba en un reto público.",
+        "arquetipo": "Potencial GovTech",
+        "rol": "Pionero tecnológico en exploración"
+      }
+    ]
+  },
+  {
+    "id": "P7",
+    "fase": "Fase 3: Capacidad Técnica y Entrega",
+    "momento": "TENER",
+    "dimension": "04. Solidez tecnológica",
+    "capacidad": "Cap. 4.1: Integración e interoperabilidad",
+    "insignia": "Estratega de Tecnología Responsable",
+    "puntoCiego": "PUNTO CIEGO 1: Interoperabilidad con Legacy Systems / Middleware",
+    "pregunta": "¿Cómo conectarían su solución con datos dispersos o sistemas antiguos de una entidad?",
+    "opciones": [
+      {
+        "letra": "A",
+        "texto": "Pedimos conectores corporativos estándar o proponemos migrar los datos a nuestra nube certificada.",
+        "arquetipo": "Proveedor Tecnológico de Escala",
+        "rol": "Operador de infraestructura masiva estandarizada"
+      },
+      {
+        "letra": "B",
+        "texto": "Usamos conexiones seguras y una capa intermedia para sincronizar datos sin sustituir los sistemas centrales.",
+        "arquetipo": "Solucionador GovTech",
+        "rol": "Integrador pragmático sobre sistemas heredados"
+      },
+      {
+        "letra": "C",
+        "texto": "Creamos conexiones a medida para nuestro componente, después de una revisión técnica.",
+        "arquetipo": "Aliado Especializado",
+        "rol": "Especialista de conexión técnica de nicho"
+      },
+      {
+        "letra": "D",
+        "texto": "Importamos y exportamos datos estructurados periódicamente, sin conectar directamente los sistemas.",
+        "arquetipo": "Potencial GovTech",
+        "rol": "Conector ligero de datos"
+      }
+    ]
+  },
+  {
+    "id": "P8",
+    "fase": "Fase 3: Capacidad Técnica y Entrega",
+    "momento": "TENER",
+    "dimension": "04. Solidez tecnológica",
+    "capacidad": "Cap. 4.2: Rigor de ingeniería y código auditable",
+    "insignia": "Estratega de Tecnología Responsable",
+    "puntoCiego": "PUNTO CIEGO 2: Rigor de Ingeniería vs. Prototipos No-Code / Wrappers IA",
+    "pregunta": "¿Cómo demuestran la solidez técnica de su solución?",
+    "opciones": [
+      {
+        "letra": "A",
+        "texto": "Con plataformas licenciadas, soporte especializado, acuerdos de servicio y certificaciones ISO de desarrollo.",
+        "arquetipo": "Proveedor Tecnológico de Escala",
+        "rol": "Proveedor de ingeniería industrial garantizada"
+      },
+      {
+        "letra": "B",
+        "texto": "Con código propio versionado, arquitectura documentada, pruebas automáticas y control del ciclo de desarrollo.",
+        "arquetipo": "Solucionador GovTech",
+        "rol": "Constructor de software auditable"
+      },
+      {
+        "letra": "C",
+        "texto": "Documentando modelos, datos de entrenamiento y límites de precisión de nuestro componente especializado.",
+        "arquetipo": "Aliado Especializado",
+        "rol": "Auditor de precisión técnica y algorítmica"
+      },
+      {
+        "letra": "D",
+        "texto": "Con una interfaz funcional probada y un equipo que puede corregir su código ante fallas de uso.",
+        "arquetipo": "Potencial GovTech",
+        "rol": "Desarrollador práctico de producto"
+      }
+    ]
+  },
+  {
+    "id": "P9",
+    "fase": "Fase 3: Capacidad Técnica y Entrega",
+    "momento": "TENER",
+    "dimension": "05. Confianza responsable",
+    "capacidad": "Cap. 5.1: Seguridad, privacidad y Habeas Data",
+    "insignia": "Estratega de Tecnología Responsable",
+    "puntoCiego": "Ciberseguridad y Habeas Data estatal",
+    "pregunta": "¿Qué práctica describe mejor cómo cuidan los datos de las personas?",
+    "opciones": [
+      {
+        "letra": "A",
+        "texto": "Aplicamos cifrado, registros de actividad que no se puedan alterar y controles de cumplimiento de las reglas de datos.",
+        "arquetipo": "Proveedor Tecnológico de Escala",
+        "rol": "Oficial de ciberseguridad y gobernanza"
+      },
+      {
+        "letra": "B",
+        "texto": "Explicamos qué datos recogemos y para qué, y facilitamos la revisión ciudadana del código.",
+        "arquetipo": "Solucionador GovTech",
+        "rol": "Custodio de la confianza cívica"
+      },
+      {
+        "letra": "C",
+        "texto": "Anonimizamos los datos y revisamos sesgos de los algoritmos.",
+        "arquetipo": "Aliado Especializado",
+        "rol": "Auditor ético de datos"
+      },
+      {
+        "letra": "D",
+        "texto": "Recogemos solo los datos indispensables y evitamos guardar información sensible.",
+        "arquetipo": "Potencial GovTech",
+        "rol": "Protector de la intimidad por diseño"
+      }
+    ]
+  },
+  {
+    "id": "P10",
+    "fase": "Fase 3: Capacidad Técnica y Entrega",
+    "momento": "TENER",
+    "dimension": "05. Confianza responsable",
+    "capacidad": "Cap. 5.2: Soberanía, licencias y acuerdos de salida",
+    "insignia": "Estratega de Tecnología Responsable",
+    "puntoCiego": "PUNTO CIEGO 3: Reversibilidad y Costo Cero de Transición (Cero Lock-in)",
+    "pregunta": "Si termina la relación con la entidad, ¿qué entregan para facilitar la salida?",
+    "opciones": [
+      {
+        "letra": "A",
+        "texto": "Exportamos todos sus datos según lo acordado; el código y la infraestructura siguen siendo nuestros.",
+        "arquetipo": "Proveedor Tecnológico de Escala",
+        "rol": "Custodio de propiedad intelectual corporativa"
+      },
+      {
+        "letra": "B",
+        "texto": "Entregamos datos en formatos abiertos y facilitamos migrar el código, sin penalidades técnicas y con salida de costo casi cero acordado.",
+        "arquetipo": "Solucionador GovTech",
+        "rol": "Garante de soberanía y no extractivismo"
+      },
+      {
+        "letra": "C",
+        "texto": "Transferimos la propiedad de las configuraciones a medida y la documentación para que otro operador continúe.",
+        "arquetipo": "Aliado Especializado",
+        "rol": "Facilitador de transición de conocimiento"
+      },
+      {
+        "letra": "D",
+        "texto": "Entregamos todo el código y los datos generados en formatos y esquemas abiertos para su gestión autónoma.",
+        "arquetipo": "Potencial GovTech",
+        "rol": "Constructor de bienes comunes abiertos"
+      }
+    ]
+  },
+  {
+    "id": "P11",
+    "fase": "Fase 3: Capacidad Técnica y Entrega",
+    "momento": "TENER",
+    "dimension": "07. Capacidad de entrega",
+    "capacidad": "Cap. 7.1: Continuidad y soporte de misión crítica",
+    "insignia": "Capacidad de Entrega",
+    "puntoCiego": "SLAs de misión crítica",
+    "pregunta": "Una vez implementada la solución, ¿cómo ofrecen soporte?",
+    "opciones": [
+      {
+        "letra": "A",
+        "texto": "Con acuerdos de servicio, mesa de ayuda, manuales técnicos y atención las 24 horas.",
+        "arquetipo": "Proveedor Tecnológico de Escala",
+        "rol": "Proveedor de estabilidad y predictibilidad"
+      },
+      {
+        "letra": "B",
+        "texto": "Con comentarios continuos de usuarios y una lista priorizada de mejoras.",
+        "arquetipo": "Solucionador GovTech",
+        "rol": "Evolucionador continuo de producto"
+      },
+      {
+        "letra": "C",
+        "texto": "Con soporte especializado para mantener y actualizar únicamente nuestro componente.",
+        "arquetipo": "Aliado Especializado",
+        "rol": "Especialista de soporte avanzado"
+      },
+      {
+        "letra": "D",
+        "texto": "Con acompañamiento directo a los funcionarios durante las primeras semanas y respuesta rápida a sus dudas.",
+        "arquetipo": "Potencial GovTech",
+        "rol": "Acompañante de adopción inicial"
+      }
+    ]
+  },
+  {
+    "id": "P12",
+    "fase": "Fase 3: Capacidad Técnica y Entrega",
+    "momento": "TENER",
+    "dimension": "07. Capacidad de entrega",
+    "capacidad": "Cap. 7.2: Transferencia y no atrofia del Estado",
+    "insignia": "Capacidad de Entrega",
+    "puntoCiego": "Capacidades dinámicas estatales",
+    "pregunta": "¿Cómo preparan al equipo público para gestionar la solución por sí mismo?",
+    "opciones": [
+      {
+        "letra": "A",
+        "texto": "Con formación formal, manuales detallados y certificación de operadores.",
+        "arquetipo": "Proveedor Tecnológico de Escala",
+        "rol": "Capacitador técnico formal"
+      },
+      {
+        "letra": "B",
+        "texto": "Con mentorías de aprender haciendo y código comentado para que puedan evolucionar el software.",
+        "arquetipo": "Solucionador GovTech",
+        "rol": "Fortalecedor de capacidades dinámicas del Estado"
+      },
+      {
+        "letra": "C",
+        "texto": "Con entrenamiento técnico para operar y mantener nuestro componente especializado.",
+        "arquetipo": "Aliado Especializado",
+        "rol": "Transferidor de conocimiento experto"
+      },
+      {
+        "letra": "D",
+        "texto": "Con guías de configuración paso a paso y talleres prácticos para gestionar la herramienta.",
+        "arquetipo": "Potencial GovTech",
+        "rol": "Habilitador de autonomía básica"
+      }
+    ]
+  },
+  {
+    "id": "P13",
+    "fase": "Fase 3: Capacidad Técnica y Entrega",
+    "momento": "TENER",
+    "dimension": "08. Riesgo e incertidumbre",
+    "capacidad": "Cap. 8.1: Protocolos ante fallos críticos",
+    "insignia": "Riesgo e Incertidumbre",
+    "puntoCiego": "Contingencia operativa ciudadana",
+    "pregunta": "Falla un servicio digital que usa mucha gente. ¿Qué hacen primero?",
+    "opciones": [
+      {
+        "letra": "A",
+        "texto": "Activamos el plan de continuidad, localizamos la falla en los registros y reportamos a la supervisión.",
+        "arquetipo": "Proveedor Tecnológico de Escala",
+        "rol": "Garante de estabilidad procedimental y forense"
+      },
+      {
+        "letra": "B",
+        "texto": "Aplicamos una contingencia técnica para restablecer el servicio en minutos e informamos a la ciudadanía.",
+        "arquetipo": "Solucionador GovTech",
+        "rol": "Resolutor operativo de choque"
+      },
+      {
+        "letra": "C",
+        "texto": "Revisamos si falló nuestro componente u otro sistema y aplicamos las correcciones correspondientes.",
+        "arquetipo": "Aliado Especializado",
+        "rol": "Remediador técnico especializado"
+      },
+      {
+        "letra": "D",
+        "texto": "Habilitamos canales alternativos para que las personas sigan haciendo su trámite mientras corregimos la falla.",
+        "arquetipo": "Potencial GovTech",
+        "rol": "Mitigador de impacto inmediato"
+      }
+    ]
+  },
+  {
+    "id": "P14",
+    "fase": "Fase 3: Capacidad Técnica y Entrega",
+    "momento": "TENER",
+    "dimension": "08. Riesgo e incertidumbre",
+    "capacidad": "Cap. 8.2: Adaptación a crisis y cambios de contexto",
+    "insignia": "Riesgo e Incertidumbre",
+    "puntoCiego": "Adaptabilidad regulatoria y de entorno",
+    "pregunta": "Una norma nueva o una emergencia cambia el proyecto. ¿Cómo responden?",
+    "opciones": [
+      {
+        "letra": "A",
+        "texto": "Revisamos riesgos, plazos y costos y tramitamos cambios formales al contrato.",
+        "arquetipo": "Proveedor Tecnológico de Escala",
+        "rol": "Administrador de equilibrio contractual"
+      },
+      {
+        "letra": "B",
+        "texto": "Ajustamos la planificación y el desarrollo para continuar el proyecto en el nuevo contexto.",
+        "arquetipo": "Solucionador GovTech",
+        "rol": "Navegador adaptativo de incertidumbre"
+      },
+      {
+        "letra": "C",
+        "texto": "Evaluamos los efectos en los estándares técnicos y proponemos ajustes para cumplir la norma.",
+        "arquetipo": "Aliado Especializado",
+        "rol": "Adaptador normativo de nicho"
+      },
+      {
+        "letra": "D",
+        "texto": "Adaptamos las funciones de la herramienta para que la entidad atienda la contingencia.",
+        "arquetipo": "Potencial GovTech",
+        "rol": "Aliado de flexibilidad institucional"
+      }
+    ]
+  },
+  {
+    "id": "P0.2",
+    "fase": "Fase 4: Conexión con lo Público",
+    "momento": "HACER",
+    "dimension": "06. Puente B2G",
+    "capacidad": "Cap. 0.2: Gestión de la incertidumbre",
+    "insignia": "Relación por revisar",
+    "puntoCiego": "-",
+    "pregunta": "La entidad tiene un problema complejo, pero no requisitos definidos. ¿Cómo empiezan?",
+    "opciones": [
+      {
+        "letra": "A",
+        "texto": "Pedimos que concrete requisitos y términos de referencia para cotizar una solución cerrada.",
+        "arquetipo": "Proveedor Tecnológico de Escala",
+        "rol": "Operador de requerimientos formales"
+      },
+      {
+        "letra": "B",
+        "texto": "Probamos un prototipo con funcionarios y usuarios y aclaramos la necesidad con datos de uso.",
+        "arquetipo": "Solucionador GovTech",
+        "rol": "Mitigador pragmático de incertidumbre"
+      },
+      {
+        "letra": "C",
+        "texto": "Aportamos investigación especializada para precisar el problema y los componentes necesarios.",
+        "arquetipo": "Aliado Especializado",
+        "rol": "Diagnosticador metodológico"
+      },
+      {
+        "letra": "D",
+        "texto": "Adaptamos nuestra tecnología existente para ensayar una respuesta y aprender del uso ciudadano.",
+        "arquetipo": "Potencial GovTech",
+        "rol": "Experimentador ágil emergente"
+      }
+    ]
+  },
+  {
+    "id": "P15",
+    "fase": "Fase 4: Conexión con lo Público",
+    "momento": "HACER",
+    "dimension": "06. Puente B2G",
+    "capacidad": "Cap. 6.1: Contratación pública y flujo financiero",
+    "insignia": "Navegante Institucional",
+    "puntoCiego": "PUNTO CIEGO 4: Músculo Financiero y Resistencia al Ciclo de Caja (PAC)",
+    "pregunta": "Si el pago de la entidad tarda varios meses, ¿cómo sostienen la operación?",
+    "opciones": [
+      {
+        "letra": "A",
+        "texto": "Con respaldo financiero y caja planificada para mantener el servicio y el equipo.",
+        "arquetipo": "Proveedor Tecnológico de Escala",
+        "rol": "Contratista solvente y preparado"
+      },
+      {
+        "letra": "B",
+        "texto": "Acordando, cuando sea viable, entregas y pagos por hitos cortos para reducir la presión de caja.",
+        "arquetipo": "Solucionador GovTech",
+        "rol": "Gestor de contratación ágil"
+      },
+      {
+        "letra": "C",
+        "texto": "Con una alianza o consorcio donde otra empresa respalda la liquidez y nosotros aportamos tecnología.",
+        "arquetipo": "Aliado Especializado",
+        "rol": "Socio tecnológico en consorcios"
+      },
+      {
+        "letra": "D",
+        "texto": "Buscando orientación sobre mecanismos contractuales y anticipos que puedan apoyar una primera prueba.",
+        "arquetipo": "Potencial GovTech",
+        "rol": "Pionero en formalización B2G"
+      }
+    ]
+  },
+  {
+    "id": "P16",
+    "fase": "Fase 4: Conexión con lo Público",
+    "momento": "HACER",
+    "dimension": "06. Puente B2G",
+    "capacidad": "Cap. 6.2: Sostenibilidad ante ciclo político",
+    "insignia": "Navegante Institucional",
+    "puntoCiego": "Continuidad institucional democrática",
+    "pregunta": "Cambia la dirección de la entidad. ¿Cómo buscan que el proyecto continúe?",
+    "opciones": [
+      {
+        "letra": "A",
+        "texto": "Con entregables aprobados, actas de supervisión y obligaciones contractuales documentadas.",
+        "arquetipo": "Proveedor Tecnológico de Escala",
+        "rol": "Defensor de la seguridad jurídica"
+      },
+      {
+        "letra": "B",
+        "texto": "Con la apropiación de funcionarios de planta y ciudadanía, mostrando la necesidad pública que atiende.",
+        "arquetipo": "Solucionador GovTech",
+        "rol": "Tejedor de sostenibilidad democrática"
+      },
+      {
+        "letra": "C",
+        "texto": "Presentando resultados técnicos y datos de desempeño de nuestro componente a la nueva dirección.",
+        "arquetipo": "Aliado Especializado",
+        "rol": "Demostrador de valor técnico"
+      },
+      {
+        "letra": "D",
+        "texto": "Presentando rápidamente resultados y aprendizajes para confirmar que la solución sigue siendo pertinente.",
+        "arquetipo": "Potencial GovTech",
+        "rol": "Reconector ágil de valor"
+      }
+    ]
+  }
+]

@@ -1,0 +1,369 @@
+{
+  "_estado": "Propuesta de trabajo (23-oct-2026; ampliada el 28-oct a las 20 preguntas del formulario completo) para revisión de Daniela. No es una regla oficial del ADN ni del Sello.",
+  "_escala": {
+    "3": "Plena: la práctica atiende el núcleo de la capacidad y su punto ciego.",
+    "2": "Parcial: atiende una parte importante de la capacidad, o la atiende desde un enfoque formal o acotado.",
+    "1": "Inicial: la atiende de forma reactiva, indirecta o dependiendo de otros.",
+    "0": "Aún no lo tenemos contemplado (no se interpreta como falta de capacidad; marca un tema por contemplar)."
+  },
+  "P1": {
+    "A": [
+      2,
+      "Entiende el procedimiento, los datos y el marco legal, pero desde el proceso formal: puede automatizar el síntoma sin revisar si el problema es otro."
+    ],
+    "B": [
+      3,
+      "Va a la causa raíz con usuarios y servidores, y se pregunta si la congestión es síntoma de un proceso que hay que rediseñar."
+    ],
+    "C": [
+      2,
+      "Diagnostica con método, pero enfocado en dimensionar el cuello de botella técnico."
+    ],
+    "D": [
+      1,
+      "Responde rápido al síntoma (descongestionar) sin indagar la causa."
+    ]
+  },
+  "P2": {
+    "A": [
+      2,
+      "Mide resultados verificables para la entidad (ahorro, tiempos), no el cambio para las personas."
+    ],
+    "B": [
+      3,
+      "Mide cambios observables en la vida de las personas y en el trato que reciben: el núcleo del valor público."
+    ],
+    "C": [
+      1,
+      "Mide el desempeño técnico de la solución frente al mercado, más que el valor público generado."
+    ],
+    "D": [
+      2,
+      "Mide personas que resolvieron su necesidad y recoge su voz; es valor público, aún sin método de comparación."
+    ]
+  },
+  "P3": {
+    "A": [
+      2,
+      "Reduce incertidumbre técnica (arquitectura, integración, carga), no la incertidumbre de uso."
+    ],
+    "B": [
+      3,
+      "Prueba supuestos de uso en un entorno controlado o en campo, en ciclos cortos: experimentación con hipótesis."
+    ],
+    "C": [
+      2,
+      "Prueba con rigor especializado en laboratorio, lejos del contexto real de uso."
+    ],
+    "D": [
+      2,
+      "Prueba temprano con usuarios reales, aunque sin un diseño explícito de hipótesis."
+    ]
+  },
+  "P4": {
+    "A": [
+      1,
+      "Registra el hallazgo y lo lleva al trámite contractual: la evidencia no cambia la solución por ahora."
+    ],
+    "B": [
+      3,
+      "Usa la evidencia de uso para reorientar la solución en el siguiente ciclo."
+    ],
+    "C": [
+      3,
+      "Analiza los datos y propone un rediseño que concilia lo que pide la ciudadanía con el objetivo misional."
+    ],
+    "D": [
+      2,
+      "Se adapta de inmediato y documenta el aprendizaje, sin un análisis previo de la evidencia."
+    ]
+  },
+  "P5": {
+    "A": [
+      2,
+      "Coordina a varios actores con acuerdos trazables; es coordinación más que cocreación."
+    ],
+    "B": [
+      3,
+      "Diseña con los servidores como pares, en espacios horizontales: cocreación multiactor."
+    ],
+    "C": [
+      1,
+      "Transfiere conocimiento en una sola vía; los funcionarios reciben, no codiseñan."
+    ],
+    "D": [
+      2,
+      "Involucra a los funcionarios para probar ideas de forma continua, con poca estructura de acuerdos."
+    ]
+  },
+  "P15": {
+    "A": [
+      3,
+      "Tiene músculo financiero para resistir el ciclo de pagos sin detener el servicio."
+    ],
+    "B": [
+      3,
+      "Navega el ciclo de caja con esquemas por hitos y pagos escalonados."
+    ],
+    "C": [
+      2,
+      "Resiste el ciclo apoyándose en la liquidez de un aliado ancla."
+    ],
+    "D": [
+      1,
+      "Reconoce que necesita acompañamiento para acceder a figuras contractuales adecuadas."
+    ]
+  },
+  "P16": {
+    "A": [
+      2,
+      "Protege la continuidad con trazabilidad formal; depende de que el nuevo equipo la valore."
+    ],
+    "B": [
+      3,
+      "Sostiene la continuidad en la apropiación de funcionarios de planta y ciudadanía, más allá del cambio directivo."
+    ],
+    "C": [
+      2,
+      "Defiende la continuidad con datos objetivos de desempeño."
+    ],
+    "D": [
+      1,
+      "Reacciona presentando resultados para volver a convencer: continuidad aún frágil."
+    ]
+  },
+  "P0.1": {
+    "A": [
+      3,
+      "Entrega una solución probada y lista, con garantías desde el primer día."
+    ],
+    "B": [
+      2,
+      "Entrega capacidad de construir a la medida; la solución aún se define con la entidad."
+    ],
+    "C": [
+      2,
+      "Entrega un componente especializado que depende de una solución mayor."
+    ],
+    "D": [
+      1,
+      "Tiene una herramienta emergente que busca su primera prueba."
+    ]
+  },
+  "P7": {
+    "A": [
+      1,
+      "Integra imponiendo conectores propios o migrando datos a su infraestructura: riesgo de dependencia."
+    ],
+    "B": [
+      3,
+      "Integra con capas intermedias y APIs sin exigir cambios a los sistemas de la entidad."
+    ],
+    "C": [
+      2,
+      "Integra a la medida, tras auditoría técnica, solo para su componente."
+    ],
+    "D": [
+      1,
+      "Evita la integración con intercambios periódicos de archivos."
+    ]
+  },
+  "P8": {
+    "A": [
+      2,
+      "Demuestra solidez con plataformas licenciadas y certificaciones de terceros; el código no es auditable por la entidad."
+    ],
+    "B": [
+      3,
+      "Demuestra rigor con código propio trazable, arquitectura documentada y pruebas automatizadas."
+    ],
+    "C": [
+      3,
+      "Documenta con rigor modelos, fuentes y límites de precisión de su componente."
+    ],
+    "D": [
+      1,
+      "Muestra que funciona en la interfaz; la solidez interna no se evidencia."
+    ]
+  },
+  "P9": {
+    "A": [
+      3,
+      "Aplica controles formales de seguridad y cumplimiento del régimen de datos."
+    ],
+    "B": [
+      2,
+      "Es transparente con la ciudadanía sobre qué datos usa; no menciona controles de seguridad."
+    ],
+    "C": [
+      2,
+      "Protege con anonimización y revisión de sesgos; cubre una parte especializada del riesgo."
+    ],
+    "D": [
+      2,
+      "Minimiza los datos que captura; buen principio, aún sin controles ni gobernanza."
+    ]
+  },
+  "P10": {
+    "A": [
+      1,
+      "Entrega los datos, pero el código e infraestructura quedan en la empresa: la salida tiene costo."
+    ],
+    "B": [
+      3,
+      "Garantiza una salida de costo cercano a cero, con formatos abiertos y migración sin penalidades."
+    ],
+    "C": [
+      2,
+      "Transfiere parametrizaciones y documentación para que otro operador continúe."
+    ],
+    "D": [
+      3,
+      "Deja código y datos en esquemas abiertos para que la entidad los gestione con autonomía."
+    ]
+  },
+  "P11": {
+    "A": [
+      3,
+      "Asegura estabilidad con acuerdos de nivel de servicio, mesa de ayuda y soporte 24/7."
+    ],
+    "B": [
+      1,
+      "Asegura la evolución de la herramienta, no su estabilidad operativa."
+    ],
+    "C": [
+      2,
+      "Da soporte especializado de segundo y tercer nivel, solo sobre su componente."
+    ],
+    "D": [
+      1,
+      "Acompaña de cerca al inicio; el soporte no queda estructurado en el tiempo."
+    ]
+  },
+  "P13": {
+    "A": [
+      2,
+      "Activa un protocolo formal y reporta a la supervisión; la ciudadanía no aparece en la primera respuesta."
+    ],
+    "B": [
+      3,
+      "Restablece el servicio en minutos e informa con transparencia a la ciudadanía."
+    ],
+    "C": [
+      1,
+      "Diagnostica y corrige su componente; la contingencia del servicio queda en otros."
+    ],
+    "D": [
+      3,
+      "Asegura que la ciudadanía siga haciendo su trámite por vías alternas mientras se corrige: contingencia ciudadana."
+    ]
+  },
+  "P0.3": {
+    "A": [
+      1,
+      "Concibe la relación como supervisión y cumplimiento del contrato; poca construcción conjunta."
+    ],
+    "B": [
+      3,
+      "Trabaja en mesas mixtas de codiseño y asume con la entidad las decisiones del proyecto."
+    ],
+    "C": [
+      2,
+      "Coordina su aporte técnico con otros actores en una mesa interdisciplinaria."
+    ],
+    "D": [
+      2,
+      "Busca entender la cultura pública y adaptar su forma de trabajar al ritmo del Estado."
+    ]
+  },
+  "P6": {
+    "A": [
+      1,
+      "Lleva la divergencia a un comité formal frente al contrato; la voz ciudadana no entra en la decisión."
+    ],
+    "B": [
+      3,
+      "Defiende la voz ciudadana con evidencia y testimonios de campo."
+    ],
+    "C": [
+      2,
+      "Ofrece un análisis técnico independiente para una decisión informada, sin tomar partido por los usuarios."
+    ],
+    "D": [
+      3,
+      "Resuelve la divergencia con hechos: prueba rápida de dos alternativas con usuarios."
+    ]
+  },
+  "P0.2": {
+    "A": [
+      1,
+      "Pide cerrar especificaciones antes de actuar: traslada la incertidumbre a la entidad."
+    ],
+    "B": [
+      3,
+      "Reduce la incertidumbre paso a paso con prototipos en campo y datos de uso."
+    ],
+    "C": [
+      2,
+      "Investiga y calibra el problema con conocimiento experto antes de definir componentes."
+    ],
+    "D": [
+      2,
+      "Ensaya rápido con su tecnología existente; aprende, aunque parte de la solución y no del problema."
+    ]
+  },
+  "P0.4": {
+    "A": [
+      1,
+      "Mide el éxito por cumplimiento contractual y cobro, no por el valor generado."
+    ],
+    "B": [
+      3,
+      "Mide bienestar ciudadano, transferencia de capacidades y valor público validado en territorio."
+    ],
+    "C": [
+      2,
+      "Mide la resolución de un problema técnico y el conocimiento que deja al ecosistema."
+    ],
+    "D": [
+      1,
+      "Mide que su tecnología funcione y abra nuevas oportunidades: éxito centrado en la propia oferta."
+    ]
+  },
+  "P12": {
+    "A": [
+      2,
+      "Transfiere de forma estructurada la administración del sistema; los servidores operan, no lo evolucionan."
+    ],
+    "B": [
+      3,
+      "Forma con mentorías de aprender haciendo y código comentado para que el Distrito evolucione el software solo."
+    ],
+    "C": [
+      1,
+      "Entrena en la operación de su tecnología especializada; la dependencia del proveedor se mantiene."
+    ],
+    "D": [
+      2,
+      "Documenta y hace talleres prácticos para que los equipos gestionen la herramienta por sí mismos."
+    ]
+  },
+  "P14": {
+    "A": [
+      1,
+      "Responde con el trámite contractual de riesgos; la adaptación queda supeditada a modificaciones formales."
+    ],
+    "B": [
+      3,
+      "Replanifica con agilidad y responde a la nueva realidad sin frenar el proyecto."
+    ],
+    "C": [
+      2,
+      "Ajusta su solución a la nueva regulación; cubre el cambio normativo más que la emergencia."
+    ],
+    "D": [
+      2,
+      "Adapta funcionalidades para que la entidad atienda la contingencia; respuesta flexible pero sin un plan explícito."
+    ]
+  }
+}

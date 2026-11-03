@@ -1,0 +1,21 @@
+# Solo el código necesario para desplegar. Los documentos de trabajo (Excel, revisiones, LEEME) quedan fuera del repositorio.
+node_modules
+dist
+qa-ux
+data
+*.sqlite*
+*.xlsx
+0*_*.html
+0*_*.md
+2026-*.html
+comparacion.json
+estadisticas.json
+.DS_Store
+
+# Notas internas y scripts del primer corte (no se ejecutan al desplegar)
+LEEME.md
+build-review.mjs
+build-ux-review.mjs
+prepare-content.mjs
+upgrade-ui.mjs
+test-browser-v13.mjs

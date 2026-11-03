@@ -1,0 +1,9 @@
+node_modules
+dist
+qa-ux
+*.xlsx
+*.md
+0*_*.html
+2026-*.html
+comparacion.json
+estadisticas.json

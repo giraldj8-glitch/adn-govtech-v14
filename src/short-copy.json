@@ -1,0 +1,284 @@
+{
+  "C01": {
+    "ask": "¿Qué tipo de organización son?",
+    "options": [
+      "Empresa privada",
+      "Empresa pública o mixta",
+      "Universidad o institución de educación superior",
+      "Centro independiente de investigación o desarrollo tecnológico",
+      "Organización social o fundación",
+      "Entidad pública (no empresa)",
+      "Equipo o iniciativa sin constituir",
+      "Profesional independiente",
+      "Otra",
+      "No estoy seguro"
+    ],
+    "note": "Se conserva la tipología; no determina el arquetipo."
+  },
+  "C02": {
+    "ask": "¿Qué aporta su organización?",
+    "options": [
+      "Desarrollamos, adaptamos u operamos tecnología",
+      "Aportamos investigación, diseño, formación o conocimiento especializado",
+      "Conectamos actores y acompañamos su colaboración",
+      "Traemos una necesidad pública y buscamos apoyo",
+      "Aún estamos definiendo nuestro aporte",
+      "Otro aporte"
+    ],
+    "note": "Se conserva un aporte principal y hasta un secundario. Traer una necesidad abre la orientación a otra ruta; no excluye automáticamente."
+  },
+  "C03": {
+    "ask": "¿En qué sectores puede aplicarse su oferta?",
+    "note": "Los sectores y sus etiquetas se conservan. Elegir primero el principal y hasta dos secundarios."
+  },
+  "C04": {
+    "ask": "¿Cómo han trabajado con entidades públicas?",
+    "options": [
+      "Aún no hemos trabajado con ellas",
+      "Conversaciones o propuestas",
+      "Retos, pruebas o pilotos",
+      "Contratos directos",
+      "A través de otra organización",
+      "Otra experiencia"
+    ],
+    "note": "La primera opción excluye las demás. Activa C05 únicamente si hay experiencia."
+  },
+  "C05": {
+    "ask": "¿Cómo fue su experiencia pública más reciente?",
+    "options": [
+      "Avanzó como esperábamos",
+      "Avanzó con dificultades importantes",
+      "No avanzó o terminó antes de lo esperado",
+      "Sigue en curso; es pronto para evaluarla",
+      "Prefiero no responder"
+    ],
+    "note": "Se conserva la experiencia más reciente, sin pedir un relato obligatorio."
+  },
+  "C06": {
+    "ask": "¿Cuántas personas trabajan habitualmente en su organización?",
+    "help": "Inclúyete si participas en la operación. Es opcional.",
+    "note": "Mismos rangos y posibilidad de omitir. No equivale a capacidad de entrega."
+  },
+  "C07": {
+    "ask": "¿Dónde operan y dónde quieren trabajar?",
+    "note": "Se conservan los dos grupos de territorios de la interfaz v12. No sustituye el país o ciudad exactos si se necesitan en una futura versión."
+  },
+  "C08": {
+    "ask": "¿Qué parte del servicio les aporta más valor?",
+    "options": [
+      "Conocer nuestro punto de partida GovTech",
+      "Entender cómo trabajar con entidades públicas",
+      "Fortalecer o probar nuestra oferta",
+      "Encontrar oportunidades para colaborar",
+      "Entender cómo sustentar y obtener un reconocimiento",
+      "Aún no lo sabemos",
+      "Otro componente"
+    ],
+    "note": "Se conserva al final, opcional y ordenable; la v12 ya la pregunta como valor percibido, no expectativa inicial."
+  },
+  "P1": {
+    "ask": "Hay filas para hacer un trámite. ¿Por dónde empezarían?",
+    "options": [
+      "Revisar el trámite, sus datos y las reglas legales para diseñar una solución viable.",
+      "Observar a usuarios y funcionarios para detectar causas de exclusión y rediseñar antes de automatizar.",
+      "Aportar un diagnóstico especializado para identificar el cuello de botella técnico.",
+      "Implementar una interfaz accesible para atender solicitudes repetidas y reducir las filas."
+    ],
+    "note": "Mantiene cuatro abordajes: viabilidad formal, causa de exclusión, diagnóstico especializado y respuesta inmediata. No se reduce a conocer o desconocer el problema."
+  },
+  "P2": {
+    "ask": "¿Qué evidencia priorizan para saber si generaron valor público?",
+    "options": [
+      "Ahorros verificados, menos tiempo de trámite y operaciones trazables.",
+      "Mejor calidad de vida, menos cargas burocráticas y un trato más digno.",
+      "Indicadores técnicos o sectoriales para auditar y comparar el desempeño.",
+      "Más personas completan el trámite sin barreras y cuentan cómo resolvieron su necesidad."
+    ],
+    "note": "Se conserva el tipo de evidencia priorizado: eficiencia, bienestar, desempeño especializado o acceso y testimonios. Las alternativas pueden coexistir: se pregunta por prioridad."
+  },
+  "P0.3": {
+    "ask": "¿Cómo trabajan con los funcionarios de una entidad?",
+    "options": [
+      "Seguimos el contrato, las entregas y los acuerdos de servicio bajo supervisión formal.",
+      "Diseñamos en equipos mixtos y decidimos juntos los ajustes del proyecto.",
+      "Participamos como especialistas, coordinando nuestro aporte con otras áreas y empresas.",
+      "Buscamos acompañamiento para entender el sector público y adaptar nuestra forma de trabajar."
+    ],
+    "note": "Conserva el esquema de relación: supervisión, decisiones compartidas, articulación especializada o aprendizaje institucional."
+  },
+  "P3": {
+    "ask": "Antes de invertir en el desarrollo, ¿cómo prueban lo que aún no saben?",
+    "help": "Piensa en una prueba inicial para un proyecto público.",
+    "options": [
+      "Probamos arquitectura, conexión con sistemas antiguos y carga en un entorno protegido.",
+      "Probamos supuestos de uso en pocas semanas, en un entorno controlado o una comunidad acotada.",
+      "Hacemos simulaciones, auditorías o pruebas especializadas de usabilidad y seguridad.",
+      "Mostramos una versión preliminar a voluntarios y observamos cómo la usan."
+    ],
+    "note": "Se mantienen la prueba técnica, el experimento acotado, el ensayo especializado y la prueba temprana con voluntarios. Evita exigir conocer la palabra sandbox."
+  },
+  "P4": {
+    "ask": "En un piloto, la gente usa otra función y deja de lado la principal. ¿Qué hacen?",
+    "options": [
+      "Registramos el cambio, revisamos su efecto en el contrato y pedimos autorización para ajustar el alcance.",
+      "Ajustamos el flujo en el siguiente ciclo de desarrollo para potenciar el uso que apareció.",
+      "Analizamos los datos y proponemos un rediseño técnico que conecte el uso real con el objetivo público.",
+      "Adaptamos de inmediato la interfaz al uso observado y documentamos lo aprendido."
+    ],
+    "note": "Se preservan autorización formal, iteración del flujo, análisis especializado y ajuste inmediato de interfaz. Las opciones B y D siguen siendo cercanas: validar su comprensión."
+  },
+  "P5": {
+    "ask": "¿Cómo reúnen a distintas áreas públicas para diseñar juntas?",
+    "options": [
+      "Con mesas técnicas, agendas, responsables y acuerdos documentados.",
+      "Con talleres entre pares, reduciendo jerarquías para diseñar en conjunto.",
+      "Con sesiones especializadas para enseñar cómo integrar nuestro componente.",
+      "Con espacios informales donde funcionarios prueban y validan ideas continuamente."
+    ],
+    "note": "Se elimina el nombre de una metodología; se mantiene la práctica que describe. La transferencia técnica sigue siendo distinta de la cocreación."
+  },
+  "P6": {
+    "ask": "La dirección pide algo distinto de lo que necesitan los usuarios. ¿Qué hacen?",
+    "options": [
+      "Reunimos un comité para contrastar lo solicitado con el contrato y el presupuesto.",
+      "Presentamos evidencia y testimonios de usuarios para defender sus necesidades en el diseño.",
+      "Entregamos un informe independiente con ventajas, desventajas y riesgos de cada alternativa.",
+      "Probamos dos alternativas sencillas con usuarios para decidir con evidencia."
+    ],
+    "note": "No se pierde el conflicto dirección-ciudadanía ni las cuatro maneras de abordarlo."
+  },
+  "P0.1": {
+    "ask": "¿Qué ofrecen principalmente a una entidad que quiere mejorar un servicio?",
+    "options": [
+      "Una solución propia, probada y lista para implementar, con alcance y garantías definidos.",
+      "Desarrollo flexible para construir, adaptar y probar una solución a la medida de la entidad.",
+      "Un componente tecnológico especializado o un estudio que complementa una solución mayor.",
+      "Una tecnología emergente que busca su primera prueba en un reto público."
+    ],
+    "note": "Describe el modelo de oferta, no acredita recursos disponibles. Se mantiene su ubicación para conservar la regla; revisar esa relación con Recursos y continuidad."
+  },
+  "P7": {
+    "ask": "¿Cómo conectarían su solución con datos dispersos o sistemas antiguos de una entidad?",
+    "options": [
+      "Pedimos conectores corporativos estándar o proponemos migrar los datos a nuestra nube certificada.",
+      "Usamos conexiones seguras y una capa intermedia para sincronizar datos sin sustituir los sistemas centrales.",
+      "Creamos conexiones a medida para nuestro componente, después de una revisión técnica.",
+      "Importamos y exportamos datos estructurados periódicamente, sin conectar directamente los sistemas."
+    ],
+    "note": "Conserva sistemas heredados, datos fragmentados y cuatro estrategias. No supone que la entidad ya tenga datos disponibles o infraestructura moderna."
+  },
+  "P8": {
+    "ask": "¿Cómo demuestran la solidez técnica de su solución?",
+    "options": [
+      "Con plataformas licenciadas, soporte especializado, acuerdos de servicio y certificaciones ISO de desarrollo.",
+      "Con código propio versionado, arquitectura documentada, pruebas automáticas y control del ciclo de desarrollo.",
+      "Documentando modelos, datos de entrenamiento y límites de precisión de nuestro componente especializado.",
+      "Con una interfaz funcional probada y un equipo que puede corregir su código ante fallas de uso."
+    ],
+    "note": "Se retira la premisa descalificadora sobre no-code e IA. Permanecen las evidencias originales. Certificaciones o código propio no garantizan por sí solos solidez; revisar el puntaje por separado."
+  },
+  "P9": {
+    "ask": "¿Qué práctica describe mejor cómo cuidan los datos de las personas?",
+    "options": [
+      "Aplicamos cifrado, registros de actividad que no se puedan alterar y controles de cumplimiento de las reglas de datos.",
+      "Explicamos qué datos recogemos y para qué, y facilitamos la revisión ciudadana del código.",
+      "Anonimizamos los datos y revisamos sesgos de los algoritmos.",
+      "Recogemos solo los datos indispensables y evitamos guardar información sensible."
+    ],
+    "note": "Conserva controles, transparencia, anonimización/sesgos y minimización. Son prácticas complementarias: una respuesta no prueba cumplimiento integral ni debe enseñarse como la única necesaria."
+  },
+  "P10": {
+    "ask": "Si termina la relación con la entidad, ¿qué entregan para facilitar la salida?",
+    "options": [
+      "Exportamos todos sus datos según lo acordado; el código y la infraestructura siguen siendo nuestros.",
+      "Entregamos datos en formatos abiertos y facilitamos migrar el código, sin penalidades técnicas y con salida de costo casi cero acordado.",
+      "Transferimos la propiedad de las configuraciones a medida y la documentación para que otro operador continúe.",
+      "Entregamos todo el código y los datos generados en formatos y esquemas abiertos para su gestión autónoma."
+    ],
+    "note": "Mantiene derechos, portabilidad, condiciones y costos. Diferenciar B de D: migración pactada frente a apertura de todo el código. No presenta una licencia como requisito legal universal."
+  },
+  "P11": {
+    "ask": "Una vez implementada la solución, ¿cómo ofrecen soporte?",
+    "options": [
+      "Con acuerdos de servicio, mesa de ayuda, manuales técnicos y atención las 24 horas.",
+      "Con comentarios continuos de usuarios y una lista priorizada de mejoras.",
+      "Con soporte especializado para mantener y actualizar únicamente nuestro componente.",
+      "Con acompañamiento directo a los funcionarios durante las primeras semanas y respuesta rápida a sus dudas."
+    ],
+    "note": "Mantiene alcance y duración del soporte, incluido 24/7 y primeras semanas. Mejora continua no equivale por sí sola a continuidad operativa: revisar regla heredada."
+  },
+  "P12": {
+    "ask": "¿Cómo preparan al equipo público para gestionar la solución por sí mismo?",
+    "options": [
+      "Con formación formal, manuales detallados y certificación de operadores.",
+      "Con mentorías de aprender haciendo y código comentado para que puedan evolucionar el software.",
+      "Con entrenamiento técnico para operar y mantener nuestro componente especializado.",
+      "Con guías de configuración paso a paso y talleres prácticos para gestionar la herramienta."
+    ],
+    "note": "Se elimina la referencia académica. Se conservan certificación, evolución del software, especialización y autonomía de operación."
+  },
+  "P13": {
+    "ask": "Falla un servicio digital que usa mucha gente. ¿Qué hacen primero?",
+    "options": [
+      "Activamos el plan de continuidad, localizamos la falla en los registros y reportamos a la supervisión.",
+      "Aplicamos una contingencia técnica para restablecer el servicio en minutos e informamos a la ciudadanía.",
+      "Revisamos si falló nuestro componente u otro sistema y aplicamos las correcciones correspondientes.",
+      "Habilitamos canales alternativos para que las personas sigan haciendo su trámite mientras corregimos la falla."
+    ],
+    "note": "Mantiene la primera respuesta y distingue recuperar el sistema de habilitar una alternativa para la ciudadanía."
+  },
+  "P14": {
+    "ask": "Una norma nueva o una emergencia cambia el proyecto. ¿Cómo responden?",
+    "options": [
+      "Revisamos riesgos, plazos y costos y tramitamos cambios formales al contrato.",
+      "Ajustamos la planificación y el desarrollo para continuar el proyecto en el nuevo contexto.",
+      "Evaluamos los efectos en los estándares técnicos y proponemos ajustes para cumplir la norma.",
+      "Adaptamos las funciones de la herramienta para que la entidad atienda la contingencia."
+    ],
+    "note": "Mantiene adaptación contractual, de planificación, técnica y funcional. No supone que se puedan omitir autorizaciones."
+  },
+  "P0.2": {
+    "ask": "La entidad tiene un problema complejo, pero no requisitos definidos. ¿Cómo empiezan?",
+    "options": [
+      "Pedimos que concrete requisitos y términos de referencia para cotizar una solución cerrada.",
+      "Probamos un prototipo con funcionarios y usuarios y aclaramos la necesidad con datos de uso.",
+      "Aportamos investigación especializada para precisar el problema y los componentes necesarios.",
+      "Adaptamos nuestra tecnología existente para ensayar una respuesta y aprender del uso ciudadano."
+    ],
+    "note": "Se conserva la reacción ante requisitos abiertos. Su cercanía con P3 sigue pendiente; fusionarlas eliminaría una observación y cambiaría la clasificación."
+  },
+  "P0.4": {
+    "ask": "Al terminar el trabajo con una entidad, ¿qué resultado consideran un éxito?",
+    "options": [
+      "Entregar lo contratado a satisfacción, cumplir plazos y rendimiento, y cobrar regularmente.",
+      "Mejorar el bienestar ciudadano, transferir capacidades y demostrar valor público en el territorio.",
+      "Resolver un problema técnico complejo y generar evidencia o conocimiento útil.",
+      "Comprobar que nuestra tecnología funciona en lo público y abrir una ruta para seguir colaborando."
+    ],
+    "note": "Se conserva el éxito de la relación/intervención. Se solapa con P2 (evidencia de valor público): revisar antes de eliminar, mover o cambiar pesos."
+  },
+  "P15": {
+    "ask": "Si el pago de la entidad tarda varios meses, ¿cómo sostienen la operación?",
+    "options": [
+      "Con respaldo financiero y caja planificada para mantener el servicio y el equipo.",
+      "Acordando, cuando sea viable, entregas y pagos por hitos cortos para reducir la presión de caja.",
+      "Con una alianza o consorcio donde otra empresa respalda la liquidez y nosotros aportamos tecnología.",
+      "Buscando orientación sobre mecanismos contractuales y anticipos que puedan apoyar una primera prueba."
+    ],
+    "note": "El plazo se plantea como escenario, no como regla general de 60–120 días. B y D no prometen modalidades ni anticipos disponibles: deben verificarse en cada caso. Capacidad financiera real y estrategia de contratación siguen siendo constructos diferentes."
+  },
+  "P16": {
+    "ask": "Cambia la dirección de la entidad. ¿Cómo buscan que el proyecto continúe?",
+    "options": [
+      "Con entregables aprobados, actas de supervisión y obligaciones contractuales documentadas.",
+      "Con la apropiación de funcionarios de planta y ciudadanía, mostrando la necesidad pública que atiende.",
+      "Presentando resultados técnicos y datos de desempeño de nuestro componente a la nueva dirección.",
+      "Presentando rápidamente resultados y aprendizajes para confirmar que la solución sigue siendo pertinente."
+    ],
+    "note": "Se conserva continuidad institucional y se distingue soporte contractual, apropiación, balance especializado y revalidación de pertinencia."
+  },
+  "P17": {
+    "ask": "Al elegir un proyecto público, ¿qué pesa más en su decisión?",
+    "note": "NUEVA. Explora prioridad al elegir proyectos; no certifica propósito ni mide altruismo. Asociación a arquetipos propuesta para probar con Daniela. No tiene puntaje de radar hasta validar la regla."
+  }
+}

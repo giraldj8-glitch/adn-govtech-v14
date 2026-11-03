@@ -1,0 +1,32 @@
+// Los formatos describen la presentación; nunca cambian valores ni puntajes.
+export const formats = {
+ C01:{type:'select',why:'Diez categorías conocidas: selector nativo, sin diez tarjetas largas.'},
+ C02:{type:'checklist',why:'Aportes que pueden coexistir. Hasta dos, con la prioridad visible.'},
+ C03:{type:'chips',why:'Sectores reconocibles: etiquetas y búsqueda opcional. La primera selección sigue siendo la principal.'},
+ C04:{type:'checklist',why:'Experiencias acumulables: casillas, sin convertirlas en una escalera de madurez.'},
+ C05:{type:'outcome',why:'Tres resultados ordenados de la experiencia, con en curso y prefiero no responder aparte. No es satisfacción de 1 a 5.'},
+ C06:{type:'ranges',why:'Rangos de tamaño discretos; no son una puntuación ni distancias iguales.'},
+ C07:{type:'territories',why:'Dos grupos de territorios con opciones distintas: no forzar una matriz común.'},
+ C08:{type:'ranking',why:'Prioridad por toques, sin arrastrar ni obligar a ordenar todos los componentes.'},
+ P1:{type:'scenario',titles:['Revisar el trámite','Observar a las personas','Diagnosticar el cuello de botella','Implementar una interfaz'],why:'Caso concreto: separar la situación de la decisión.'},
+ P2:{type:'priority',titles:['Eficiencia y trazabilidad','Calidad de vida y trato','Indicadores técnicos','Uso sin barreras'],why:'Cuatro clases de evidencia, sin un orden de mejor a peor.'},
+ P17:{type:'priority',titles:['Encaje con la solución','Problema y trabajo conjunto','Aporte especializado','Primera prueba y aprendizaje'],why:'Prioridades distintas, no grados de vocación pública.'},
+ 'P0.3':{type:'list',why:'Formas de colaboración: lectura vertical de una sola elección.'},
+ P3:{type:'list',why:'Métodos diferentes de prueba, no una escala de cuánto experimentan.'},
+ P4:{type:'scenario',titles:['Revisar y autorizar','Ajustar el siguiente ciclo','Analizar y rediseñar','Adaptar y documentar'],why:'La situación aporta contexto; las alternativas son acciones.'},
+ P5:{type:'list',why:'Cuatro formas de convocar y trabajar: lista compacta.'},
+ P6:{type:'scenario',titles:['Contrastar en comité','Presentar evidencia de usuarios','Comparar alternativas','Probar con usuarios'],why:'Dilema que requiere leer el contexto antes de decidir.'},
+ 'P0.1':{type:'priority',titles:['Solución lista','Desarrollo a la medida','Componente especializado','Tecnología por probar'],why:'Tipos de oferta que se reconocen rápidamente por una etiqueta.'},
+ P7:{type:'comparison',titles:['Conectores o migración','Conexión mediante una capa intermedia','Conexiones a medida','Intercambio periódico'],why:'Comparar estrategias de integración en filas: una sola pregunta y una sola respuesta.'},
+ P8:{type:'comparison',titles:['Plataformas y acuerdos','Código y pruebas','Modelos y límites','Interfaz y corrección'],why:'Comparar qué evidencia se presenta, sin calificarla con estrellas.'},
+ P9:{type:'comparison',titles:['Cifrado y controles','Transparencia y revisión','Anonimización y sesgos','Minimización de datos'],why:'Prácticas que pueden coexistir. Se conserva la práctica principal; no se interpreta como auditoría de seguridad.'},
+ P10:{type:'comparison',titles:['Exportar datos','Facilitar la migración','Transferir configuraciones','Entregar código y datos'],why:'Contrastar qué se entrega y qué permanece en cada opción.'},
+ P11:{type:'list',why:'Modalidades de soporte: respuesta única sin falsa escala de calidad.'},
+ P12:{type:'list',why:'Formas de transferencia: conservar las diferencias entre enfoques.'},
+ P13:{type:'scenario',titles:['Activar continuidad','Restablecer e informar','Revisar el componente','Habilitar otros canales'],why:'Elegir la primera acción frente a una falla.'},
+ P14:{type:'scenario',titles:['Tramitar cambios','Ajustar la planificación','Evaluar estándares','Adaptar funciones'],why:'Caso de cambio de contexto, con cuatro respuestas distintas.'},
+ 'P0.2':{type:'scenario',titles:['Precisar requisitos','Probar un prototipo','Investigar el problema','Adaptar tecnología'],why:'Decisión ante una necesidad sin requisitos definidos.'},
+ P15:{type:'comparison',titles:['Respaldo y caja','Pagos por hitos','Alianza o consorcio','Orientación contractual'],why:'Comparar estrategias financieras. No se infiere solvencia demostrada.'},
+ P16:{type:'scenario',titles:['Documentación contractual','Apropiación y necesidad','Resultados técnicos','Resultados y aprendizajes'],why:'Caso de cambio de dirección: conservar las estrategias de continuidad.'}
+};
+export const formatNames={select:'Selector',checklist:'Lista de selección múltiple',chips:'Etiquetas con búsqueda',outcome:'Escala de resultado con etiquetas',ranges:'Rangos de tamaño',territories:'Dos grupos de selección',ranking:'Priorización por toques',scenario:'Caso y acciones',priority:'Tarjetas de elección',comparison:'Tabla comparativa',list:'Lista de elección única'};

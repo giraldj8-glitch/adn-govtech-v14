@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<link rel="icon" href="data:,">
+<meta name="theme-color" content="#ffffff">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<meta name="robots" content="noindex,nofollow">
+<title>ADN GovTech · Formulario</title>
+</head>
+<body data-theme="light">
+<a href="#main" class="skip">Ir al contenido principal</a>
+<div id="loader" class="loader" aria-hidden="true">
+  <div class="ld-inner">
+    <svg class="ld-arch" viewBox="0 0 120 150" aria-hidden="true"><path d="M8 146V62a52 52 0 0 1 104 0v84"/></svg>
+    <p class="ld-brand"><small>Bogotá Capital</small><strong>GOVTECH</strong></p>
+    <p class="ld-title">Descubre tu ADN</p>
+    <span class="ld-line"><span></span></span>
+    <span class="ld-pct">0%</span>
+  </div>
+</div>
+<header class="top" id="top">
+  <div class="top-inner">
+    <button class="brand" type="button" id="home" aria-label="Volver al inicio del autodiagnóstico"><small>Bogotá Capital</small><strong>GOVTECH</strong></button>
+    <nav id="mode-pill" class="mode-pill" aria-label="Etapas del recorrido" hidden></nav>
+    <div class="top-links">
+      <button class="top-link" id="motion-toggle" type="button" aria-pressed="false"><span id="motion-label">Reducir movimiento</span></button>
+    </div>
+  </div>
+  <div class="top-progress" aria-hidden="true"><span></span></div>
+</header>
+<main id="main" tabindex="-1"></main>
+<nav id="rail" class="rail" aria-label="Progreso del diagnóstico" hidden></nav>
+<div id="veil" class="veil" aria-hidden="true" hidden></div>
+<dialog id="confirm-dialog" class="v10-dialog" aria-labelledby="confirm-title" aria-describedby="confirm-text">
+  <form method="dialog">
+    <h2 id="confirm-title"></h2>
+    <p id="confirm-text"></p>
+    <div class="pill-row">
+      <button class="pill-btn solid" value="ok" type="submit" id="confirm-ok"></button>
+      <button class="pill-btn" value="cancel" type="submit" id="confirm-cancel">Cancelar</button>
+    </div>
+  </form>
+</dialog>
+<div id="live" class="sr-only" aria-live="polite"></div>
+<noscript><p style="padding:24px">Este prototipo necesita JavaScript para funcionar.</p></noscript>
+<script type="module" src="/src/summit.js"></script>
+</body>
+</html>
