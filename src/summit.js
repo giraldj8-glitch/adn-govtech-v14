@@ -510,7 +510,7 @@ function opinion(){
  <p class="lead">Toca primero el que más valor le ves: sube al puesto 1. Luego el siguiente, y así. Puedes elegir solo algunos; toca de nuevo para quitarlo.</p>
  <ol class="sm-rank" id="rank">${rankList()}</ol><div class="sm-rank-alt" id="rank-alt">${rankAlt()}</div>
  <fieldset class="ux-rating"><legend>¿Qué tan clara fue esta experiencia? <small>Opcional</small></legend><div class="ux-stars">${[1,2,3,4,5].map(n=>`<label><input type="radio" name="clarity" value="${n}" ${feedback.clarity===n?'checked':''}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 14.78 8.63 21 9.54 16.5 13.93 17.56 20.12 12 17.2 6.44 20.12 7.5 13.93 3 9.54 9.22 8.63Z"/></svg><span class="sr-only">${n} de 5: ${['nada clara','poco clara','medianamente clara','clara','muy clara'][n-1]}</span><span aria-hidden="true">${n}</span></label>`).join('')}</div><div class="ux-rating-labels"><span>1 · Nada clara</span><span>5 · Muy clara</span></div><p id="clarity-value" aria-live="polite">${feedback.clarity?feedback.clarity+' de 5':'Sin valoración'}</p><button type="button" class="link-btn" data-action="clear-clarity">Quitar valoración</button></fieldset>
- ${KIOSK?'':`<div class="qfields sm-add"><label for="fb-add">¿Qué otro componente le agregarías? (opcional)</label><input id="fb-add" type="text" maxlength="200" autocomplete="off" value="${e(feedback.add)}"></div>`}
+ <div class="qfields sm-add"><label for="fb-add">¿Qué otro componente le agregarías? (opcional)</label><input id="fb-add" type="text" maxlength="200" autocomplete="off" value="${e(feedback.add)}"></div>
  <p class="fine">Puedes saltar este paso. ${REMOTE?'Tu opinión se guarda con tus respuestas, sin tu nombre, y aparece en tu informe.':`Tu opinión se queda en ${KIOSK?'esta sesión':'este navegador'} y aparece en tu informe; no se envía.`}</p></section>${stepper('opinion')}`;
 }
 function syncC08(){if(feedback.rank.length)answers.C08={values:[feedback.rank[0]]};else if(feedback.unsure)answers.C08={values:['F']};else delete answers.C08;answers=clean(answers);save();}
@@ -639,13 +639,14 @@ function nextQuestion(id){
  const chapter=next.phase!==byId[id].phase;show(chapter?'chapter':'question',chapter?next.phase:next.id);
 }
 function bind(next){
+ wireKioskInputs();
  if(next==='question'){if(byId[current].dim&&layout==='bloques')bindBlock();else bindQuestion(byId[current]);}
  if(next==='revelar')bindReveal();
  if(next==='chapter'&&current==='perfil'){const inp=document.querySelector('#org-start');if(inp){if(KIOSK)inp.addEventListener('click',()=>openKeyboard(inp));else inp.addEventListener('input',()=>{org=inp.value.trim().slice(0,40);save();});}}
  if(next==='tie')document.querySelector('#tie-form').addEventListener('submit',ev=>{ev.preventDefault();const sel=new FormData(ev.target).get('tie');if(sel===null){document.querySelector('#error').textContent='Elige una opción para ver tu ADN.';return;}answers=resolveTie(answers,Number(sel));save();show('rol');});
  if(next==='llevar'){
   const img=document.querySelector('#card-img'),paint=()=>cardDataURL(cardData()).then(u=>{if(u&&img){img.src=u;img.hidden=false;}});paint();
-  let t=0;const on=document.querySelector('#org-name');if(KIOSK)on?.addEventListener('click',()=>openKeyboard(on));
+  let t=0;const on=document.querySelector('#org-name');
   on?.addEventListener('input',ev=>{org=ev.target.value.trim().slice(0,40);save();clearTimeout(t);t=setTimeout(paint,350);const q=document.querySelector('#qr-card');if(q)q.innerHTML=qrCardIdle();});
   document.querySelector('#contact-form')?.addEventListener('submit',async ev=>{ev.preventDefault();
    const mail=document.querySelector('#contact-mail').value.trim(),ok=document.querySelector('#contact-ok').checked,msg=document.querySelector('#contact-msg');
@@ -700,25 +701,39 @@ function bindQuestion(q){
 
 /* Teclado en pantalla solo para el nombre de la organización en el stand (un único campo opcional).
    Mayúscula automática al empezar cada palabra; ⇧ cambia la siguiente letra. */
+/* Teclado en pantalla del quiosco (no hay teclado físico ni del sistema). Sirve para cualquier campo de texto:
+   toma su etiqueta y su límite, escribe en vivo (el buscador filtra mientras se teclea) y al cerrar deja el valor final. */
 function openKeyboard(inp){
  document.querySelector('#kbd')?.remove();
- const rows=['1234567890','QWERTYUIOP','ASDFGHJKLÑ','ZXCVBNM&.-'];
- const box=document.createElement('div');box.id='kbd';box.className='sm-kbd';box.setAttribute('role','dialog');box.setAttribute('aria-label','Teclado para escribir el nombre de tu empresa');
- box.innerHTML=`<div class="kbd-in"><p class="kbd-label">Nombre de tu empresa <small>opcional</small></p><output class="kbd-out" id="kbd-out"></output>
- ${rows.map(r=>`<div class="kbd-row">${[...r].map(k=>`<button type="button" data-k="${k}">${k}</button>`).join('')}</div>`).join('')}
+ const raw=document.querySelector(`label[for="${inp.id}"]`)?.textContent||inp.placeholder||'Escribe',optional=/opcional/i.test(raw);
+ const label=raw.replace(/\s*\(?opcional\)?\s*/i,' ').trim(),max=inp.maxLength>0?inp.maxLength:60,words=inp.id==='org-name';
+ const rows=['1234567890','QWERTYUIOP','ASDFGHJKLÑ','ZXCVBNM&.-','ÁÉÍÓÚ,¿?@_'];
+ const box=document.createElement('div');box.id='kbd';box.className='sm-kbd';box.setAttribute('role','dialog');box.setAttribute('aria-label','Teclado: '+label);
+ box.innerHTML=`<div class="kbd-in"><p class="kbd-label">${e(label)}${optional?' <small>opcional</small>':''}</p><output class="kbd-out" id="kbd-out"></output>
+ ${rows.map(r=>`<div class="kbd-row">${[...r].map(k=>`<button type="button" data-k="${e(k)}">${e(k)}</button>`).join('')}</div>`).join('')}
  <div class="kbd-row"><button type="button" data-k="shift" class="kbd-w" aria-label="Mayúscula">⇧</button><button type="button" data-k=" " class="kbd-space">espacio</button><button type="button" data-k="del" class="kbd-w" aria-label="Borrar">⌫</button></div>
  <div class="kbd-row kbd-act"><button type="button" data-k="clear" class="pill-btn ghost">Borrar todo</button><button type="button" data-k="ok" class="pill-btn solid big">Listo</button></div></div>`;
  document.body.appendChild(box);
- let val=org,shift=false;const out=box.querySelector('#kbd-out');
+ let val=inp.value||'',shift=false;const out=box.querySelector('#kbd-out');
  const paint=()=>{out.textContent=val||'Escribe aquí';out.classList.toggle('empty',!val);box.querySelector('[data-k="shift"]').classList.toggle('on',shift);};
+ const sync=()=>{inp.value=val;inp.dispatchEvent(new Event('input',{bubbles:true}));};
+ const done=()=>{val=val.trim();sync();closeKbd(box);};
  paint();
  box.addEventListener('click',ev=>{
-  if(ev.target===box){org=val.trim();save();inp.value=org;closeKbd(box);inp.dispatchEvent(new Event('input',{bubbles:true}));return;}
-  const k=ev.target.closest('[data-k]')?.dataset.k;if(!k)return;
-  if(k==='ok'||k==='close'){org=val.trim();save();inp.value=org;closeKbd(box);inp.dispatchEvent(new Event('input',{bubbles:true}));return;}
-  if(k==='del')val=val.slice(0,-1);else if(k==='clear')val='';else if(k==='shift')shift=!shift;
-  else if(val.length<40){const start=!val||val.endsWith(' ');const ch=/[A-ZÑ]/.test(k)?(start||shift?k:k.toLowerCase()):k;val+=ch;shift=false;}
-  paint();
+  if(ev.target===box){done();return;}
+  const k=ev.target.closest('[data-k]')?.dataset.k;if(k==null)return;
+  if(k==='ok'||k==='close'){done();return;}
+  if(k==='del')val=val.slice(0,-1);else if(k==='clear')val='';else if(k==='shift'){shift=!shift;paint();return;}
+  else if(val.length<max){const start=!val||(words?val.endsWith(' '):/[.?¿]\s$/.test(val));const ch=/[A-ZÑÁÉÍÓÚ]/.test(k)?(start||shift?k:k.toLowerCase()):k;val+=ch;shift=false;}
+  paint();sync();
+ });
+}
+/* En el quiosco todos los campos de texto usan el teclado en pantalla. */
+function wireKioskInputs(){
+ if(!KIOSK)return;
+ main.querySelectorAll('input[type="text"],input[type="search"],input[type="email"],textarea').forEach(i=>{
+  if(i.dataset.kbd)return;i.dataset.kbd='1';i.readOnly=true;i.inputMode='none';if(!i.placeholder)i.placeholder='Toca para escribir';
+  i.addEventListener('click',()=>openKeyboard(i));i.addEventListener('keydown',ev=>{if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();openKeyboard(i);}});
  });
 }
 /* El teclado sale por donde entró (abajo). No bloquea: deja de recibir toques desde el primer instante de la salida. */

@@ -23,7 +23,12 @@ async function run(width,height,query,tag){
   assert.equal(screen,'question');assert.equal(await page.locator('.view-menu').count(),0);
   const id=await page.locator('.q-tags .code').textContent();assert(!seen.has(id),'pregunta repetida '+id);seen.add(id);assert(formats[id]);
   if(id==='C01'){assert.equal(await page.locator('.ux-tile').count(),10);await page.locator('.ux-tile:has(input[value="A"])').click();}
-  else if(id==='C03'){
+  else if(id==='C03'&&query.includes('quiosco')){/* v14: el buscador usa el teclado en pantalla del quiosco */
+   const kb=async keys=>{await page.locator('#sector-search').click();await page.locator('#kbd [data-k="clear"]').click();for(const k of keys)await page.locator(`#kbd [data-k="${k}"]`).click();};
+   await kb('SALUD');assert.equal(await page.locator('#sector-search').inputValue(),'Salud');assert(await page.locator('[name=answer][value=A]').isVisible());
+   await page.locator('#kbd [data-k="ok"]').click();await page.locator('#kbd').waitFor({state:'detached'});await page.locator('.ux-choice:has([name=answer][value=A])').click();
+   await kb('ZZZ');assert(await page.locator('#sector-empty').isVisible());await page.locator('#kbd [data-k="clear"]').click();await page.locator('#kbd [data-k="ok"]').click();await page.locator('#kbd').waitFor({state:'detached'});await shot('sectores');
+  }else if(id==='C03'){
    await page.locator('#sector-search').fill('salud');await page.locator('[name=answer][value=A]').check();
    await page.locator('#sector-search').fill('zzz');assert(await page.locator('#sector-empty').isVisible());assert(await page.locator('[name=answer][value=A]').isVisible());
    await page.locator('#sector-search').fill('');await shot('sectores');
@@ -42,6 +47,7 @@ async function run(width,height,query,tag){
  await act('rol');
  await act('ruta');if(summit){/* v14: el radar vuelve al final del Summit */assert.equal(await page.locator('#radar-box .rd-svg').count(),1);assert.equal(await page.locator('.rd-lab').count(),5);assert.equal(await page.locator('.sm-seal li').count(),4);}
  await shot('ruta');await act('opinion');await act('rank:A');await act('rank:C');
+ if(query.includes('quiosco')){await page.locator('#fb-add').click();for(const k of ['M','E','N','T','O','R','Í','A'])await page.locator(`#kbd [data-k="${k}"]`).click();await page.locator('#kbd [data-k="ok"]').click();await page.locator('#kbd').waitFor({state:'detached'});assert.equal(await page.locator('#fb-add').inputValue(),'Mentoría');}
  await page.locator('[name=clarity][value="4"]').check();assert.equal(await page.locator('#clarity-value').textContent(),'4 de 5');
  await act('clear-clarity');assert.equal(await page.locator('[name=clarity]:checked').count(),0);
  await page.locator('[name=clarity][value="5"]').check();await shot('estrellas');await act('llevar');

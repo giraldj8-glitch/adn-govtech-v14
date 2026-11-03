@@ -133,3 +133,6 @@ html{touch-action:manipulation}
 html[data-motion="reduce"] .sm-kbd .kbd-in,html[data-motion="reduce"] .ux-tick,html[data-motion="reduce"] .sm-rank-n{animation:none}
 html[data-motion="reduce"] .v14-qrcard .qr{animation:v14-fade-in .2s ease-out}
 html[data-motion="reduce"] :is(.pill-btn,.ux-choice,.ux-tile,.v13-choice,.rd-lab,.sm-rank-b,.kbd-row button[data-k]):active{transform:none}
+/* Teclado del quiosco: fila de tildes y signos; campos que lo abren se ven tocables. */
+html.kiosk input[data-kbd]{cursor:pointer;caret-color:transparent}
+html.kiosk .ux-search{min-height:3.4rem;font-size:1.1rem}
