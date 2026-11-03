@@ -7,7 +7,7 @@ Una sola aplicación y un volumen. No hace falta crear una base de datos aparte 
 - **La base de datos:** guarda cada respuesta al llegar al resultado y la actualiza si la persona cambia su opinión o el nombre de la organización.
 - **`/admin`, protegido con usuario y clave:**
   - conteos por recorrido, por quiosco y por arquetipo;
-  - descarga en Excel con tres hojas: *Respuestas* (una fila por persona), *Detalle por pregunta* (letra original, arquetipo de la opción, puntaje y posición en pantalla) y *Contactos autorizados*;
+  - descarga en Excel con tres hojas: *Respuestas* (una fila por persona), *Detalle por pregunta* (letra original, arquetipo de la opción, puntaje y posición en pantalla) y *Empresas y contactos* (nombre, correo autorizado, página web, descripción, qué le interesaría a futuro y qué le agregaría a la experiencia);
   - descarga en JSON;
   - un formulario para borrar los datos de una persona, incluida su tarjeta.
 - **La dirección principal abre el Summit.** Para que abra el completo, usa la variable `RECORRIDO_INICIAL=completo`.
@@ -31,7 +31,8 @@ Una sola aplicación y un volumen. No hace falta crear una base de datos aparte 
 - **Pantalla vertical:** abre `https://TU-DOMINIO/quiosco` en Chrome a pantalla completa (modo quiosco).
 - **Al terminar**, en «Llévatelo» la persona escribe el nombre de su empresa (opcional) con el teclado de la pantalla y toca «Generar el QR de mi tarjeta».
   - La tarjeta se guarda en el servidor y aparece un QR que abre `TU-DOMINIO/t/<id>` en el celular: ahí descarga su tarjeta.
-  - Desde esa misma página puede abrir su resultado completo, descargar el informe PDF y dejar su correo, con autorización, para recibir invitaciones.
+  - En esa misma página, con el teclado de su celular, puede contarnos de su empresa. Todo es opcional: nombre, correo (con autorización), página web, descripción, qué le interesaría a futuro y qué le agregaría a la experiencia. Por eso, en el quiosco ya no se pide el texto abierto de la opinión.
+  - También puede abrir su resultado completo y descargar el informe PDF.
   - Si cambia el nombre, debe volver a generar el QR.
 - **QR para el stand**, para que cada persona lo haga en su celular: `https://TU-DOMINIO/summit`.
 - **El quiosco necesita internet** para guardar. Si se cae la red, la persona igual ve su resultado, pero esa respuesta no se guarda.

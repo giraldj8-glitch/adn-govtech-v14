@@ -463,7 +463,7 @@ async function makeCardQR(){
  const img=await cardDataURL(cardData());
  const ok=img&&await sendRemote('tarjeta',{id,organizacion:org,imagen:img,codigo:encodeResult(answers),recorrido:SHORT_ROUTE?'summit':'completo'});
  const link=SITE+(SHORT_ROUTE?'?recorrido=summit':'?recorrido=completo')+'#r='+encodeResult(answers)+'&s='+id;
- box.innerHTML=ok?`${qrSVG(location.origin+'/t/'+id,'Escanea con tu celular para descargar tu tarjeta')}`
+ box.innerHTML=ok?`${qrSVG(location.origin+'/t/'+id,'Escanea con tu celular: descargas tu tarjeta y, si quieres, nos cuentas de tu empresa')}`
   :`${qrSVG(link,'Escanea con tu celular para ver tu resultado y descargar tu tarjeta')}<p class="v14-qr-hint">No pudimos guardar la tarjeta; este QR abre tu resultado.</p>`;
 }
 /* v14 · 2-nov: sin descarga de Excel (las respuestas van a la base de datos). En el quiosco, el QR lleva el resultado al
@@ -479,14 +479,19 @@ function llevar(){
  <div class="sm-take">${KIOSK?(REMOTE&&id?`<div class="v14-qrcard" id="qr-card">${qrCardIdle()}</div>`:qrSVG(link,'Escanea con tu celular para descargar tu tarjeta y tu informe')):''}
  <div class="sm-take-b">${KIOSK?'':btn('Descargar tarjeta (imagen)','card','solid')}${KIOSK?'':btn('Descargar informe (PDF)','pdf')}${!KIOSK&&navigator.share?btn('Compartir','share'):''}</div>
  ${!KIOSK&&REMOTE&&id?`<form class="v14-contact" id="contact-form" novalidate><p class="eyebrow">Conexión con el ecosistema · opcional</p>
-  <label for="contact-mail">¿Quieres recibir invitaciones a eventos de Bogotá Capital GovTech y Campus 2600? Déjanos tu correo.</label>
+  <h2 class="v14-contact-t">Cuéntanos de tu empresa</h2><p class="v14-contact-s">Todo es opcional. El nombre lo tomamos del campo de arriba.</p>
+  <label for="contact-mail">Correo de contacto <span>· para invitarte a eventos de Bogotá Capital GovTech y Campus 2600</span></label>
   <div class="v14-contact-row"><input id="contact-mail" type="email" inputmode="email" autocomplete="email" maxlength="120" placeholder="nombre@empresa.com"></div>
-  <label class="v14-check"><input id="contact-ok" type="checkbox"> Autorizo el tratamiento de mi correo para recibir invitaciones y novedades del ecosistema, según la Ley 1581 de 2012. Puedo pedir que lo borren cuando quiera.</label>
-  <button class="pill-btn solid" type="submit">Quiero recibirlas</button>
+  <label for="contact-web">Página web</label><div class="v14-contact-row"><input id="contact-web" inputmode="url" autocomplete="url" maxlength="200" placeholder="www.tuempresa.com"></div>
+  <label for="contact-desc">Descripción de la empresa</label><textarea id="contact-desc" maxlength="600" placeholder="¿Qué hace tu empresa y a quién sirve?"></textarea>
+  <label for="contact-int">¿Qué le interesaría a futuro?</label><textarea id="contact-int" maxlength="600" placeholder="Temas, apoyos o conexiones que les gustaría encontrar"></textarea>
+  <label class="v14-check"><input id="contact-ok" type="checkbox"> Si dejo mi correo, autorizo su tratamiento para recibir invitaciones y novedades del ecosistema, según la Ley 1581 de 2012. Puedo pedir que lo borren cuando quiera.</label>
+  <button class="pill-btn solid" type="submit">Enviar</button>
   <p class="v14-contact-msg" id="contact-msg" role="status"></p></form>`:''}
  <details class="v14-data"><summary>Tratamiento de datos</summary>${REMOTE?`<ul>
   <li>Guardamos tus respuestas del ADN y tu opinión para analizar y mejorar el servicio. No pedimos tu nombre.</li>
-  <li>El nombre de tu empresa solo se guarda si lo escribes. Si generas el QR, tu tarjeta se guarda para que la descargues. Tu correo, solo si lo dejas y lo autorizas.</li>
+  <li>El nombre de tu empresa solo se guarda si lo escribes. Si generas el QR, tu tarjeta se guarda para que la descargues.</li>
+  <li>Lo que nos cuentes de tu empresa (página web, descripción, intereses) se guarda con tus respuestas. Tu correo, solo si lo dejas y lo autorizas.</li>
   <li>Los datos los consulta únicamente el equipo de Bogotá Capital GovTech y no se usan para calificar ni contratar.</li>
   <li>Puedes pedir consultar, corregir o borrar tus datos al equipo de Bogotá Capital GovTech.</li></ul>`:`<p>Esta versión no envía tus respuestas: todo se genera en tu dispositivo.</p>`}</details>
  <p class="fine">${KIOSK?`${REMOTE?'Escanea el QR antes de terminar.':`El enlace solo lleva tus ${TOTAL} respuestas del ADN.`} Al terminar, esta pantalla se borra.`:'Tu tarjeta y tu informe se generan en tu dispositivo.'}${mins?` · Tu recorrido tomó ${mins===1?'1 minuto':`unos ${mins} minutos`}.`:''}</p></div></section>${stepper('llevar')}`;
@@ -510,8 +515,8 @@ function opinion(){
  <p class="lead">Toca primero el que más valor le ves: sube al puesto 1. Luego el siguiente, y así. Puedes elegir solo algunos; toca de nuevo para quitarlo.</p>
  <ol class="sm-rank" id="rank">${rankList()}</ol><div class="sm-rank-alt" id="rank-alt">${rankAlt()}</div>
  <fieldset class="ux-rating"><legend>¿Qué tan clara fue esta experiencia? <small>Opcional</small></legend><div class="ux-stars">${[1,2,3,4,5].map(n=>`<label><input type="radio" name="clarity" value="${n}" ${feedback.clarity===n?'checked':''}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 14.78 8.63 21 9.54 16.5 13.93 17.56 20.12 12 17.2 6.44 20.12 7.5 13.93 3 9.54 9.22 8.63Z"/></svg><span class="sr-only">${n} de 5: ${['nada clara','poco clara','medianamente clara','clara','muy clara'][n-1]}</span><span aria-hidden="true">${n}</span></label>`).join('')}</div><div class="ux-rating-labels"><span>1 · Nada clara</span><span>5 · Muy clara</span></div><p id="clarity-value" aria-live="polite">${feedback.clarity?feedback.clarity+' de 5':'Sin valoración'}</p><button type="button" class="link-btn" data-action="clear-clarity">Quitar valoración</button></fieldset>
- <div class="qfields sm-add"><label for="fb-add">¿Qué otro componente le agregarías? (opcional)</label><input id="fb-add" type="text" maxlength="200" autocomplete="off" value="${e(feedback.add)}"></div>
- <p class="fine">Puedes saltar este paso. ${REMOTE?'Tu opinión se guarda con tus respuestas, sin tu nombre, y aparece en tu informe.':`Tu opinión se queda en ${KIOSK?'esta sesión':'este navegador'} y aparece en tu informe; no se envía.`}</p></section>${stepper('opinion')}`;
+ ${KIOSK&&REMOTE?'':`<div class="qfields sm-add"><label for="fb-add">¿Qué otro componente le agregarías? (opcional)</label><input id="fb-add" type="text" maxlength="200" autocomplete="off" value="${e(feedback.add)}"></div>`}
+ <p class="fine">Puedes saltar este paso.${KIOSK&&REMOTE?' Lo que le agregarías a la experiencia nos lo cuentas en tu celular, al escanear el QR de tu tarjeta.':''} ${REMOTE?'Tu opinión se guarda con tus respuestas, sin tu nombre, y aparece en tu informe.':`Tu opinión se queda en ${KIOSK?'esta sesión':'este navegador'} y aparece en tu informe; no se envía.`}</p></section>${stepper('opinion')}`;
 }
 function syncC08(){if(feedback.rank.length)answers.C08={values:[feedback.rank[0]]};else if(feedback.unsure)answers.C08={values:['F']};else delete answers.C08;answers=clean(answers);save();}
 function refreshOpinion(focus){const r=document.querySelector('#rank'),a=document.querySelector('#rank-alt');
@@ -649,11 +654,13 @@ function bind(next){
   let t=0;const on=document.querySelector('#org-name');
   on?.addEventListener('input',ev=>{org=ev.target.value.trim().slice(0,40);save();clearTimeout(t);t=setTimeout(paint,350);const q=document.querySelector('#qr-card');if(q)q.innerHTML=qrCardIdle();});
   document.querySelector('#contact-form')?.addEventListener('submit',async ev=>{ev.preventDefault();
-   const mail=document.querySelector('#contact-mail').value.trim(),ok=document.querySelector('#contact-ok').checked,msg=document.querySelector('#contact-msg');
-   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail)){msg.textContent='Revisa tu correo.';return;}
-   if(!ok){msg.textContent='Para guardarlo necesitamos tu autorización.';return;}
-   msg.textContent='Enviando…';const sent=await sendRemote('contacto',{id:shared?sharedId:rid,email:mail,organizacion:org,autoriza:true,recorrido:SHORT_ROUTE?'summit':'completo'});
-   msg.textContent=sent?'¡Listo! Te escribiremos con las próximas invitaciones.':'No pudimos guardarlo. Intenta de nuevo en un momento.';if(sent)ev.target.querySelector('button').disabled=true;});
+   const v=k=>document.querySelector('#contact-'+k).value.trim(),mail=v('mail'),ok=document.querySelector('#contact-ok').checked,msg=document.querySelector('#contact-msg');
+   const data={organizacion:org,email:mail,web:v('web'),descripcion:v('desc'),interes:v('int')};
+   if(!data.email&&!data.web&&!data.descripcion&&!data.interes){msg.textContent='Escribe al menos un dato.';return;}
+   if(mail&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail)){msg.textContent='Revisa tu correo.';return;}
+   if(mail&&!ok){msg.textContent='Para guardar tu correo necesitamos tu autorización.';return;}
+   msg.textContent='Enviando…';const sent=await sendRemote('contacto',{id:shared?sharedId:rid,...data,autoriza:!!(mail&&ok),recorrido:SHORT_ROUTE?'summit':'completo'});
+   msg.textContent=sent?'¡Gracias! Guardamos los datos de tu empresa.':'No pudimos guardarlo. Intenta de nuevo en un momento.';});
  }
  if(next==='opinion'){
   document.querySelector('#fb-add')?.addEventListener('input',ev=>{feedback.add=ev.target.value.slice(0,200);save();});

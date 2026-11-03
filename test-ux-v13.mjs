@@ -47,7 +47,9 @@ async function run(width,height,query,tag){
  await act('rol');
  await act('ruta');if(summit){/* v14: el radar vuelve al final del Summit */assert.equal(await page.locator('#radar-box .rd-svg').count(),1);assert.equal(await page.locator('.rd-lab').count(),5);assert.equal(await page.locator('.sm-seal li').count(),4);}
  await shot('ruta');await act('opinion');await act('rank:A');await act('rank:C');
- if(query.includes('quiosco')){await page.locator('#fb-add').click();for(const k of ['M','E','N','T','O','R','Í','A'])await page.locator(`#kbd [data-k="${k}"]`).click();await page.locator('#kbd [data-k="ok"]').click();await page.locator('#kbd').waitFor({state:'detached'});assert.equal(await page.locator('#fb-add').inputValue(),'Mentoría');}
+ /* 3-nov: con servidor, el texto abierto del quiosco pasa al celular (página del QR). */
+ if(query.includes('quiosco')&&base.startsWith('http'))assert.equal(await page.locator('#fb-add').count(),0);
+ else if(query.includes('quiosco')){await page.locator('#fb-add').click();for(const k of ['M','E','N','T','O','R','Í','A'])await page.locator(`#kbd [data-k="${k}"]`).click();await page.locator('#kbd [data-k="ok"]').click();await page.locator('#kbd').waitFor({state:'detached'});assert.equal(await page.locator('#fb-add').inputValue(),'Mentoría');}
  await page.locator('[name=clarity][value="4"]').check();assert.equal(await page.locator('#clarity-value').textContent(),'4 de 5');
  await act('clear-clarity');assert.equal(await page.locator('[name=clarity]:checked').count(),0);
  await page.locator('[name=clarity][value="5"]').check();await shot('estrellas');await act('llevar');
@@ -57,7 +59,21 @@ async function run(width,height,query,tag){
   const rid=await page.evaluate(()=>Object.values(sessionStorage).map(v=>{try{return JSON.parse(v).rid}catch{}}).find(Boolean));
   const pg=await page.request.get(base+'t/'+rid);assert.equal(pg.status(),200);assert((await pg.text()).includes('Acme'),'nombre en la página de la tarjeta');
   const im=await page.request.get(base+'t/'+rid+'/tarjeta.png?descargar=1');assert.equal(im.headers()['content-type'],'image/png');assert((im.headers()['content-disposition']||'').includes('ADN_GovTech_Acme.png'));
-  console.log('kiosk tarjeta',Math.round((await im.body()).length/1024)+' KB');await page.screenshot({path:`qa-ux/${tag}-qr-tarjeta.png`,fullPage:true});}
+  console.log('kiosk tarjeta',Math.round((await im.body()).length/1024)+' KB');
+  /* 3-nov: en el celular, la página del QR pide los datos de la empresa (todos opcionales; el correo exige autorización). */
+  const ph=await browser.newPage({viewport:{width:390,height:844}});ph.on('pageerror',e=>errors.push('t: '+e.message));await ph.goto(base+'t/'+rid);
+  assert.equal(await ph.locator('#f-org').inputValue(),'Acme');await ph.fill('#f-mail','prueba@ejemplo.com');await ph.fill('#f-desc','Software para trámites');
+  await ph.locator('button[type=submit]').click();assert((await ph.locator('.err').textContent()).includes('autorización'));
+  await ph.fill('#f-web','www.acme.test');await ph.fill('#f-int','Conectar con entidades');await ph.fill('#f-add','Mentoría');await ph.check('[name=autoriza]');
+  await Promise.all([ph.waitForURL(/gracias=1/),ph.locator('button[type=submit]').click()]);assert.equal(await ph.locator('.ok').count(),1);
+  await ph.screenshot({path:`qa-ux/${tag}-celular-gracias.png`,fullPage:true});await ph.close();
+  const empty=await page.request.post(base+'t/'+rid,{form:{organizacion:'',email:''},maxRedirects:0});assert((empty.headers().location||'').includes('error=vacio'));
+  if(process.env.ADMIN_PASSWORD){const x=await page.request.get(base+'admin/respuestas.json',{headers:{Authorization:'Basic '+Buffer.from('equipo:'+process.env.ADMIN_PASSWORD).toString('base64')}});
+   const row=(await x.json()).find(r=>r.id===rid);assert.equal(row.email,'prueba@ejemplo.com');assert.equal(row.empresa_descripcion,'Software para trámites');assert.equal(row.agregaria,'Mentoría');assert.equal(row.interes_futuro,'Conectar con entidades');assert.equal(row.empresa_web,'www.acme.test');}await page.screenshot({path:`qa-ux/${tag}-qr-tarjeta.png`,fullPage:true});}
+ if(!query.includes('quiosco')&&base.startsWith('http')){/* 3-nov: el formulario del final pide los mismos datos opcionales de la empresa */
+  await page.fill('#contact-desc','Consultoría en datos');await page.fill('#contact-mail','web@ejemplo.com');await page.locator('#contact-form button[type=submit]').click();
+  assert((await page.locator('#contact-msg').textContent()).includes('autorización'));await page.check('#contact-ok');await page.locator('#contact-form button[type=submit]').click();
+  await page.waitForFunction(()=>document.querySelector('#contact-msg').textContent.includes('Gracias'));}
  if(!query.includes('quiosco')){assert.equal(await page.locator('#contact-form').count(),base.startsWith('file:')?0:1);const r=await page.locator('#card-img').evaluate(i=>i.getBoundingClientRect());assert(Math.abs(r.width/r.height-2/3)<.02,'tarjeta 2:3');}
  await act('rol');await act('review');await page.locator('details').filter({has:page.locator('[data-action="edit:P9"]')}).locator('summary').click();await act('edit:P9');
  await page.locator('[name=answer][value="__na"]').check();await page.locator('#q-submit').click();assert.equal(await page.getAttribute('body','data-screen'),'review');
