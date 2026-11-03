@@ -7,7 +7,7 @@ import http from 'node:http';
 import { readFileSync, mkdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { timingSafeEqual, createHash } from 'node:crypto';
+import { timingSafeEqual, createHash, randomUUID } from 'node:crypto';
 import { DatabaseSync } from 'node:sqlite';
 import { xlsxBlob } from '../src/xlsx.js';
 
@@ -110,7 +110,7 @@ function workbook() {
   for (const r of all) for (const d of r.datos?.detalle || []) detalle.push([r.id, bogota(r.creado), r.recorrido, r.modo, d.id, d.fase, d.dimension, d.pregunta, d.respuesta, d.letras, d.arquetipo, d.puntaje ?? '', d.posicion ?? '']);
   const contactos = [['ID respuesta', 'Organización', 'Correo (autorizado)', 'Autorizó (Bogotá)', 'Página web', 'Descripción de la empresa', 'Le interesaría a futuro', 'Le agregaría a la experiencia', 'Datos enviados (Bogotá)', 'Recorrido', 'Modo', 'Arquetipo'],
     ...all.filter(r => r.perfil_fecha || (r.autoriza && r.email)).map(r => [r.id, r.organizacion_contacto || r.organizacion || '', r.autoriza ? r.email || '' : '', bogota(r.autoriza_fecha),
-      r.empresa_web || '', r.empresa_descripcion || '', r.interes_futuro || '', r.agregaria || '', bogota(r.perfil_fecha), r.recorrido || '', r.modo || '', r.arquetipo || ''])];
+      r.empresa_web || '', r.empresa_descripcion || '', r.interes_futuro || '', r.agregaria || '', bogota(r.perfil_fecha), r.recorrido === 'datos-stand' ? 'QR de datos (sin recorrido)' : r.recorrido || '', r.modo || '', r.arquetipo || ''])];
   return xlsxBlob([
     { name: 'Respuestas', rows: respuestas, widths: [...base.map(() => 16), ...keys.map(() => 22)] },
     { name: 'Detalle por pregunta', rows: detalle, widths: [16, 16, 10, 9, 8, 8, 24, 60, 60, 10, 26, 10, 10] },
@@ -119,7 +119,7 @@ function workbook() {
 }
 function adminPage() {
   const c = db.prepare(`SELECT COUNT(*) n, SUM(datos IS NOT NULL) completos, SUM(recorrido='summit') summit, SUM(recorrido='completo') completo,
-    SUM(modo='quiosco') quiosco, SUM(autoriza=1) contactos, SUM(perfil_fecha IS NOT NULL) perfiles, MAX(actualizado) ultimo FROM respuestas`).get();
+    SUM(modo='quiosco') quiosco, SUM(autoriza=1) contactos, SUM(perfil_fecha IS NOT NULL) perfiles, SUM(recorrido='datos-stand') stand, MAX(actualizado) ultimo FROM respuestas`).get();
   const tarjetas = db.prepare('SELECT COUNT(*) n FROM tarjetas').get().n;
   const arch = db.prepare(`SELECT arquetipo, COUNT(*) n FROM respuestas WHERE datos IS NOT NULL GROUP BY arquetipo ORDER BY n DESC`).all();
   return `<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ADN GovTech · datos</title>
@@ -129,7 +129,7 @@ input{font:inherit;padding:10px;border:1px solid #cfc4ee;border-radius:8px;min-w
 <h1>ADN GovTech · respuestas guardadas</h1>
 <table><tr><th>Registros</th><td>${c.n || 0}</td></tr><tr><th>Con respuestas completas</th><td>${c.completos || 0}</td></tr>
 <tr><th>Summit / Completo</th><td>${c.summit || 0} / ${c.completo || 0}</td></tr><tr><th>Desde el quiosco</th><td>${c.quiosco || 0}</td></tr>
-<tr><th>Correos autorizados</th><td>${c.contactos || 0}</td></tr><tr><th>Empresas que dejaron sus datos</th><td>${c.perfiles || 0}</td></tr><tr><th>Tarjetas generadas con QR</th><td>${tarjetas}</td></tr><tr><th>Última actualización</th><td>${bogota(c.ultimo)}</td></tr></table>
+<tr><th>Correos autorizados</th><td>${c.contactos || 0}</td></tr><tr><th>Empresas que dejaron sus datos</th><td>${c.perfiles || 0}</td></tr><tr><th>…de ellas, con el QR de datos del stand (sin recorrido)</th><td>${c.stand || 0}</td></tr><tr><th>Tarjetas generadas con QR</th><td>${tarjetas}</td></tr><tr><th>Última actualización</th><td>${bogota(c.ultimo)}</td></tr></table>
 <table><tr><th>Arquetipo</th><th>Respuestas</th></tr>${arch.map(a => `<tr><td>${(a.arquetipo || 'Sin arquetipo').replace(/[<&]/g, '')}</td><td>${a.n}</td></tr>`).join('')}</table>
 <p><a class="b" href="/admin/respuestas.xlsx">Descargar Excel</a><a class="b" href="/admin/respuestas.json">Descargar JSON</a></p>
 <h2>Borrar datos de una persona</h2><form method="post" action="/admin/borrar"><input name="q" placeholder="Correo o ID de respuesta" required> <button>Borrar</button></form>
@@ -140,16 +140,15 @@ input{font:inherit;padding:10px;border:1px solid #cfc4ee;border-radius:8px;min-w
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const fileName = org => 'ADN_GovTech_' + ((org || 'tarjeta').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^A-Za-z0-9]+/g, '_').replace(/^_|_$/g, '').slice(0, 40) || 'tarjeta');
 const ERRORES = { vacio: 'Escribe al menos un dato.', correo: 'Revisa tu correo.', autoriza: 'Para guardar tu correo necesitamos tu autorización (casilla de abajo).' };
-function cardPage(c, estado = '') {
-  const result = c.codigo ? `/?recorrido=${c.recorrido === 'completo' ? 'completo' : 'summit'}#r=${encodeURIComponent(c.codigo)}&s=${encodeURIComponent(c.id)}` : '';
-  return `<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">
-<title>Mi tarjeta ADN GovTech</title><style>
+/* Páginas para el celular (QR de la tarjeta y QR de datos del stand): mismo estilo y mismo formulario de empresa. */
+const page = (title, body) => `<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">
+<title>${title}</title><style>
 body{margin:0;font-family:system-ui,-apple-system,sans-serif;background:linear-gradient(160deg,#160b4f,#3b1f96 55%,#8a2ba8);color:#fff;min-height:100svh}
 main{max-width:440px;margin:0 auto;padding:24px 16px 40px;text-align:center}.k{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#ffc6e1;margin:8px 0}
 h1{font-size:28px;line-height:1.1;margin:0 0 16px}img{width:100%;height:auto;aspect-ratio:2/3;border-radius:18px;box-shadow:0 20px 50px rgba(0,0,0,.35);background:#2a1690}
 a.b{display:block;margin:18px 0 8px;padding:16px;border-radius:999px;background:#fff;color:#211744;font-weight:700;text-decoration:none;font-size:17px}
 a.g{display:block;padding:14px;border-radius:999px;border:1.5px solid rgba(255,255,255,.6);color:#fff;text-decoration:none;font-weight:600}
-p{font-size:14px;line-height:1.45;color:#eadcff}small{display:block;margin-top:22px;font-size:12px;color:#d9ccf5}
+p{font-size:14px;line-height:1.45;color:#eadcff}p.lead{font-size:16px}small{display:block;margin-top:22px;font-size:12px;color:#d9ccf5}
 form{margin:28px 0 0;padding:20px 16px;border-radius:20px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);text-align:left}
 form h2{font-size:20px;margin:0 0 4px}form>p{margin:0 0 14px}label{display:block;font-size:14px;font-weight:600;margin:14px 0 6px}label i{font-weight:400;font-style:normal;color:#d9ccf5}
 input,textarea{box-sizing:border-box;width:100%;font:inherit;font-size:16px;padding:12px 14px;border:1.5px solid rgba(255,255,255,.35);border-radius:12px;background:#fff;color:#211744}
@@ -157,27 +156,42 @@ textarea{min-height:88px;resize:vertical}label.ck{display:flex;gap:10px;align-it
 button{display:block;width:100%;margin:18px 0 0;padding:16px;border:0;border-radius:999px;background:#fff;color:#211744;font:inherit;font-weight:700;font-size:17px}
 button:active,a.b:active,a.g:active{transform:scale(.97)}.err{background:#ffe1ec;color:#7a0b3b;padding:10px 12px;border-radius:10px;font-weight:600}
 .ok{margin:28px 0 0;padding:18px 16px;border-radius:20px;background:rgba(255,255,255,.14);font-size:16px;color:#fff}</style></head><body><main>
-<p class="k">Bogotá Capital GovTech · Sello B-GovTech</p><h1>Tu tarjeta ADN GovTech${c.organizacion ? `<br><span style="color:#cdb0fb">${esc(c.organizacion)}</span>` : ''}</h1>
-<img src="/t/${esc(c.id)}/tarjeta.${c.tipo === 'image/jpeg' ? 'jpg' : 'png'}" alt="Tarjeta ADN GovTech" width="540" height="810">
-<a class="b" href="/t/${esc(c.id)}/tarjeta.${c.tipo === 'image/jpeg' ? 'jpg' : 'png'}?descargar=1" download="${fileName(c.organizacion)}.${c.tipo === 'image/jpeg' ? 'jpg' : 'png'}">Descargar mi tarjeta</a>
-<p>Si no se descarga, mantén presionada la imagen y elige «Guardar imagen».</p>
-${result ? `<a class="g" href="${esc(result)}">Ver mi resultado y descargar el informe (PDF)</a>` : ''}
-${estado === 'ok' ? '<p class="ok" role="status">¡Gracias! Guardamos los datos de tu empresa.</p>' : `<form method="post" action="/t/${esc(c.id)}">
-<h2>Cuéntanos de tu empresa</h2><p>Todo es opcional. Es más fácil escribirlo aquí, en tu celular.</p>
+<p class="k">Bogotá Capital GovTech · Sello B-GovTech</p>${body}</main></body></html>`;
+/* withAdd: «¿Qué le agregarían a esta experiencia?» solo para quien hizo el recorrido. */
+function dataForm({ action, org = '', estado = '', title, intro, withAdd }) {
+  if (estado === 'ok') return '<p class="ok" role="status">¡Gracias! Guardamos los datos de tu empresa.</p>';
+  return `<form method="post" action="${esc(action)}">
+<h2>${title}</h2><p>${intro}</p>
 ${ERRORES[estado] ? `<p class="err" role="alert">${ERRORES[estado]}</p>` : ''}
-<label for="f-org">Nombre de la empresa</label><input id="f-org" name="organizacion" maxlength="80" autocomplete="organization" value="${esc(c.organizacion)}">
+<label for="f-org">Nombre de la empresa</label><input id="f-org" name="organizacion" maxlength="80" autocomplete="organization" value="${esc(org)}">
 <label for="f-mail">Correo de contacto <i>· para invitarte a eventos del ecosistema</i></label><input id="f-mail" name="email" type="email" inputmode="email" autocomplete="email" maxlength="120" placeholder="nombre@empresa.com">
 <label for="f-web">Página web</label><input id="f-web" name="web" inputmode="url" autocomplete="url" maxlength="200" placeholder="www.tuempresa.com">
 <label for="f-desc">Descripción de la empresa</label><textarea id="f-desc" name="descripcion" maxlength="600" placeholder="¿Qué hace tu empresa y a quién sirve?"></textarea>
 <label for="f-int">¿Qué le interesaría a futuro?</label><textarea id="f-int" name="interes" maxlength="600" placeholder="Temas, apoyos o conexiones que les gustaría encontrar"></textarea>
-<label for="f-add">¿Qué le agregarían a esta experiencia?</label><textarea id="f-add" name="agregaria" maxlength="600"></textarea>
+${withAdd ? '<label for="f-add">¿Qué le agregarían a esta experiencia?</label><textarea id="f-add" name="agregaria" maxlength="600"></textarea>' : ''}
 <label class="ck"><input type="checkbox" name="autoriza" value="1"> Si dejo mi correo, autorizo su tratamiento para recibir invitaciones y novedades de Bogotá Capital GovTech, según la Ley 1581 de 2012. Puedo pedir que lo borren cuando quiera.</label>
 <button type="submit">Enviar</button></form>
 <script>document.querySelector('form').addEventListener('submit',function(ev){var f=ev.target,m=f.email.value.trim(),e=f.querySelector('.err');
 if(!e){e=document.createElement('p');e.className='err';e.setAttribute('role','alert');f.querySelector('h2').nextElementSibling.after(e);}
 var msg=![].some.call(f.querySelectorAll('input:not([type=checkbox]),textarea'),function(i){return i.value.trim();})?'${ERRORES.vacio}':m&&!f.autoriza.checked?'${ERRORES.autoriza}':'';
-if(msg){ev.preventDefault();e.textContent=msg;e.scrollIntoView({block:'center'});}else{f.querySelector('button').disabled=true;f.querySelector('button').textContent='Enviando…';}});</script>`}
-<small>ADN autodeclarado. No es un sello ni una certificación.</small></main></body></html>`;
+if(msg){ev.preventDefault();e.textContent=msg;e.scrollIntoView({block:'center'});}else{f.querySelector('button').disabled=true;f.querySelector('button').textContent='Enviando…';}});</script>`;
+}
+function cardPage(c, estado = '') {
+  const result = c.codigo ? `/?recorrido=${c.recorrido === 'completo' ? 'completo' : 'summit'}#r=${encodeURIComponent(c.codigo)}&s=${encodeURIComponent(c.id)}` : '';
+  const ext = c.tipo === 'image/jpeg' ? 'jpg' : 'png';
+  return page('Mi tarjeta ADN GovTech', `<h1>Tu tarjeta ADN GovTech${c.organizacion ? `<br><span style="color:#cdb0fb">${esc(c.organizacion)}</span>` : ''}</h1>
+<img src="/t/${esc(c.id)}/tarjeta.${ext}" alt="Tarjeta ADN GovTech" width="540" height="810">
+<a class="b" href="/t/${esc(c.id)}/tarjeta.${ext}?descargar=1" download="${fileName(c.organizacion)}.${ext}">Descargar mi tarjeta</a>
+<p>Si no se descarga, mantén presionada la imagen y elige «Guardar imagen».</p>
+${result ? `<a class="g" href="${esc(result)}">Ver mi resultado y descargar el informe (PDF)</a>` : ''}
+${dataForm({ action: '/t/' + c.id, org: c.organizacion, estado, title: 'Cuéntanos de tu empresa', intro: 'Todo es opcional. Es más fácil escribirlo aquí, en tu celular.', withAdd: true })}
+<small>ADN autodeclarado. No es un sello ni una certificación.</small>`);
+}
+/* 3-nov · QR de datos del stand (quiosco): para quien pasa y no alcanza a hacer el recorrido. Solo capta datos. */
+function datosPage(estado = '') {
+  return page('Déjanos tus datos · Bogotá Capital GovTech', `<h1>Conozcamos tu empresa</h1>
+<p class="lead">¿No alcanzaste a hacer el ADN GovTech en el stand? Déjanos tus datos y te compartimos información del Sello B-GovTech y de los próximos encuentros del ecosistema.</p>
+${dataForm({ action: '/datos', estado, title: 'Datos de tu empresa', intro: 'Todo es opcional. Para que te escribamos, deja tu correo y marca la autorización.' })}`);
 }
 
 const server = http.createServer(async (req, res) => {
@@ -193,6 +207,18 @@ const server = http.createServer(async (req, res) => {
       const codigo = /^[A-Dx-]{1,40}(?:\.[0-3])?$/.test(b.codigo || '') ? b.codigo : '', t = now();
       upsertCard.run(b.id, t, t, str(b.organizacion, 80), str(b.recorrido, 20), codigo, png ? 'image/png' : 'image/jpeg', img);
       return send(res, 200, { ok: true, url: '/t/' + b.id });
+    }
+    /* QR de datos del stand: cada envío es un registro nuevo (recorrido «datos-stand»). */
+    if (path === '/datos' || path === '/datos/') {
+      if (req.method === 'POST') {
+        const origin = req.headers.origin; if (origin && origin !== 'null' && new URL(origin).host !== req.headers.host) return send(res, 403, 'Origen no válido', 'text/plain; charset=utf-8');
+        if (limited(ip)) return send(res, 429, 'Intenta de nuevo en un minuto', 'text/plain; charset=utf-8');
+        let raw = ''; for await (const ch of req) { raw += ch; if (raw.length > 8000) return send(res, 413, 'Texto muy largo', 'text/plain; charset=utf-8'); }
+        const f = Object.fromEntries(new URLSearchParams(raw)); f.autoriza = f.autoriza === '1'; delete f.agregaria;
+        const err = saveContact(randomUUID(), f, 'datos-stand');
+        return send(res, 303, '', 'text/plain', { Location: `/datos?${err ? 'error=' + err : 'gracias=1'}` });
+      }
+      if (req.method === 'GET' || req.method === 'HEAD') return send(res, 200, datosPage(url.searchParams.has('gracias') ? 'ok' : str(url.searchParams.get('error'), 20)), 'text/html; charset=utf-8', { 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex' });
     }
     const card = /^\/t\/([A-Za-z0-9-]{8,64})(?:\/tarjeta\.(png|jpg))?\/?$/.exec(path);
     if (card && !card[2] && req.method === 'POST') {

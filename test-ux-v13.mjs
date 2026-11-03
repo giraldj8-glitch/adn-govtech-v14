@@ -69,13 +69,21 @@ async function run(width,height,query,tag){
   await ph.screenshot({path:`qa-ux/${tag}-celular-gracias.png`,fullPage:true});await ph.close();
   const empty=await page.request.post(base+'t/'+rid,{form:{organizacion:'',email:''},maxRedirects:0});assert((empty.headers().location||'').includes('error=vacio'));
   if(process.env.ADMIN_PASSWORD){const x=await page.request.get(base+'admin/respuestas.json',{headers:{Authorization:'Basic '+Buffer.from('equipo:'+process.env.ADMIN_PASSWORD).toString('base64')}});
-   const row=(await x.json()).find(r=>r.id===rid);assert.equal(row.email,'prueba@ejemplo.com');assert.equal(row.empresa_descripcion,'Software para trámites');assert.equal(row.agregaria,'Mentoría');assert.equal(row.interes_futuro,'Conectar con entidades');assert.equal(row.empresa_web,'www.acme.test');}await page.screenshot({path:`qa-ux/${tag}-qr-tarjeta.png`,fullPage:true});}
+   const all=await x.json(),row=all.find(r=>r.id===rid);assert.equal(row.email,'prueba@ejemplo.com');assert.equal(row.empresa_descripcion,'Software para trámites');assert.equal(row.agregaria,'Mentoría');assert.equal(row.interes_futuro,'Conectar con entidades');assert.equal(row.empresa_web,'www.acme.test');globalThis.adminRows=all;}
+  /* 3-nov: QR de datos del stand. Flota en el quiosco salvo en «Llévatelo»; /datos solo capta datos (sin «qué agregarían»). */
+  assert(await page.locator('#info-qr').isHidden(),'sin QR flotante en Llévatelo');
+  const dp=await browser.newPage({viewport:{width:390,height:844}});dp.on('pageerror',e=>errors.push('datos: '+e.message));await dp.goto(base+'datos');assert.equal(await dp.locator('#f-add').count(),0);
+  await dp.locator('button[type=submit]').click();assert((await dp.locator('.err').textContent()).includes('al menos'));
+  await dp.fill('#f-org','Stand SAS');await dp.fill('#f-mail','stand@ejemplo.com');await dp.fill('#f-desc','Pasó por el stand');await dp.check('[name=autoriza]');
+  await Promise.all([dp.waitForURL(/gracias=1/),dp.locator('button[type=submit]').click()]);assert.equal(await dp.locator('.ok').count(),1);await dp.screenshot({path:`qa-ux/${tag}-datos-stand.png`,fullPage:true});await dp.close();
+  if(process.env.ADMIN_PASSWORD){const x=await page.request.get(base+'admin/respuestas.json',{headers:{Authorization:'Basic '+Buffer.from('equipo:'+process.env.ADMIN_PASSWORD).toString('base64')}});
+   const st=(await x.json()).find(r=>r.email==='stand@ejemplo.com'&&r.empresa_descripcion==='Pasó por el stand');assert.equal(st?.recorrido,'datos-stand');assert.equal(st.organizacion_contacto,'Stand SAS');}await page.screenshot({path:`qa-ux/${tag}-qr-tarjeta.png`,fullPage:true});}
  if(!query.includes('quiosco')&&base.startsWith('http')){/* 3-nov: el formulario del final pide los mismos datos opcionales de la empresa */
   await page.fill('#contact-desc','Consultoría en datos');await page.fill('#contact-mail','web@ejemplo.com');await page.locator('#contact-form button[type=submit]').click();
   assert((await page.locator('#contact-msg').textContent()).includes('autorización'));await page.check('#contact-ok');await page.locator('#contact-form button[type=submit]').click();
   await page.waitForFunction(()=>document.querySelector('#contact-msg').textContent.includes('Gracias'));}
  if(!query.includes('quiosco')){assert.equal(await page.locator('#contact-form').count(),base.startsWith('file:')?0:1);const r=await page.locator('#card-img').evaluate(i=>i.getBoundingClientRect());assert(Math.abs(r.width/r.height-2/3)<.02,'tarjeta 2:3');}
- await act('rol');await act('review');await page.locator('details').filter({has:page.locator('[data-action="edit:P9"]')}).locator('summary').click();await act('edit:P9');
+ await act('rol');if(query.includes('quiosco')&&base.startsWith('http'))assert(await page.locator('.v14-info-chip').isVisible(),'QR de datos flotante durante el recorrido');await act('review');await page.locator('details').filter({has:page.locator('[data-action="edit:P9"]')}).locator('summary').click();await act('edit:P9');
  await page.locator('[name=answer][value="__na"]').check();await page.locator('#q-submit').click();assert.equal(await page.getAttribute('body','data-screen'),'review');
  console.log(tag+' PASS '+seen.size+' preguntas, formatos, exportación, estrellas y edición');await ctx.close();
 }

@@ -34,6 +34,10 @@ Una sola aplicación y un volumen. No hace falta crear una base de datos aparte 
   - En esa misma página, con el teclado de su celular, puede contarnos de su empresa. Todo es opcional: nombre, correo (con autorización), página web, descripción, qué le interesaría a futuro y qué le agregaría a la experiencia. Por eso, en el quiosco ya no se pide el texto abierto de la opinión.
   - También puede abrir su resultado completo y descargar el informe PDF.
   - Si cambia el nombre, debe volver a generar el QR.
+- **QR de datos, para quien no alcanza a hacer el recorrido:**
+  - en el quiosco, una tarjeta flotante con un QR («¿Sin tiempo?») está a la vista desde el inicio y durante todo el formulario. Al tocarla se amplía;
+  - el QR abre `https://TU-DOMINIO/datos` en el celular. Esa página solo capta los datos de la empresa: nombre, correo con autorización, página web, descripción y qué le interesaría a futuro;
+  - en el Excel, esos registros aparecen en *Empresas y contactos* con el recorrido «QR de datos (sin recorrido)».
 - **QR para el stand**, para que cada persona lo haga en su celular: `https://TU-DOMINIO/summit`.
 - **El quiosco necesita internet** para guardar. Si se cae la red, la persona igual ve su resultado, pero esa respuesta no se guarda.
 

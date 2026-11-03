@@ -123,7 +123,7 @@ function attract(){
  <div class="sa-arch" aria-hidden="true"><div class="sa-3d" data-helix></div></div>
  <p class="sa-lede">${SHORT_ROUTE?'Descubre el ADN GovTech de tu empresa: tu rol, tus capacidades y qué fortalecer.':'Descubre tu ADN: lo que te mueve, cómo lo haces y con qué cuentas.'}</p>
  <button class="pill-btn solid sa-cta" type="button" data-action="welcome">Toca para empezar</button>
- ${qrSVG(SITE?(SITE+(SHORT_ROUTE?'?recorrido=summit':'?recorrido=completo')):'','¿Prefieres tu celular? Escanea y hazlo allí')}</section>`;
+ ${KIOSK&&REMOTE?'<div class="sa-qrs">':''}${qrSVG(SITE?(SITE+(SHORT_ROUTE?'?recorrido=summit':'?recorrido=completo')):'','¿Prefieres tu celular? Escanea y hazlo allí')}${KIOSK&&REMOTE?qrSVG(location.origin+'/datos','¿Sin tiempo? Escanea y déjanos los datos de tu empresa')+'</div>':''}</section>`;
 }
 /* v14 · 2-nov (solo Summit): pantalla inicial con el contexto del Word «Pantalla inicial del Sello» y la fórmula de la
    «Ficha de Valor y Narrativa», muy resumidos. No cambia preguntas, selección ni reglas. Lo que aún no existe
@@ -611,6 +611,7 @@ function swap(next,arg,push){
  const ph=phaseOf(next,arg),cs=COLORS[ph]||COLORS.perfil;
  const dark=['chapter','attract','rol','revelar'].includes(next);
  document.body.dataset.theme=dark?'stage':'light';document.body.dataset.screen=next;document.body.dataset.layout=layout;
+ infoQRClose();const iq=document.querySelector('#info-qr');if(iq)iq.hidden=next==='llevar'||next==='attract';
  document.body.style.setProperty('--g1',cs[0]);document.body.style.setProperty('--g2',cs[1]);
  document.querySelector('meta[name="theme-color"]').content=dark?cs[0]:'#ffffff';
  main.innerHTML=render(next,arg);
@@ -863,6 +864,28 @@ function remotePayload(){
 }
 const excelName=()=>`ADN_GovTech_${(org||'respuestas').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^A-Za-z0-9]+/g,'_').replace(/^_|_$/g,'').slice(0,40)||'respuestas'}_${new Date().toISOString().slice(0,10)}.xlsx`;
 
+/* ---------- Quiosco: QR de datos siempre a la vista ---------- */
+/* En la pantalla de atracción va junto al QR «hazlo en tu celular» (dentro de la pantalla), no flotante. */
+/* 3-nov: hay quien pasa por el stand y no alcanza a hacer el recorrido. Desde el inicio y durante todo el formulario,
+   una tarjeta flotante con un QR abre /datos en el celular: solo capta los datos de la empresa. Se oculta al final
+   («Llévatelo»), donde ya está el QR de la tarjeta que lleva a ese mismo formulario. Tocarla amplía el QR. */
+function infoQR(){
+ if(!KIOSK||!REMOTE)return;
+ const url=location.origin+'/datos',label='Escanea para dejarnos los datos de tu empresa';
+ const el=document.createElement('aside');el.id='info-qr';el.className='v14-info';el.setAttribute('aria-label','QR de datos de tu empresa');
+ el.innerHTML=`<button type="button" class="v14-info-chip" aria-haspopup="dialog" aria-controls="info-qr-big">${qrSVG(url,label).replace(/<figcaption>.*<\/figcaption>/,'')}<span><b>¿Sin tiempo?</b>Escanea y déjanos los datos de tu empresa</span></button>
+ <div class="v14-info-big" id="info-qr-big" role="dialog" aria-modal="true" aria-labelledby="info-qr-t" hidden><div class="v14-info-sheet">
+ <p class="eyebrow">Bogotá Capital GovTech</p><h2 id="info-qr-t">¿No alcanzas a hacer el recorrido?</h2>
+ <p>Escanea con tu celular y déjanos los datos de tu empresa. Te compartimos información del Sello B-GovTech y de los próximos encuentros.</p>
+ ${qrSVG(url,'Nombre, correo, página web y a qué se dedica tu empresa. Todo es opcional.')}
+ <button type="button" class="pill-btn solid big" data-info="close">Cerrar</button></div></div>`;
+ document.body.appendChild(el);
+ const big=el.querySelector('.v14-info-big'),chip=el.querySelector('.v14-info-chip');
+ chip.addEventListener('click',()=>{big.hidden=false;el.classList.add('open');big.querySelector('[data-info=close]').focus();});
+ big.addEventListener('click',ev=>{if(ev.target===big||ev.target.closest('[data-info=close]'))infoQRClose(true);});
+}
+function infoQRClose(focus){const el=document.querySelector('#info-qr');if(!el||!el.classList.contains('open'))return;el.classList.remove('open');el.querySelector('.v14-info-big').hidden=true;if(focus)el.querySelector('.v14-info-chip').focus();}
+
 /* ---------- Quiosco: inactividad y reinicio ---------- */
 let idleT=0,idleW=0;
 function idleReset(){
@@ -907,4 +930,5 @@ if(KIOSK&&!decoded&&!isDemo){wipe();}
 history.replaceState({next:first,arg:''},'',location.hash||'#'+first);
 const example=LAB&&byId[params.get('ejemplo')]?params.get('ejemplo'):'';
 if(example){isDemo=true;answers=example==='C05'?{C04:{values:['B']}}:{};first=example==='C08'?'opinion':'question';}
+infoQR();
 show(first,example,false,{instant:true,noEnter:true}).then(()=>loader(()=>{animateIn(first);idleReset();}));
