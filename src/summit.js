@@ -478,13 +478,15 @@ function llevar(){
  <div class="qfields sm-org"><label for="org-name">Nombre de tu empresa (opcional)</label><input id="org-name" type="text" maxlength="40" autocomplete="organization" placeholder="${KIOSK?'Toca para escribir':'Si prefieres no darlo, déjalo vacío'}" value="${e(org)}" ${KIOSK?'readonly inputmode="none"':''}><small>Aparece en tu tarjeta${KIOSK?'':' y tu informe'}.</small></div>
  <div class="sm-take">${KIOSK?(REMOTE&&id?`<div class="v14-qrcard" id="qr-card">${qrCardIdle()}</div>`:qrSVG(link,'Escanea con tu celular para descargar tu tarjeta y tu informe')):''}
  <div class="sm-take-b">${KIOSK?'':btn('Descargar tarjeta (imagen)','card','solid')}${KIOSK?'':btn('Descargar informe (PDF)','pdf')}${!KIOSK&&navigator.share?btn('Compartir','share'):''}</div>
+ ${!KIOSK&&REMOTE&&id&&!shared?`<div class="v14-qrweb"><p><b>¿Lo hiciste en una tableta o computador del stand?</b> Genera un QR y descarga tu tarjeta y tu informe en tu celular.</p><div class="v14-qrcard" id="qr-card">${qrCardIdle()}</div></div>`:''}
  ${!KIOSK&&REMOTE&&id?`<form class="v14-contact" id="contact-form" novalidate><p class="eyebrow">Conexión con el ecosistema · opcional</p>
-  <h2 class="v14-contact-t">Cuéntanos de tu empresa</h2><p class="v14-contact-s">Todo es opcional. El nombre lo tomamos del campo de arriba.</p>
+  <h2 class="v14-contact-t">Cuéntanos de tu empresa</h2><p class="v14-contact-s">Todo es opcional. El nombre de tu empresa es el que escribiste arriba.</p>
   <label for="contact-mail">Correo de contacto <span>· para invitarte a eventos de Bogotá Capital GovTech y Campus 2600</span></label>
   <div class="v14-contact-row"><input id="contact-mail" type="email" inputmode="email" autocomplete="email" maxlength="120" placeholder="nombre@empresa.com"></div>
   <label for="contact-web">Página web</label><div class="v14-contact-row"><input id="contact-web" inputmode="url" autocomplete="url" maxlength="200" placeholder="www.tuempresa.com"></div>
   <label for="contact-desc">Descripción de la empresa</label><textarea id="contact-desc" maxlength="600" placeholder="¿Qué hace tu empresa y a quién sirve?"></textarea>
   <label for="contact-int">¿Qué le interesaría a futuro?</label><textarea id="contact-int" maxlength="600" placeholder="Temas, apoyos o conexiones que les gustaría encontrar"></textarea>
+  <label for="contact-add">¿Qué le agregarían a esta experiencia?</label><textarea id="contact-add" maxlength="600"></textarea>
   <label class="v14-check"><input id="contact-ok" type="checkbox"> Si dejo mi correo, autorizo su tratamiento para recibir invitaciones y novedades del ecosistema, según la Ley 1581 de 2012. Puedo pedir que lo borren cuando quiera.</label>
   <button class="pill-btn solid" type="submit">Enviar</button>
   <p class="v14-contact-msg" id="contact-msg" role="status"></p></form>`:''}
@@ -515,8 +517,8 @@ function opinion(){
  <p class="lead">Toca primero el que más valor le ves: sube al puesto 1. Luego el siguiente, y así. Puedes elegir solo algunos; toca de nuevo para quitarlo.</p>
  <ol class="sm-rank" id="rank">${rankList()}</ol><div class="sm-rank-alt" id="rank-alt">${rankAlt()}</div>
  <fieldset class="ux-rating"><legend>¿Qué tan clara fue esta experiencia? <small>Opcional</small></legend><div class="ux-stars">${[1,2,3,4,5].map(n=>`<label><input type="radio" name="clarity" value="${n}" ${feedback.clarity===n?'checked':''}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 14.78 8.63 21 9.54 16.5 13.93 17.56 20.12 12 17.2 6.44 20.12 7.5 13.93 3 9.54 9.22 8.63Z"/></svg><span class="sr-only">${n} de 5: ${['nada clara','poco clara','medianamente clara','clara','muy clara'][n-1]}</span><span aria-hidden="true">${n}</span></label>`).join('')}</div><div class="ux-rating-labels"><span>1 · Nada clara</span><span>5 · Muy clara</span></div><p id="clarity-value" aria-live="polite">${feedback.clarity?feedback.clarity+' de 5':'Sin valoración'}</p><button type="button" class="link-btn" data-action="clear-clarity">Quitar valoración</button></fieldset>
- ${KIOSK&&REMOTE?'':`<div class="qfields sm-add"><label for="fb-add">¿Qué otro componente le agregarías? (opcional)</label><input id="fb-add" type="text" maxlength="200" autocomplete="off" value="${e(feedback.add)}"></div>`}
- <p class="fine">Puedes saltar este paso.${KIOSK&&REMOTE?' Lo que le agregarías a la experiencia nos lo cuentas en tu celular, al escanear el QR de tu tarjeta.':''} ${REMOTE?'Tu opinión se guarda con tus respuestas, sin tu nombre, y aparece en tu informe.':`Tu opinión se queda en ${KIOSK?'esta sesión':'este navegador'} y aparece en tu informe; no se envía.`}</p></section>${stepper('opinion')}`;
+ ${REMOTE?'':`<div class="qfields sm-add"><label for="fb-add">¿Qué otro componente le agregarías? (opcional)</label><input id="fb-add" type="text" maxlength="200" autocomplete="off" value="${e(feedback.add)}"></div>`}
+ <p class="fine">Puedes saltar este paso.${REMOTE?(KIOSK?' Lo que le agregarías a la experiencia nos lo cuentas en tu celular, al escanear el QR de tu tarjeta.':' Lo que le agregarías a la experiencia nos lo cuentas al final, con los datos de tu empresa.'):''} ${REMOTE?'Tu opinión se guarda con tus respuestas, sin tu nombre, y aparece en tu informe.':`Tu opinión se queda en ${KIOSK?'esta sesión':'este navegador'} y aparece en tu informe; no se envía.`}</p></section>${stepper('opinion')}`;
 }
 function syncC08(){if(feedback.rank.length)answers.C08={values:[feedback.rank[0]]};else if(feedback.unsure)answers.C08={values:['F']};else delete answers.C08;answers=clean(answers);save();}
 function refreshOpinion(focus){const r=document.querySelector('#rank'),a=document.querySelector('#rank-alt');
@@ -656,8 +658,8 @@ function bind(next){
   on?.addEventListener('input',ev=>{org=ev.target.value.trim().slice(0,40);save();clearTimeout(t);t=setTimeout(paint,350);const q=document.querySelector('#qr-card');if(q)q.innerHTML=qrCardIdle();});
   document.querySelector('#contact-form')?.addEventListener('submit',async ev=>{ev.preventDefault();
    const v=k=>document.querySelector('#contact-'+k).value.trim(),mail=v('mail'),ok=document.querySelector('#contact-ok').checked,msg=document.querySelector('#contact-msg');
-   const data={organizacion:org,email:mail,web:v('web'),descripcion:v('desc'),interes:v('int')};
-   if(!data.email&&!data.web&&!data.descripcion&&!data.interes){msg.textContent='Escribe al menos un dato.';return;}
+   const data={organizacion:org,email:mail,web:v('web'),descripcion:v('desc'),interes:v('int'),agregaria:v('add')};
+   if(!data.email&&!data.web&&!data.descripcion&&!data.interes&&!data.agregaria){msg.textContent='Escribe al menos un dato.';return;}
    if(mail&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail)){msg.textContent='Revisa tu correo.';return;}
    if(mail&&!ok){msg.textContent='Para guardar tu correo necesitamos tu autorización.';return;}
    msg.textContent='Enviando…';const sent=await sendRemote('contacto',{id:shared?sharedId:rid,...data,autoriza:!!(mail&&ok),recorrido:SHORT_ROUTE?'summit':'completo'});

@@ -176,3 +176,6 @@ html[data-motion="reduce"] .v14-info-sheet{animation:none}
 .v14-info-tab svg{width:2.2rem;height:2.2rem;fill:currentColor}
 .v14-info.min .v14-info-chip,.v14-info.min .v14-info-hide{display:none}
 .v14-info.min .v14-info-tab{display:flex}
+.v14-qrweb{margin:1.2rem auto 0;max-width:34rem;padding:1rem 1.2rem;border-radius:1rem;border:1px dashed #cfc4ee;text-align:center}
+.v14-qrweb>p{margin:0 0 .8rem;font-size:.92rem;line-height:1.4;color:#4a4070}
+.v14-qrweb .qr{justify-content:center;color:var(--purple-deep)}.v14-qrweb .qr-code{width:10rem;border:1px solid var(--line)}
