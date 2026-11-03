@@ -611,7 +611,7 @@ function swap(next,arg,push){
  const ph=phaseOf(next,arg),cs=COLORS[ph]||COLORS.perfil;
  const dark=['chapter','attract','rol','revelar'].includes(next);
  document.body.dataset.theme=dark?'stage':'light';document.body.dataset.screen=next;document.body.dataset.layout=layout;
- infoQRClose();const iq=document.querySelector('#info-qr');if(iq)iq.hidden=next==='llevar'||next==='attract';
+ infoQRClose();const iq=document.querySelector('#info-qr');if(iq){iq.hidden=next==='llevar'||next==='attract';if(next==='attract'){infoPos.side='left';infoPos.top=null;iq.classList.remove('min');}requestAnimationFrame(()=>placeInfoQR(false));}
  document.body.style.setProperty('--g1',cs[0]);document.body.style.setProperty('--g2',cs[1]);
  document.querySelector('meta[name="theme-color"]').content=dark?cs[0]:'#ffffff';
  main.innerHTML=render(next,arg);
@@ -874,6 +874,8 @@ function infoQR(){
  const url=location.origin+'/datos',label='Escanea para dejarnos los datos de tu empresa';
  const el=document.createElement('aside');el.id='info-qr';el.className='v14-info';el.setAttribute('aria-label','QR de datos de tu empresa');
  el.innerHTML=`<button type="button" class="v14-info-chip" aria-haspopup="dialog" aria-controls="info-qr-big">${qrSVG(url,label).replace(/<figcaption>.*<\/figcaption>/,'')}<span><b>¿Sin tiempo?</b>Escanea y déjanos los datos de tu empresa</span></button>
+ <button type="button" class="v14-info-hide" aria-label="Ocultar el QR de datos">×</button>
+ <button type="button" class="v14-info-tab" aria-label="Mostrar el QR de datos"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM5 5v3h3V5zM16 5v3h3V5zM5 16v3h3v-3zM14 14h3v3h-3zM18 18h3v3h-3zM14 19h3v2h-3zM19 14h2v3h-2z"/></svg><span>Datos</span></button>
  <div class="v14-info-big" id="info-qr-big" role="dialog" aria-modal="true" aria-labelledby="info-qr-t" hidden><div class="v14-info-sheet">
  <p class="eyebrow">Bogotá Capital GovTech</p><h2 id="info-qr-t">¿No alcanzas a hacer el recorrido?</h2>
  <p>Escanea con tu celular y déjanos los datos de tu empresa. Te compartimos información del Sello B-GovTech y de los próximos encuentros.</p>
@@ -881,8 +883,37 @@ function infoQR(){
  <button type="button" class="pill-btn solid big" data-info="close">Cerrar</button></div></div>`;
  document.body.appendChild(el);
  const big=el.querySelector('.v14-info-big'),chip=el.querySelector('.v14-info-chip');
- chip.addEventListener('click',()=>{big.hidden=false;el.classList.add('open');big.querySelector('[data-info=close]').focus();});
+ chip.addEventListener('click',()=>{if(dragged)return;big.hidden=false;el.classList.add('open');big.querySelector('[data-info=close]').focus();});
  big.addEventListener('click',ev=>{if(ev.target===big||ev.target.closest('[data-info=close]'))infoQRClose(true);});
+ el.querySelector('.v14-info-hide').addEventListener('click',()=>{el.classList.add('min');placeInfoQR(true);el.querySelector('.v14-info-tab').focus();});
+ el.querySelector('.v14-info-tab').addEventListener('click',()=>{if(dragged)return;el.classList.remove('min');placeInfoQR(true);});
+ /* Se puede arrastrar: sigue al dedo 1:1 desde donde se tomó y, al soltar, se proyecta con la velocidad del gesto y
+    se acomoda al borde más cercano (izquierda o derecha). Un toque sin arrastrar (menos de 10 px) sigue siendo un toque. */
+ let start=null,dragged=false,hist=[];
+ el.addEventListener('pointerdown',ev=>{if(ev.target.closest('.v14-info-big,.v14-info-hide'))return;
+  const r=el.getBoundingClientRect();start={x:ev.clientX,y:ev.clientY,l:r.left,t:r.top,id:ev.pointerId};dragged=false;hist=[{x:ev.clientX,y:ev.clientY,t:ev.timeStamp}];gsap.killTweensOf(el);});
+ el.addEventListener('pointermove',ev=>{if(!start||ev.pointerId!==start.id)return;const dx=ev.clientX-start.x,dy=ev.clientY-start.y;
+  if(!dragged&&Math.hypot(dx,dy)<10)return;
+  if(!dragged){dragged=true;el.classList.add('drag');try{el.setPointerCapture(ev.pointerId);}catch{}}
+  hist.push({x:ev.clientX,y:ev.clientY,t:ev.timeStamp});if(hist.length>6)hist.shift();
+  el.style.left=start.l+dx+'px';el.style.top=start.t+dy+'px';el.style.bottom='auto';el.style.right='auto';});
+ const end=ev=>{if(!start||ev.pointerId!==start.id)return;start=null;el.classList.remove('drag');if(!dragged)return;
+  const a=hist[0],b=hist[hist.length-1],dt=Math.max(1,b.t-a.t),vx=(b.x-a.x)/dt*1000,vy=(b.y-a.y)/dt*1000;
+  const proj=v=>v/1000*.998/(1-.998),r=el.getBoundingClientRect();
+  infoPos.side=r.left+r.width/2+proj(vx)<innerWidth/2?'left':'right';infoPos.top=r.top+proj(vy);placeInfoQR(true);
+  setTimeout(()=>{dragged=false;},0);};
+ el.addEventListener('pointerup',end);el.addEventListener('pointercancel',end);
+ addEventListener('resize',()=>placeInfoQR(false));
+}
+/* Posición elegida por quien está en el quiosco; al reiniciar (pantalla de atracción) vuelve a la de siempre. */
+const infoPos={side:'left',top:null};
+function placeInfoQR(animate){
+ const el=document.querySelector('#info-qr');if(!el||el.hidden)return;
+ const w=el.offsetWidth,h=el.offsetHeight,m=el.classList.contains('min')?0:24,bar=document.querySelector('.sm-bar')?.offsetHeight||0;
+ const maxTop=innerHeight-bar-h-16,minTop=Math.min(maxTop,(document.querySelector('#top')?.offsetHeight||0)+16);
+ const top=Math.max(minTop,Math.min(maxTop,infoPos.top??maxTop)),left=infoPos.side==='left'?m:innerWidth-w-m;
+ el.dataset.side=infoPos.side;el.style.bottom='auto';el.style.right='auto';gsap.killTweensOf(el);
+ if(animate&&motionOK())gsap.to(el,{left,top,duration:.5,ease:'expo.out'});else gsap.set(el,{left,top});
 }
 function infoQRClose(focus){const el=document.querySelector('#info-qr');if(!el||!el.classList.contains('open'))return;el.classList.remove('open');el.querySelector('.v14-info-big').hidden=true;if(focus)el.querySelector('.v14-info-chip').focus();}
 

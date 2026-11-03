@@ -165,3 +165,14 @@ html.kiosk .ux-search{min-height:3.4rem;font-size:1.1rem}
 html[data-motion="reduce"] .v14-info-sheet{animation:none}
 @media (prefers-reduced-transparency:reduce){.v14-info-chip{background:#fff;backdrop-filter:none}.v14-info-big{background:rgba(20,10,60,.85);backdrop-filter:none}}
 .sa-qrs{display:flex;flex-wrap:wrap;justify-content:center;gap:1.4rem 2.6rem}
+/* Ocultar (×) → pestaña en el borde; arrastrar para moverla */
+.v14-info{width:max-content;touch-action:none;user-select:none;-webkit-user-select:none}
+.v14-info.drag .v14-info-chip{transform:scale(1.03);box-shadow:0 22px 60px rgba(33,23,68,.32);transition:transform .15s ease-out,box-shadow .15s ease-out}
+.v14-info-hide{position:absolute;top:-.9rem;right:-.9rem;width:3rem;height:3rem;border-radius:50%;border:1px solid #e3dbfb;background:#fff;color:#3b1f96;font:700 1.6rem/1 system-ui,sans-serif;box-shadow:0 6px 18px rgba(33,23,68,.2);cursor:pointer;touch-action:manipulation}
+.v14-info-hide:active,.v14-info-tab:active{transform:scale(.94)}
+.v14-info[data-side="right"] .v14-info-hide{right:auto;left:-.9rem}
+.v14-info-tab{display:none;flex-direction:column;align-items:center;gap:.3rem;padding:.9rem .7rem;border:0;background:#3b1f96;color:#fff;font:700 .95rem/1 inherit;box-shadow:0 10px 28px rgba(33,23,68,.3);cursor:pointer;touch-action:manipulation;border-radius:0 18px 18px 0}
+.v14-info[data-side="right"] .v14-info-tab{border-radius:18px 0 0 18px}
+.v14-info-tab svg{width:2.2rem;height:2.2rem;fill:currentColor}
+.v14-info.min .v14-info-chip,.v14-info.min .v14-info-hide{display:none}
+.v14-info.min .v14-info-tab{display:flex}

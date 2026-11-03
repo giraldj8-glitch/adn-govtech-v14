@@ -83,7 +83,8 @@ async function run(width,height,query,tag){
   assert((await page.locator('#contact-msg').textContent()).includes('autorización'));await page.check('#contact-ok');await page.locator('#contact-form button[type=submit]').click();
   await page.waitForFunction(()=>document.querySelector('#contact-msg').textContent.includes('Gracias'));}
  if(!query.includes('quiosco')){assert.equal(await page.locator('#contact-form').count(),base.startsWith('file:')?0:1);const r=await page.locator('#card-img').evaluate(i=>i.getBoundingClientRect());assert(Math.abs(r.width/r.height-2/3)<.02,'tarjeta 2:3');}
- await act('rol');if(query.includes('quiosco')&&base.startsWith('http'))assert(await page.locator('.v14-info-chip').isVisible(),'QR de datos flotante durante el recorrido');await act('review');await page.locator('details').filter({has:page.locator('[data-action="edit:P9"]')}).locator('summary').click();await act('edit:P9');
+ await act('rol');if(query.includes('quiosco')&&base.startsWith('http')){assert(await page.locator('.v14-info-chip').isVisible(),'QR de datos flotante durante el recorrido');
+  await page.locator('.v14-info-hide').click();assert(await page.locator('.v14-info-tab').isVisible(),'se oculta en una pestaña');await page.locator('.v14-info-tab').click();assert(await page.locator('.v14-info-chip').isVisible(),'vuelve a mostrarse');}await act('review');await page.locator('details').filter({has:page.locator('[data-action="edit:P9"]')}).locator('summary').click();await act('edit:P9');
  await page.locator('[name=answer][value="__na"]').check();await page.locator('#q-submit').click();assert.equal(await page.getAttribute('body','data-screen'),'review');
  console.log(tag+' PASS '+seen.size+' preguntas, formatos, exportación, estrellas y edición');await ctx.close();
 }
