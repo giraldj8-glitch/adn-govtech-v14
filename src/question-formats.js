@@ -1,6 +1,6 @@
 // Los formatos describen la presentación; nunca cambian valores ni puntajes.
 export const formats = {
- C01:{type:'select',why:'Diez categorías conocidas: selector nativo, sin diez tarjetas largas.'},
+ C01:{type:'tiles',why:'v14 (2-nov): botones táctiles a la vista en vez de lista desplegable; «Otra» y «No estoy seguro» aparte. Mismas opciones.'},
  C02:{type:'checklist',why:'Aportes que pueden coexistir. Hasta dos, con la prioridad visible.'},
  C03:{type:'chips',why:'Sectores reconocibles: etiquetas y búsqueda opcional. La primera selección sigue siendo la principal.'},
  C04:{type:'checklist',why:'Experiencias acumulables: casillas, sin convertirlas en una escalera de madurez.'},
@@ -29,4 +29,4 @@ export const formats = {
  P15:{type:'comparison',titles:['Respaldo y caja','Pagos por hitos','Alianza o consorcio','Orientación contractual'],why:'Comparar estrategias financieras. No se infiere solvencia demostrada.'},
  P16:{type:'scenario',titles:['Documentación contractual','Apropiación y necesidad','Resultados técnicos','Resultados y aprendizajes'],why:'Caso de cambio de dirección: conservar las estrategias de continuidad.'}
 };
-export const formatNames={select:'Selector',checklist:'Lista de selección múltiple',chips:'Etiquetas con búsqueda',outcome:'Escala de resultado con etiquetas',ranges:'Rangos de tamaño',territories:'Dos grupos de selección',ranking:'Priorización por toques',scenario:'Caso y acciones',priority:'Tarjetas de elección',comparison:'Tabla comparativa',list:'Lista de elección única'};
+export const formatNames={select:'Selector',tiles:'Botones táctiles',checklist:'Lista de selección múltiple',chips:'Etiquetas con búsqueda',outcome:'Escala de resultado con etiquetas',ranges:'Rangos de tamaño',territories:'Dos grupos de selección',ranking:'Priorización por toques',scenario:'Caso y acciones',priority:'Tarjetas de elección',comparison:'Tabla comparativa',list:'Lista de elección única'};

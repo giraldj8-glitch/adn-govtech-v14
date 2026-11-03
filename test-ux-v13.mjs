@@ -22,7 +22,7 @@ async function run(width,height,query,tag){
   if(screen==='chapter'){await page.locator('[data-action^="phase:"]').last().click();continue;}
   assert.equal(screen,'question');assert.equal(await page.locator('.view-menu').count(),0);
   const id=await page.locator('.q-tags .code').textContent();assert(!seen.has(id),'pregunta repetida '+id);seen.add(id);assert(formats[id]);
-  if(id==='C01')await page.locator('#org-type').selectOption('A');
+  if(id==='C01'){assert.equal(await page.locator('.ux-tile').count(),10);await page.locator('.ux-tile:has(input[value="A"])').click();}
   else if(id==='C03'){
    await page.locator('#sector-search').fill('salud');await page.locator('[name=answer][value=A]').check();
    await page.locator('#sector-search').fill('zzz');assert(await page.locator('#sector-empty').isVisible());assert(await page.locator('[name=answer][value=A]').isVisible());

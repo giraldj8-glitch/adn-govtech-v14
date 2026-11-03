@@ -77,3 +77,23 @@ html.kiosk .sm-llevar .qr figcaption{font-size:1.25rem;max-width:16ch}
 html.kiosk .v14-qrcard .pill-btn.big{font-size:1.2rem;min-height:4rem;padding:1rem 2.2rem}
 html.kiosk .sm-llevar .sm-org{max-width:34rem;margin:0 auto 1rem}
 html.kiosk .sm-llevar .sm-org input{font-size:1.2rem;min-height:3.6rem;cursor:pointer}
+/* 2-nov · C01 tipo de organización: botones táctiles a la vista (antes lista desplegable). */
+.ux-tiles{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.ux-tile{position:relative;align-items:center;justify-content:center;text-align:center;min-height:76px;padding:14px 34px 14px 16px;border-radius:16px;font-weight:600;font-size:16px;line-height:1.3;transition:transform .12s,background .2s,border-color .2s}
+.ux-tile:active{transform:scale(.98)}
+.ux-tile input{position:absolute!important;opacity:0!important;width:1px!important;height:1px!important;margin:0!important}
+.ux-tile .ux-tick{position:absolute;top:8px;right:8px;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;background:#fff;border:2px solid #d2c4e5;color:transparent}
+.ux-tile .ux-tick svg{width:13px;height:13px}
+.ux-tile:has(input:checked) .ux-tick{background:#6b3cba;border-color:#6b3cba;color:#fff}
+.ux-tile:has(input:focus-visible){outline:3px solid #b390e8;outline-offset:3px}
+.ux-tiles-extra{margin-top:12px}
+.ux-tiles-extra .ux-tile{min-height:56px;font-weight:500;background:#faf8fd;border-style:dashed}
+html.kiosk .ux-tiles{gap:14px}html.kiosk .ux-tile{min-height:100px;font-size:1.05rem}html.kiosk .ux-tiles-extra .ux-tile{min-height:70px}
+@media(min-width:1000px){html:not(.kiosk) .ux-tiles:not(.ux-tiles-extra){grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:600px){
+ .ux-tiles{gap:8px}
+ .ux-tile{min-height:64px;padding:12px 14px;font-size:15px;line-height:1.25;border-radius:14px}
+ .ux-tile .ux-tick{top:5px;right:5px;width:18px;height:18px;border-width:1.5px}
+ .ux-tile .ux-tick svg{width:11px;height:11px}
+ .ux-tile:not(:has(input:checked)) .ux-tick{opacity:.55}
+}
