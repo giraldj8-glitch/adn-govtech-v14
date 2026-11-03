@@ -516,8 +516,8 @@ function opinion(){
 function syncC08(){if(feedback.rank.length)answers.C08={values:[feedback.rank[0]]};else if(feedback.unsure)answers.C08={values:['F']};else delete answers.C08;answers=clean(answers);save();}
 function refreshOpinion(focus){const r=document.querySelector('#rank'),a=document.querySelector('#rank-alt');
  if(r){const before=new Map([...r.querySelectorAll('[data-action]')].map(b=>[b.dataset.action,b.getBoundingClientRect().top]));r.innerHTML=rankList();
-  r.querySelectorAll('[data-action]').forEach(b=>{const y=before.get(b.dataset.action);if(y!=null&&motionOK()){const d=y-b.getBoundingClientRect().top;if(d)gsap.fromTo(b,{y:d},{y:0,duration:.35,ease:'power2.out',clearProps:'transform'});}});
-  if(focus)r.querySelector(`[data-action="${focus}"]`)?.focus({preventScroll:true});}
+  r.querySelectorAll('[data-action]').forEach(b=>{const y=before.get(b.dataset.action);if(y!=null&&motionOK()){const d=y-b.getBoundingClientRect().top;if(d){gsap.killTweensOf(b);gsap.fromTo(b,{y:d},{y:0,duration:.45,ease:'expo.out',clearProps:'transform'});}}});
+  if(focus){const f=r.querySelector(`[data-action="${focus}"]`);f?.classList.add('pop');f?.focus({preventScroll:true});}}
  if(a)a.innerHTML=rankAlt();}
 
 function render(next,arg){
@@ -713,12 +713,20 @@ function openKeyboard(inp){
  const paint=()=>{out.textContent=val||'Escribe aquí';out.classList.toggle('empty',!val);box.querySelector('[data-k="shift"]').classList.toggle('on',shift);};
  paint();
  box.addEventListener('click',ev=>{
+  if(ev.target===box){org=val.trim();save();inp.value=org;closeKbd(box);inp.dispatchEvent(new Event('input',{bubbles:true}));return;}
   const k=ev.target.closest('[data-k]')?.dataset.k;if(!k)return;
-  if(k==='ok'||k==='close'){org=val.trim();save();inp.value=org;box.remove();inp.dispatchEvent(new Event('input',{bubbles:true}));return;}
+  if(k==='ok'||k==='close'){org=val.trim();save();inp.value=org;closeKbd(box);inp.dispatchEvent(new Event('input',{bubbles:true}));return;}
   if(k==='del')val=val.slice(0,-1);else if(k==='clear')val='';else if(k==='shift')shift=!shift;
   else if(val.length<40){const start=!val||val.endsWith(' ');const ch=/[A-ZÑ]/.test(k)?(start||shift?k:k.toLowerCase()):k;val+=ch;shift=false;}
   paint();
  });
+}
+/* El teclado sale por donde entró (abajo). No bloquea: deja de recibir toques desde el primer instante de la salida. */
+function closeKbd(box){
+ box.style.pointerEvents='none';const sheet=box.querySelector('.kbd-in');
+ if(!motionOK()||!sheet?.animate){box.remove();return;}
+ const opt={duration:240,easing:'cubic-bezier(.32,.72,0,1)',fill:'forwards'};
+ box.animate([{opacity:1},{opacity:0}],opt);sheet.animate([{transform:getComputedStyle(sheet).transform==='none'?'translateY(0)':getComputedStyle(sheet).transform},{transform:'translateY(100%)'}],opt).finished.then(()=>box.remove(),()=>box.remove());
 }
 function ask(title,text,ok){
  const d=document.querySelector('#confirm-dialog');

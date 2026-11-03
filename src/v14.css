@@ -97,3 +97,39 @@ html.kiosk .ux-tiles{gap:14px}html.kiosk .ux-tile{min-height:100px;font-size:1.0
  .ux-tile .ux-tick svg{width:11px;height:11px}
  .ux-tile:not(:has(input:checked)) .ux-tick{opacity:.55}
 }
+
+/* ---------- Sensación táctil (skill apple-design, 2-nov) ----------
+   Respuesta al apoyar el dedo (no al soltar), salida por el mismo camino de entrada, confirmación breve de selección,
+   QR que se materializa, y equivalentes suaves para movimiento o transparencia reducidos. */
+html{touch-action:manipulation}
+.pill-btn,.ux-choice,.ux-tile,.v13-choice,.rd-lab,.sm-rank-b,.kbd-row button[data-k],.v14-data summary{transition-property:transform,background,border-color,box-shadow,color;transition-duration:.18s;transition-timing-function:cubic-bezier(.32,.72,0,1)}
+.pill-btn:active,.rd-lab:active{transform:scale(.97);transition-duration:.08s}
+.ux-choice:active,.ux-tile:active,.v13-choice:active,.sm-rank-b:active{transform:scale(.985);transition-duration:.08s}
+.kbd-row button[data-k]:active{transform:scale(.94);background:#e2d8fd;transition-duration:.06s}
+/* Selección: el check confirma con un pequeño crecimiento (sin rebote: no hubo un gesto con impulso). */
+@keyframes v14-tick{from{transform:scale(.55);opacity:.4}to{transform:scale(1);opacity:1}}
+.ux-tile:has(input:checked) .ux-tick,.sm-rank-b.on.pop .sm-rank-n{animation:v14-tick .22s cubic-bezier(.32,.72,0,1)}
+/* Teclado del quiosco: entra desde abajo, donde vive; el velo aparece con él. */
+@keyframes v14-sheet-in{from{transform:translateY(100%)}to{transform:translateY(0)}}
+@keyframes v14-fade-in{from{opacity:0}to{opacity:1}}
+.sm-kbd{animation:v14-fade-in .24s ease-out}
+.sm-kbd .kbd-in{animation:v14-sheet-in .34s cubic-bezier(.32,.72,0,1)}
+/* QR de la tarjeta: se materializa (escala + desenfoque), no solo aparece. */
+@keyframes v14-materialize{from{opacity:0;transform:scale(.94);filter:blur(6px)}to{opacity:1;transform:none;filter:none}}
+.v14-qrcard .qr{animation:v14-materialize .38s cubic-bezier(.32,.72,0,1)}
+/* Barra inferior: material translúcido con un borde de luz, en lugar de una línea dura. */
+.sm-bar{backdrop-filter:blur(16px) saturate(170%);-webkit-backdrop-filter:blur(16px) saturate(170%);box-shadow:0 -10px 30px rgba(33,23,68,.06)}
+@media (prefers-reduced-transparency: reduce){
+ .sm-bar{background:#fff;backdrop-filter:none;-webkit-backdrop-filter:none}
+ [data-theme="stage"] .sm-bar{background:#1e0f5c}
+ .sm-kbd{backdrop-filter:none;background:rgba(18,8,60,.8)}
+}
+/* Movimiento reducido (del sistema o con el botón «Reducir movimiento»): fundidos cortos, sin desplazamientos ni escalas. */
+@media (prefers-reduced-motion: reduce){
+ html:not([data-motion="full"]) .sm-kbd .kbd-in,html:not([data-motion="full"]) .ux-tick,html:not([data-motion="full"]) .sm-rank-n{animation:none}
+ html:not([data-motion="full"]) .v14-qrcard .qr{animation:v14-fade-in .2s ease-out}
+ html:not([data-motion="full"]) :is(.pill-btn,.ux-choice,.ux-tile,.v13-choice,.rd-lab,.sm-rank-b,.kbd-row button[data-k]):active{transform:none}
+}
+html[data-motion="reduce"] .sm-kbd .kbd-in,html[data-motion="reduce"] .ux-tick,html[data-motion="reduce"] .sm-rank-n{animation:none}
+html[data-motion="reduce"] .v14-qrcard .qr{animation:v14-fade-in .2s ease-out}
+html[data-motion="reduce"] :is(.pill-btn,.ux-choice,.ux-tile,.v13-choice,.rd-lab,.sm-rank-b,.kbd-row button[data-k]):active{transform:none}
