@@ -45,7 +45,13 @@ async function run(width,height,query,tag){
  await page.locator('[name=clarity][value="4"]').check();assert.equal(await page.locator('#clarity-value').textContent(),'4 de 5');
  await act('clear-clarity');assert.equal(await page.locator('[name=clarity]:checked').count(),0);
  await page.locator('[name=clarity][value="5"]').check();await shot('estrellas');await act('llevar');
- /* v14: sin descarga de Excel; las respuestas van a la base de datos. */assert.equal(await page.locator('[data-action="excel"]').count(),0);if(query.includes('quiosco'))assert(base.startsWith('file:')||await page.locator('.qr-code').count()===1,'QR del quiosco');
+ /* v14: sin descarga de Excel; las respuestas van a la base de datos. */assert.equal(await page.locator('[data-action="excel"]').count(),0);if(query.includes('quiosco')&&base.startsWith('http')){/* v14: nombre al final con el teclado del quiosco y QR de la tarjeta guardada en el servidor */
+  await page.locator('#org-name').click();for(const k of ['A','C','M','E'])await page.locator(`#kbd [data-k="${k}"]`).click();await page.locator('#kbd [data-k="ok"]').click();
+  assert.equal(await page.locator('#org-name').inputValue(),'Acme');await act('qr-card');await page.locator('#qr-card .qr-code').waitFor({timeout:30000});
+  const rid=await page.evaluate(()=>Object.values(sessionStorage).map(v=>{try{return JSON.parse(v).rid}catch{}}).find(Boolean));
+  const pg=await page.request.get(base+'t/'+rid);assert.equal(pg.status(),200);assert((await pg.text()).includes('Acme'),'nombre en la página de la tarjeta');
+  const im=await page.request.get(base+'t/'+rid+'/tarjeta.png?descargar=1');assert.equal(im.headers()['content-type'],'image/png');assert((im.headers()['content-disposition']||'').includes('ADN_GovTech_Acme.png'));
+  console.log('kiosk tarjeta',Math.round((await im.body()).length/1024)+' KB');await page.screenshot({path:`qa-ux/${tag}-qr-tarjeta.png`,fullPage:true});}
  if(!query.includes('quiosco')){assert.equal(await page.locator('#contact-form').count(),base.startsWith('file:')?0:1);const r=await page.locator('#card-img').evaluate(i=>i.getBoundingClientRect());assert(Math.abs(r.width/r.height-2/3)<.02,'tarjeta 2:3');}
  await act('rol');await act('review');await page.locator('details').filter({has:page.locator('[data-action="edit:P9"]')}).locator('summary').click();await act('edit:P9');
  await page.locator('[name=answer][value="__na"]').check();await page.locator('#q-submit').click();assert.equal(await page.getAttribute('body','data-screen'),'review');

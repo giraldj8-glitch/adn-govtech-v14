@@ -9,7 +9,7 @@ Una sola aplicación y un volumen. No hace falta crear una base de datos aparte 
   - conteos por recorrido, por quiosco y por arquetipo;
   - descarga en Excel con tres hojas: *Respuestas* (una fila por persona), *Detalle por pregunta* (letra original, arquetipo de la opción, puntaje y posición en pantalla) y *Contactos autorizados*;
   - descarga en JSON;
-  - un formulario para borrar los datos de una persona.
+  - un formulario para borrar los datos de una persona, incluida su tarjeta.
 - **La dirección principal abre el Summit.** Para que abra el completo, usa la variable `RECORRIDO_INICIAL=completo`.
 - **Accesos cortos:**
   - `/summit` (celular)
@@ -29,7 +29,10 @@ Una sola aplicación y un volumen. No hace falta crear una base de datos aparte 
 
 ## En el evento
 - **Pantalla vertical:** abre `https://TU-DOMINIO/quiosco` en Chrome a pantalla completa (modo quiosco).
-- **Al terminar**, la pantalla muestra un QR. La persona lo escanea y en su celular descarga la tarjeta y el informe PDF. Desde ahí también puede dejar su correo, con autorización, para recibir invitaciones.
+- **Al terminar**, en «Llévatelo» la persona escribe el nombre de su empresa (opcional) con el teclado de la pantalla y toca «Generar el QR de mi tarjeta».
+  - La tarjeta se guarda en el servidor y aparece un QR que abre `TU-DOMINIO/t/<id>` en el celular: ahí descarga su tarjeta.
+  - Desde esa misma página puede abrir su resultado completo, descargar el informe PDF y dejar su correo, con autorización, para recibir invitaciones.
+  - Si cambia el nombre, debe volver a generar el QR.
 - **QR para el stand**, para que cada persona lo haga en su celular: `https://TU-DOMINIO/summit`.
 - **El quiosco necesita internet** para guardar. Si se cae la red, la persona igual ve su resultado, pero esa respuesta no se guarda.
 

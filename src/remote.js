@@ -9,6 +9,8 @@ export function newId() {
 }
 export function sendRemote(path, data) {
   if (!API) return Promise.resolve(false);
-  return fetch(new URL(path, API), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data), keepalive: true })
+  /* keepalive deja terminar el envío aunque el quiosco se reinicie, pero el navegador lo limita a 64 KB: la tarjeta (imagen) va sin él. */
+  const body = JSON.stringify(data);
+  return fetch(new URL(path, API), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body, keepalive: body.length < 60000 })
     .then(r => r.ok).catch(() => false);
 }

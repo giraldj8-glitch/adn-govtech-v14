@@ -17,6 +17,7 @@ const DATA_DIR = process.env.DATA_DIR || '/data';
 const ADMIN_USER = process.env.ADMIN_USER || 'equipo';
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || '';
 const MAX_BODY = 256 * 1024;
+const MAX_CARD = 6 * 1024 * 1024;
 
 mkdirSync(DATA_DIR, { recursive: true });
 const db = new DatabaseSync(join(DATA_DIR, 'adn-govtech.sqlite'));
@@ -26,7 +27,14 @@ CREATE TABLE IF NOT EXISTS respuestas (
   recorrido TEXT, modo TEXT, version TEXT, arquetipo TEXT, organizacion TEXT,
   datos TEXT,
   email TEXT, autoriza INTEGER DEFAULT 0, autoriza_fecha TEXT, organizacion_contacto TEXT
+);
+CREATE TABLE IF NOT EXISTS tarjetas (
+  id TEXT PRIMARY KEY, creado TEXT NOT NULL, actualizado TEXT NOT NULL,
+  organizacion TEXT, recorrido TEXT, codigo TEXT, tipo TEXT, imagen BLOB
 );`);
+const upsertCard = db.prepare(`INSERT INTO tarjetas (id, creado, actualizado, organizacion, recorrido, codigo, tipo, imagen) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+  ON CONFLICT(id) DO UPDATE SET actualizado=excluded.actualizado, organizacion=excluded.organizacion, recorrido=excluded.recorrido,
+  codigo=excluded.codigo, tipo=excluded.tipo, imagen=excluded.imagen`);
 
 const upsertAnswers = db.prepare(`INSERT INTO respuestas (id, creado, actualizado, recorrido, modo, version, arquetipo, organizacion, datos)
   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -55,10 +63,10 @@ function send(res, code, body, type = 'application/json; charset=utf-8', extra =
   res.writeHead(code, { 'Content-Type': type, 'X-Content-Type-Options': 'nosniff', 'Referrer-Policy': 'no-referrer', ...extra });
   res.end(typeof body === 'string' || Buffer.isBuffer(body) ? body : JSON.stringify(body));
 }
-function readJSON(req) {
+function readJSON(req, max = MAX_BODY) {
   return new Promise((resolve, reject) => {
     let size = 0; const chunks = [];
-    req.on('data', c => { size += c.length; if (size > MAX_BODY) { reject(new Error('grande')); req.destroy(); } else chunks.push(c); });
+    req.on('data', c => { size += c.length; if (size > max) { reject(new Error('grande')); req.destroy(); } else chunks.push(c); });
     req.on('end', () => { try { resolve(JSON.parse(Buffer.concat(chunks).toString('utf8'))); } catch { reject(new Error('json')); } });
     req.on('error', reject);
   });
@@ -92,6 +100,7 @@ function workbook() {
 function adminPage() {
   const c = db.prepare(`SELECT COUNT(*) n, SUM(datos IS NOT NULL) completos, SUM(recorrido='summit') summit, SUM(recorrido='completo') completo,
     SUM(modo='quiosco') quiosco, SUM(autoriza=1) contactos, MAX(actualizado) ultimo FROM respuestas`).get();
+  const tarjetas = db.prepare('SELECT COUNT(*) n FROM tarjetas').get().n;
   const arch = db.prepare(`SELECT arquetipo, COUNT(*) n FROM respuestas WHERE datos IS NOT NULL GROUP BY arquetipo ORDER BY n DESC`).all();
   return `<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ADN GovTech · datos</title>
 <style>body{font-family:system-ui,sans-serif;max-width:720px;margin:32px auto;padding:0 16px;color:#211744}h1{font-size:24px}table{border-collapse:collapse;width:100%;margin:16px 0}
@@ -100,17 +109,57 @@ input{font:inherit;padding:10px;border:1px solid #cfc4ee;border-radius:8px;min-w
 <h1>ADN GovTech · respuestas guardadas</h1>
 <table><tr><th>Registros</th><td>${c.n || 0}</td></tr><tr><th>Con respuestas completas</th><td>${c.completos || 0}</td></tr>
 <tr><th>Summit / Completo</th><td>${c.summit || 0} / ${c.completo || 0}</td></tr><tr><th>Desde el quiosco</th><td>${c.quiosco || 0}</td></tr>
-<tr><th>Contactos autorizados</th><td>${c.contactos || 0}</td></tr><tr><th>Última actualización</th><td>${bogota(c.ultimo)}</td></tr></table>
+<tr><th>Contactos autorizados</th><td>${c.contactos || 0}</td></tr><tr><th>Tarjetas generadas con QR</th><td>${tarjetas}</td></tr><tr><th>Última actualización</th><td>${bogota(c.ultimo)}</td></tr></table>
 <table><tr><th>Arquetipo</th><th>Respuestas</th></tr>${arch.map(a => `<tr><td>${(a.arquetipo || 'Sin arquetipo').replace(/[<&]/g, '')}</td><td>${a.n}</td></tr>`).join('')}</table>
 <p><a class="b" href="/admin/respuestas.xlsx">Descargar Excel</a><a class="b" href="/admin/respuestas.json">Descargar JSON</a></p>
 <h2>Borrar datos de una persona</h2><form method="post" action="/admin/borrar"><input name="q" placeholder="Correo o ID de respuesta" required> <button>Borrar</button></form>
 <p><small>Para atender solicitudes de consulta o supresión. No se puede deshacer.</small></p></body></html>`;
 }
 
+/* ---------- Tarjeta para descargar desde el QR del quiosco ---------- */
+const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const fileName = org => 'ADN_GovTech_' + ((org || 'tarjeta').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^A-Za-z0-9]+/g, '_').replace(/^_|_$/g, '').slice(0, 40) || 'tarjeta');
+function cardPage(c) {
+  const result = c.codigo ? `/?recorrido=${c.recorrido === 'completo' ? 'completo' : 'summit'}#r=${encodeURIComponent(c.codigo)}&s=${encodeURIComponent(c.id)}` : '';
+  return `<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">
+<title>Mi tarjeta ADN GovTech</title><style>
+body{margin:0;font-family:system-ui,-apple-system,sans-serif;background:linear-gradient(160deg,#160b4f,#3b1f96 55%,#8a2ba8);color:#fff;min-height:100svh}
+main{max-width:440px;margin:0 auto;padding:24px 16px 40px;text-align:center}.k{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#ffc6e1;margin:8px 0}
+h1{font-size:28px;line-height:1.1;margin:0 0 16px}img{width:100%;height:auto;aspect-ratio:2/3;border-radius:18px;box-shadow:0 20px 50px rgba(0,0,0,.35);background:#2a1690}
+a.b{display:block;margin:18px 0 8px;padding:16px;border-radius:999px;background:#fff;color:#211744;font-weight:700;text-decoration:none;font-size:17px}
+a.g{display:block;padding:14px;border-radius:999px;border:1.5px solid rgba(255,255,255,.6);color:#fff;text-decoration:none;font-weight:600}
+p{font-size:14px;line-height:1.45;color:#eadcff}small{display:block;margin-top:22px;font-size:12px;color:#d9ccf5}</style></head><body><main>
+<p class="k">Bogotá Capital GovTech · Sello B-GovTech</p><h1>Tu tarjeta ADN GovTech${c.organizacion ? `<br><span style="color:#cdb0fb">${esc(c.organizacion)}</span>` : ''}</h1>
+<img src="/t/${esc(c.id)}/tarjeta.${c.tipo === 'image/jpeg' ? 'jpg' : 'png'}" alt="Tarjeta ADN GovTech" width="540" height="810">
+<a class="b" href="/t/${esc(c.id)}/tarjeta.${c.tipo === 'image/jpeg' ? 'jpg' : 'png'}?descargar=1" download="${fileName(c.organizacion)}.${c.tipo === 'image/jpeg' ? 'jpg' : 'png'}">Descargar mi tarjeta</a>
+<p>Si no se descarga, mantén presionada la imagen y elige «Guardar imagen».</p>
+${result ? `<a class="g" href="${esc(result)}">Ver mi resultado y descargar el informe (PDF)</a>` : ''}
+<small>ADN autodeclarado. No es un sello ni una certificación.</small></main></body></html>`;
+}
+
 const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, 'http://x'), path = url.pathname, ip = req.headers['x-forwarded-for']?.split(',')[0].trim() || req.socket.remoteAddress || '';
   try {
     if (req.method === 'GET' && path === '/api/estado') return send(res, 200, { ok: true });
+    if (req.method === 'POST' && path === '/api/tarjeta') {
+      if (limited(ip)) return send(res, 429, { ok: false });
+      const b = await readJSON(req, MAX_CARD), m = /^data:(image\/(?:png|jpeg));base64,([A-Za-z0-9+/=]+)$/.exec(b?.imagen || '');
+      if (!ID.test(b?.id || '') || !m) return send(res, 400, { ok: false });
+      const img = Buffer.from(m[2], 'base64'), png = img.subarray(0, 4).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47])), jpg = img[0] === 0xff && img[1] === 0xd8;
+      if (!(png || jpg) || img.length > 4.5 * 1024 * 1024) return send(res, 400, { ok: false });
+      const codigo = /^[A-Dx-]{1,40}(?:\.[0-3])?$/.test(b.codigo || '') ? b.codigo : '', t = now();
+      upsertCard.run(b.id, t, t, str(b.organizacion, 80), str(b.recorrido, 20), codigo, png ? 'image/png' : 'image/jpeg', img);
+      return send(res, 200, { ok: true, url: '/t/' + b.id });
+    }
+    const card = /^\/t\/([A-Za-z0-9-]{8,64})(?:\/tarjeta\.(png|jpg))?\/?$/.exec(path);
+    if (card && (req.method === 'GET' || req.method === 'HEAD')) {
+      const c = db.prepare('SELECT * FROM tarjetas WHERE id = ?').get(card[1]);
+      if (!c) return send(res, 404, '<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><p style="font-family:system-ui;padding:24px">Esta tarjeta no existe o ya fue borrada.</p>', 'text/html; charset=utf-8', { 'X-Robots-Tag': 'noindex' });
+      if (!card[2]) return send(res, 200, cardPage(c), 'text/html; charset=utf-8', { 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex' });
+      const ext = c.tipo === 'image/jpeg' ? 'jpg' : 'png';
+      return send(res, 200, Buffer.from(c.imagen), c.tipo, { 'Cache-Control': 'private, max-age=600', 'X-Robots-Tag': 'noindex',
+        ...(url.searchParams.has('descargar') ? { 'Content-Disposition': `attachment; filename="${fileName(c.organizacion)}.${ext}"` } : {}) });
+    }
     if (req.method === 'POST' && (path === '/api/respuestas' || path === '/api/contacto')) {
       if (limited(ip)) return send(res, 429, { ok: false });
       const b = await readJSON(req);
@@ -137,7 +186,10 @@ const server = http.createServer(async (req, res) => {
         const origin = req.headers.origin; if (origin && new URL(origin).host !== req.headers.host) return send(res, 403, 'Origen no válido', 'text/plain; charset=utf-8');
         let raw = ''; for await (const c of req) { raw += c; if (raw.length > 2000) break; }
         const q = (new URLSearchParams(raw).get('q') || '').trim();
-        const r = q ? db.prepare('DELETE FROM respuestas WHERE id = ? OR lower(email) = lower(?)').run(q, q) : { changes: 0 };
+        const ids = q ? db.prepare('SELECT id FROM respuestas WHERE id = ? OR lower(email) = lower(?)').all(q, q).map(x => x.id) : [];
+        if (q && !ids.includes(q)) ids.push(q);
+        let changes = 0; for (const i of ids) changes += db.prepare('DELETE FROM respuestas WHERE id = ?').run(i).changes + db.prepare('DELETE FROM tarjetas WHERE id = ?').run(i).changes;
+        const r = { changes };
         return send(res, 200, `<!doctype html><meta charset="utf-8"><p style="font-family:system-ui">Registros borrados: ${r.changes}. <a href="/admin">Volver</a></p>`, 'text/html; charset=utf-8');
       }
       return send(res, 404, 'No encontrado', 'text/plain; charset=utf-8');

@@ -166,8 +166,7 @@ function chapter(id){
  const p=phases.find(p=>p.id===id),n=phases.indexOf(p),qs=visible(answers).filter(q=>q.phase===id);
  const explore=id==='perfil'
   ?`<p class="sm-why">Tu organización, su aporte y su contexto. <b>No puntúa</b>: orienta tu resultado.</p>
-   <div class="sm-orgask"><label for="org-start">¿Cómo se llama tu organización? <small>Opcional · solo aparece en tu tarjeta</small></label>
-   <input id="org-start" type="text" maxlength="40" autocomplete="organization" placeholder="${KIOSK?'Toca para escribir':'Escríbelo o déjalo vacío'}" value="${e(org)}" ${KIOSK?'readonly inputmode="none"':''}></div>`
+`
   :`<ul class="sm-dims">${dims.filter(d=>d.phase===id).map(d=>`<li><b>${d.name}</b><span>${PLAIN[d.id]}</span></li>`).join('')}</ul>`;
  return `<section class="stage chapter sm-chapter"><div class="stage-inner">${phSteps(n)}
  <div class="ch-glass" aria-hidden="true"><div class="ph3d" data-floating="${PH3D[id]}"></div></div>
@@ -453,6 +452,18 @@ function summitRoute(){
  <div class="sm-seal"><p class="eyebrow">Tu camino al Sello B-GovTech</p><ol>${path.map(([t,sub,here],k)=>`<li class="${here?'here':''}"><span>${here?CHECK:k+1}</span>${t}<small>${sub}</small>${here?'<em>Aquí estás</em>':''}</li>`).join('')}</ol><p class="fine">Las insignias y el sello se obtienen con evidencia y verificación; sus reglas y niveles siguen en definición. Responder no los otorga.</p></div>
  <p class="fine">Lectura orientativa de lo que declaraste: no es una calificación ni un sello. Propuesta de puntajes en revisión.</p></section>${stepper('ruta')}`;
 }
+/* v14 · QR de la tarjeta (quiosco): la tarjeta, con el nombre de la empresa, se guarda en el servidor y el QR abre
+   /t/<id> en el celular para descargarla. Si cambia el nombre, hay que volver a generarlo. */
+const qrCardIdle=()=>`${btn('Generar el QR de mi tarjeta','qr-card','solid big')}<p class="v14-qr-hint">${org?'Tu tarjeta llevará el nombre de tu empresa.':'Si quieres, escribe arriba el nombre de tu empresa antes de generarlo.'}</p>`;
+async function makeCardQR(){
+ const box=document.querySelector('#qr-card');if(!box)return;const id=shared?sharedId:rid;
+ box.innerHTML='<p class="v14-qr-hint" role="status">Generando tu QR…</p>';
+ const img=await cardDataURL(cardData());
+ const ok=img&&await sendRemote('tarjeta',{id,organizacion:org,imagen:img,codigo:encodeResult(answers),recorrido:SHORT_ROUTE?'summit':'completo'});
+ const link=SITE+(SHORT_ROUTE?'?recorrido=summit':'?recorrido=completo')+'#r='+encodeResult(answers)+'&s='+id;
+ box.innerHTML=ok?`${qrSVG(location.origin+'/t/'+id,'Escanea con tu celular para descargar tu tarjeta')}`
+  :`${qrSVG(link,'Escanea con tu celular para ver tu resultado y descargar tu tarjeta')}<p class="v14-qr-hint">No pudimos guardar la tarjeta; este QR abre tu resultado.</p>`;
+}
 /* v14 · 2-nov: sin descarga de Excel (las respuestas van a la base de datos). En el quiosco, el QR lleva el resultado al
    celular, donde se descargan tarjeta e informe. En el celular: descargas, invitación opcional por correo (con
    autorización) y nota de tratamiento de datos. */
@@ -462,8 +473,8 @@ function llevar(){
  const mins=startedAt&&finishedAt?Math.max(1,Math.round((finishedAt-startedAt)/60000)):0;
  return `<section class="page light sm-page sm-llevar"><p class="eyebrow">Tu tarjeta ADN</p><h1>Llévate tu ADN</h1>
  <div class="sm-card-prev"><img id="card-img" hidden alt="Tarjeta con tu rol en el ecosistema GovTech" width="540" height="810"></div>
- ${KIOSK?'':`<div class="qfields sm-org"><label for="org-name">Nombre de tu organización en la tarjeta (opcional)</label><input id="org-name" type="text" maxlength="60" autocomplete="organization" placeholder="Si prefieres no darlo, déjalo vacío" value="${e(org)}"><small>Aparece en tu tarjeta y tu informe.</small></div>`}
- <div class="sm-take">${KIOSK?qrSVG(link,'Escanea con tu celular para descargar tu tarjeta y tu informe'):''}
+ <div class="qfields sm-org"><label for="org-name">Nombre de tu empresa (opcional)</label><input id="org-name" type="text" maxlength="40" autocomplete="organization" placeholder="${KIOSK?'Toca para escribir':'Si prefieres no darlo, déjalo vacío'}" value="${e(org)}" ${KIOSK?'readonly inputmode="none"':''}><small>Aparece en tu tarjeta${KIOSK?'':' y tu informe'}.</small></div>
+ <div class="sm-take">${KIOSK?(REMOTE&&id?`<div class="v14-qrcard" id="qr-card">${qrCardIdle()}</div>`:qrSVG(link,'Escanea con tu celular para descargar tu tarjeta y tu informe')):''}
  <div class="sm-take-b">${KIOSK?'':btn('Descargar tarjeta (imagen)','card','solid')}${KIOSK?'':btn('Descargar informe (PDF)','pdf')}${!KIOSK&&navigator.share?btn('Compartir','share'):''}</div>
  ${!KIOSK&&REMOTE&&id?`<form class="v14-contact" id="contact-form" novalidate><p class="eyebrow">Conexión con el ecosistema · opcional</p>
   <label for="contact-mail">¿Quieres recibir invitaciones a eventos de Bogotá Capital GovTech y Campus 2600? Déjanos tu correo.</label>
@@ -473,10 +484,10 @@ function llevar(){
   <p class="v14-contact-msg" id="contact-msg" role="status"></p></form>`:''}
  <details class="v14-data"><summary>Tratamiento de datos</summary>${REMOTE?`<ul>
   <li>Guardamos tus respuestas del ADN y tu opinión para analizar y mejorar el servicio. No pedimos tu nombre.</li>
-  <li>El nombre de tu organización solo se guarda si lo escribes. Tu correo, solo si lo dejas y lo autorizas.</li>
+  <li>El nombre de tu empresa solo se guarda si lo escribes. Si generas el QR, tu tarjeta se guarda para que la descargues. Tu correo, solo si lo dejas y lo autorizas.</li>
   <li>Los datos los consulta únicamente el equipo de Bogotá Capital GovTech y no se usan para calificar ni contratar.</li>
   <li>Puedes pedir consultar, corregir o borrar tus datos al equipo de Bogotá Capital GovTech.</li></ul>`:`<p>Esta versión no envía tus respuestas: todo se genera en tu dispositivo.</p>`}</details>
- <p class="fine">${KIOSK?`En tu celular podrás agregar el nombre de tu organización a la tarjeta. El enlace solo lleva tus ${TOTAL} respuestas del ADN. Al terminar, esta pantalla se borra.`:'Tu tarjeta y tu informe se generan en tu dispositivo.'}${mins?` · Tu recorrido tomó ${mins===1?'1 minuto':`unos ${mins} minutos`}.`:''}</p></div></section>${stepper('llevar')}`;
+ <p class="fine">${KIOSK?`${REMOTE?'Escanea el QR antes de terminar.':`El enlace solo lleva tus ${TOTAL} respuestas del ADN.`} Al terminar, esta pantalla se borra.`:'Tu tarjeta y tu informe se generan en tu dispositivo.'}${mins?` · Tu recorrido tomó ${mins===1?'1 minuto':`unos ${mins} minutos`}.`:''}</p></div></section>${stepper('llevar')}`;
 }
 
 /* C08 al final, como opinión: mismo texto y opciones. A–E se ordenan tocándolas; «Aún no lo sabemos» va aparte;
@@ -632,7 +643,8 @@ function bind(next){
  if(next==='tie')document.querySelector('#tie-form').addEventListener('submit',ev=>{ev.preventDefault();const sel=new FormData(ev.target).get('tie');if(sel===null){document.querySelector('#error').textContent='Elige una opción para ver tu ADN.';return;}answers=resolveTie(answers,Number(sel));save();show('rol');});
  if(next==='llevar'){
   const img=document.querySelector('#card-img'),paint=()=>cardDataURL(cardData()).then(u=>{if(u&&img){img.src=u;img.hidden=false;}});paint();
-  let t=0;document.querySelector('#org-name')?.addEventListener('input',ev=>{org=ev.target.value.trim().slice(0,60);save();clearTimeout(t);t=setTimeout(paint,350);});
+  let t=0;const on=document.querySelector('#org-name');if(KIOSK)on?.addEventListener('click',()=>openKeyboard(on));
+  on?.addEventListener('input',ev=>{org=ev.target.value.trim().slice(0,40);save();clearTimeout(t);t=setTimeout(paint,350);const q=document.querySelector('#qr-card');if(q)q.innerHTML=qrCardIdle();});
   document.querySelector('#contact-form')?.addEventListener('submit',async ev=>{ev.preventDefault();
    const mail=document.querySelector('#contact-mail').value.trim(),ok=document.querySelector('#contact-ok').checked,msg=document.querySelector('#contact-msg');
    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail)){msg.textContent='Revisa tu correo.';return;}
@@ -689,8 +701,8 @@ function bindQuestion(q){
 function openKeyboard(inp){
  document.querySelector('#kbd')?.remove();
  const rows=['1234567890','QWERTYUIOP','ASDFGHJKLÑ','ZXCVBNM&.-'];
- const box=document.createElement('div');box.id='kbd';box.className='sm-kbd';box.setAttribute('role','dialog');box.setAttribute('aria-label','Teclado para escribir el nombre de tu organización');
- box.innerHTML=`<div class="kbd-in"><p class="kbd-label">Nombre de tu organización <small>opcional</small></p><output class="kbd-out" id="kbd-out"></output>
+ const box=document.createElement('div');box.id='kbd';box.className='sm-kbd';box.setAttribute('role','dialog');box.setAttribute('aria-label','Teclado para escribir el nombre de tu empresa');
+ box.innerHTML=`<div class="kbd-in"><p class="kbd-label">Nombre de tu empresa <small>opcional</small></p><output class="kbd-out" id="kbd-out"></output>
  ${rows.map(r=>`<div class="kbd-row">${[...r].map(k=>`<button type="button" data-k="${k}">${k}</button>`).join('')}</div>`).join('')}
  <div class="kbd-row"><button type="button" data-k="shift" class="kbd-w" aria-label="Mayúscula">⇧</button><button type="button" data-k=" " class="kbd-space">espacio</button><button type="button" data-k="del" class="kbd-w" aria-label="Borrar">⌫</button></div>
  <div class="kbd-row kbd-act"><button type="button" data-k="clear" class="pill-btn ghost">Borrar todo</button><button type="button" data-k="ok" class="pill-btn solid big">Listo</button></div></div>`;
@@ -700,7 +712,7 @@ function openKeyboard(inp){
  paint();
  box.addEventListener('click',ev=>{
   const k=ev.target.closest('[data-k]')?.dataset.k;if(!k)return;
-  if(k==='ok'||k==='close'){org=val.trim();save();inp.value=org;box.remove();return;}
+  if(k==='ok'||k==='close'){org=val.trim();save();inp.value=org;box.remove();inp.dispatchEvent(new Event('input',{bubbles:true}));return;}
   if(k==='del')val=val.slice(0,-1);else if(k==='clear')val='';else if(k==='shift')shift=!shift;
   else if(val.length<40){const start=!val||val.endsWith(' ');const ch=/[A-ZÑ]/.test(k)?(start||shift?k:k.toLowerCase()):k;val+=ch;shift=false;}
   paint();
@@ -739,6 +751,7 @@ async function handle(action,arg){
  else if(action==='rank-unsure'){feedback.unsure=!feedback.unsure;if(feedback.unsure)feedback.rank=[];syncC08();refreshOpinion();}
  else if(action==='clear-clarity'){delete feedback.clarity;save();document.querySelectorAll('[name=clarity]').forEach(x=>x.checked=false);document.querySelector('#clarity-value').textContent='Sin valoración';}
  else if(action==='card')downloadCard(cardData());
+ else if(action==='qr-card')makeCardQR();
  else if(action==='pdf')printReport(reportHTML());
  else if(action==='share'){try{const blob=await (await fetch(await cardDataURL(cardData()))).blob();const file=new File([blob],'Mi_ADN_GovTech.png',{type:'image/png'});const data={title:'Mi ADN GovTech',text:'Descubrí mi rol en el ecosistema GovTech.',...(SITE?{url:SITE}:{})};if(navigator.canShare?.({files:[file]}))data.files=[file];await navigator.share(data);}catch{}}
  else if(action==='finish'){if(await ask('¿Terminar y borrar?','Tus respuestas se borrarán de esta pantalla para la siguiente persona.','Sí, terminar')){wipe();show('attract');}}
