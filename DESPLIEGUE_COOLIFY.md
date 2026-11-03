@@ -10,6 +10,7 @@ Una sola aplicación y un volumen. No hace falta crear una base de datos aparte 
   - descarga en Excel con tres hojas: *Respuestas* (una fila por persona), *Detalle por pregunta* (letra original, arquetipo de la opción, puntaje y posición en pantalla) y *Contactos autorizados*;
   - descarga en JSON;
   - un formulario para borrar los datos de una persona.
+- **La dirección principal abre el Summit.** Para que abra el completo, usa la variable `RECORRIDO_INICIAL=completo`.
 - **Accesos cortos:**
   - `/summit` (celular)
   - `/quiosco` (pantalla vertical)

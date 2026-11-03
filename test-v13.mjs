@@ -3,7 +3,7 @@ import fs from 'node:fs';
 const read=p=>JSON.parse(fs.readFileSync(p,'utf8'));
 const url=s=>'data:text/javascript;base64,'+Buffer.from(s).toString('base64');
 async function model(dir,summit=false){
- globalThis.location={search:summit?'?recorrido=summit':''};
+ globalThis.location={search:summit?'?recorrido=summit':'?recorrido=completo'};
  const matrix=read(dir+'/src/matrix.json');
  const base=url(fs.readFileSync(dir+'/src/model-v7.js','utf8').replace("import rows from './matrix.json';",'const rows='+JSON.stringify(matrix)+';'));
  return import(url(fs.readFileSync(dir+'/src/model-summit.js','utf8').replace("import * as base from './model-v7.js';",`import * as base from '${base}';`).replace("import selection from './summit-selection.json';",'const selection='+JSON.stringify(read(dir+'/src/summit-selection.json'))+';').replace("import capScores from './capacity-scores.json';",'const capScores='+JSON.stringify(read(dir+'/src/capacity-scores.json'))+';')+'\n// mode '+summit));

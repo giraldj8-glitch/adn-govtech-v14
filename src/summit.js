@@ -28,7 +28,7 @@ import {REMOTE,newId,sendRemote} from './remote.js';
 const params=new URLSearchParams(location.search);
 const KIOSK=params.get('modo')==='quiosco';
 const IDLE_WARN=(+params.get('aviso')||60)*1000, IDLE_RESET=(+params.get('reinicio')||90)*1000;
-const SHORT_ROUTE=params.get('recorrido')==='summit';
+const SHORT_ROUTE=params.get('recorrido')!=='completo';
 const KEY='adn-govtech-v13-'+(SHORT_ROUTE?'summit-9':'completo');
 const LAB=params.get('laboratorio')==='1';
 const layout='guiado';
@@ -123,7 +123,7 @@ function attract(){
  <div class="sa-arch" aria-hidden="true"><div class="sa-3d" data-helix></div></div>
  <p class="sa-lede">${SHORT_ROUTE?'Descubre el ADN GovTech de tu empresa: tu rol, tus capacidades y qué fortalecer.':'Descubre tu ADN: lo que te mueve, cómo lo haces y con qué cuentas.'}</p>
  <button class="pill-btn solid sa-cta" type="button" data-action="welcome">Toca para empezar</button>
- ${qrSVG(SITE?(SITE+(SHORT_ROUTE?'?recorrido=summit':'')):'','¿Prefieres tu celular? Escanea y hazlo allí')}</section>`;
+ ${qrSVG(SITE?(SITE+(SHORT_ROUTE?'?recorrido=summit':'?recorrido=completo')):'','¿Prefieres tu celular? Escanea y hazlo allí')}</section>`;
 }
 /* v14 · 2-nov (solo Summit): pantalla inicial con el contexto del Word «Pantalla inicial del Sello» y la fórmula de la
    «Ficha de Valor y Narrativa», muy resumidos. No cambia preguntas, selección ni reglas. Lo que aún no existe
@@ -458,7 +458,7 @@ function summitRoute(){
    autorización) y nota de tratamiento de datos. */
 function llevar(){
  const id=shared?sharedId:rid;
- const link=SITE?SITE+(SHORT_ROUTE?'?recorrido=summit':'')+'#r='+encodeResult(answers)+(REMOTE&&id?'&s='+id:''):'';
+ const link=SITE?SITE+(SHORT_ROUTE?'?recorrido=summit':'?recorrido=completo')+'#r='+encodeResult(answers)+(REMOTE&&id?'&s='+id:''):'';
  const mins=startedAt&&finishedAt?Math.max(1,Math.round((finishedAt-startedAt)/60000)):0;
  return `<section class="page light sm-page sm-llevar"><p class="eyebrow">Tu tarjeta ADN</p><h1>Llévate tu ADN</h1>
  <div class="sm-card-prev"><img id="card-img" hidden alt="Tarjeta con tu rol en el ecosistema GovTech" width="540" height="810"></div>

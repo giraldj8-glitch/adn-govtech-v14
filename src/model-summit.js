@@ -19,7 +19,7 @@ export function answerText(q, a) {
   return base.answerText(q, a);
 }
 export const notConsidered = answers => diagnostic.filter(q => answers[q.id]?.skip && answers[q.id].reason === 'nc');
-export const SUMMIT_MODE = typeof location !== 'undefined' && new URLSearchParams(location.search).get('recorrido') === 'summit';
+export const SUMMIT_MODE = typeof location !== 'undefined' && new URLSearchParams(location.search).get('recorrido') !== 'completo';
 export const KEEP = SUMMIT_MODE ? selection.summit : selection.conservar;
 export const DEFERRED = selection.aplazar;
 

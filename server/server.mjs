@@ -146,6 +146,11 @@ const server = http.createServer(async (req, res) => {
     /* Accesos cortos para el evento: /summit (celular) y /quiosco (pantalla vertical). */
     const go = { '/summit': '/?recorrido=summit', '/quiosco': '/?recorrido=summit&modo=quiosco', '/completo': '/?recorrido=completo' }[path.replace(/\/$/, '')];
     if (go) return send(res, 302, '', 'text/plain', { Location: go });
+    /* Por ahora el sitio es para el Summit: la raíz abre el recorrido Summit (el completo queda en /completo). */
+    if ((path === '/' || path === '/index.html') && !url.searchParams.has('recorrido')) {
+      url.searchParams.set('recorrido', process.env.RECORRIDO_INICIAL || 'summit');
+      return send(res, 302, '', 'text/plain', { Location: '/?' + url.searchParams.toString() });
+    }
     if (path.startsWith('/api/')) return send(res, 404, { ok: false });
     return send(res, 200, INDEX, 'text/html; charset=utf-8', { 'Cache-Control': 'no-cache' });
   } catch (err) {

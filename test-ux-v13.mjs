@@ -51,4 +51,4 @@ async function run(width,height,query,tag){
  await page.locator('[name=answer][value="__na"]').check();await page.locator('#q-submit').click();assert.equal(await page.getAttribute('body','data-screen'),'review');
  console.log(tag+' PASS '+seen.size+' preguntas, formatos, exportación, estrellas y edición');await ctx.close();
 }
-try{await run(1365,900,'','desktop');await run(390,844,'?recorrido=summit','mobile');await run(1080,1920,'?recorrido=summit&modo=quiosco&aviso=600&reinicio=900','kiosk');assert.deepEqual(errors,[]);console.log('PASS sin errores JS');}finally{await browser.close();}
+try{await run(1365,900,'?recorrido=completo','desktop');await run(390,844,'?recorrido=summit','mobile');await run(1080,1920,'?recorrido=summit&modo=quiosco&aviso=600&reinicio=900','kiosk');assert.deepEqual(errors,[]);console.log('PASS sin errores JS');}finally{await browser.close();}
