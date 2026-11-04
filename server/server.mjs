@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS tarjetas (
 );`);
 /* 3-nov: datos de la empresa que la persona deja en su celular (página del QR o final del recorrido), todos opcionales. */
 const cols = db.prepare('PRAGMA table_info(respuestas)').all().map(c => c.name);
-for (const c of ['empresa_web', 'empresa_descripcion', 'interes_futuro', 'agregaria', 'perfil_fecha']) if (!cols.includes(c)) db.exec(`ALTER TABLE respuestas ADD COLUMN ${c} TEXT`);
+for (const c of ['empresa_web', 'empresa_descripcion', 'interes_futuro', 'agregaria', 'observaciones', 'perfil_fecha']) if (!cols.includes(c)) db.exec(`ALTER TABLE respuestas ADD COLUMN ${c} TEXT`);
 const upsertCard = db.prepare(`INSERT INTO tarjetas (id, creado, actualizado, organizacion, recorrido, codigo, tipo, imagen) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
   ON CONFLICT(id) DO UPDATE SET actualizado=excluded.actualizado, organizacion=excluded.organizacion, recorrido=excluded.recorrido,
   codigo=excluded.codigo, tipo=excluded.tipo, imagen=excluded.imagen`);
@@ -45,13 +45,13 @@ const upsertAnswers = db.prepare(`INSERT INTO respuestas (id, creado, actualizad
   version=excluded.version, arquetipo=excluded.arquetipo, organizacion=excluded.organizacion, datos=excluded.datos`);
 /* El correo solo se guarda con autorización; si no viene, se conserva el que ya hubiera. Los demás datos se reemplazan. */
 const upsertContact = db.prepare(`INSERT INTO respuestas (id, creado, actualizado, recorrido, email, autoriza, autoriza_fecha, organizacion_contacto,
-  empresa_web, empresa_descripcion, interes_futuro, agregaria, perfil_fecha)
-  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  empresa_web, empresa_descripcion, interes_futuro, agregaria, observaciones, perfil_fecha)
+  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   ON CONFLICT(id) DO UPDATE SET actualizado=excluded.actualizado, email=COALESCE(excluded.email, email), autoriza=MAX(autoriza, excluded.autoriza),
   autoriza_fecha=COALESCE(excluded.autoriza_fecha, autoriza_fecha), organizacion_contacto=excluded.organizacion_contacto,
   empresa_web=excluded.empresa_web, empresa_descripcion=excluded.empresa_descripcion, interes_futuro=excluded.interes_futuro,
-  agregaria=COALESCE(excluded.agregaria, agregaria), perfil_fecha=excluded.perfil_fecha`);
-const PERFIL = { organizacion: 80, email: 120, web: 200, descripcion: 600, interes: 600, agregaria: 600 };
+  agregaria=COALESCE(excluded.agregaria, agregaria), observaciones=excluded.observaciones, perfil_fecha=excluded.perfil_fecha`);
+const PERFIL = { organizacion: 80, email: 120, web: 200, descripcion: 600, interes: 600, agregaria: 600, observaciones: 600 };
 /* Valida y guarda; devuelve el error para mostrarlo, o '' si quedó guardado. */
 function saveContact(id, b, recorrido) {
   const v = Object.fromEntries(Object.entries(PERFIL).map(([k, n]) => [k, str(b[k], n).trim()]));
@@ -60,7 +60,7 @@ function saveContact(id, b, recorrido) {
   if (v.email && b.autoriza !== true) return 'autoriza';
   const t = now();
   upsertContact.run(id, t, t, str(recorrido, 20), v.email ? v.email.toLowerCase() : null, v.email ? 1 : 0, v.email ? t : null, v.organizacion,
-    v.web, v.descripcion, v.interes, 'agregaria' in b ? v.agregaria : null, t);
+    v.web, v.descripcion, v.interes, 'agregaria' in b ? v.agregaria : null, v.observaciones, t);
   return '';
 }
 
@@ -108,13 +108,13 @@ function workbook() {
     bogota(r.datos.inicio), bogota(r.datos.fin), ...keys.map(k => r.datos.resumen?.[k] ?? '')])];
   const detalle = [['ID respuesta', 'Creado (Bogotá)', 'Recorrido', 'Modo', 'Pregunta', 'Fase', 'Dimensión', 'Texto de la pregunta', 'Respuesta', 'Letra(s) original(es)', 'Arquetipo de la opción', 'Puntaje de capacidad', 'Posición en pantalla']];
   for (const r of all) for (const d of r.datos?.detalle || []) detalle.push([r.id, bogota(r.creado), r.recorrido, r.modo, d.id, d.fase, d.dimension, d.pregunta, d.respuesta, d.letras, d.arquetipo, d.puntaje ?? '', d.posicion ?? '']);
-  const contactos = [['ID respuesta', 'Organización', 'Correo (autorizado)', 'Autorizó (Bogotá)', 'Página web', 'Descripción de la empresa', 'Le interesaría a futuro', 'Le agregaría a la experiencia', 'Datos enviados (Bogotá)', 'Recorrido', 'Modo', 'Arquetipo'],
+  const contactos = [['ID respuesta', 'Organización', 'Correo (autorizado)', 'Autorizó (Bogotá)', 'Página web', 'Descripción de la empresa', 'Le interesaría a futuro', 'Le agregaría a la experiencia', 'Observaciones adicionales', 'Datos enviados (Bogotá)', 'Recorrido', 'Modo', 'Arquetipo'],
     ...all.filter(r => r.perfil_fecha || (r.autoriza && r.email)).map(r => [r.id, r.organizacion_contacto || r.organizacion || '', r.autoriza ? r.email || '' : '', bogota(r.autoriza_fecha),
-      r.empresa_web || '', r.empresa_descripcion || '', r.interes_futuro || '', r.agregaria || '', bogota(r.perfil_fecha), r.recorrido === 'datos-stand' ? 'QR de datos (sin recorrido)' : r.recorrido || '', r.modo || '', r.arquetipo || ''])];
+      r.empresa_web || '', r.empresa_descripcion || '', r.interes_futuro || '', r.agregaria || '', r.observaciones || '', bogota(r.perfil_fecha), r.recorrido === 'datos-stand' ? 'QR de datos (sin recorrido)' : r.recorrido || '', r.modo || '', r.arquetipo || ''])];
   return xlsxBlob([
     { name: 'Respuestas', rows: respuestas, widths: [...base.map(() => 16), ...keys.map(() => 22)] },
     { name: 'Detalle por pregunta', rows: detalle, widths: [16, 16, 10, 9, 8, 8, 24, 60, 60, 10, 26, 10, 10] },
-    { name: 'Empresas y contactos', rows: contactos, widths: [16, 28, 30, 16, 28, 50, 50, 50, 16, 10, 9, 24] }
+    { name: 'Empresas y contactos', rows: contactos, widths: [16, 28, 30, 16, 28, 50, 50, 50, 50, 16, 10, 9, 24] }
   ]);
 }
 function adminPage() {
@@ -169,6 +169,7 @@ ${ERRORES[estado] ? `<p class="err" role="alert">${ERRORES[estado]}</p>` : ''}
 <label for="f-desc">Descripción de la empresa</label><textarea id="f-desc" name="descripcion" maxlength="600" placeholder="¿Qué hace tu empresa y a quién sirve?"></textarea>
 <label for="f-int">¿Qué le interesaría a futuro?</label><textarea id="f-int" name="interes" maxlength="600" placeholder="Temas, apoyos o conexiones que les gustaría encontrar"></textarea>
 ${withAdd ? '<label for="f-add">¿Qué le agregarían a esta experiencia?</label><textarea id="f-add" name="agregaria" maxlength="600"></textarea>' : ''}
+<label for="f-obs">Observaciones adicionales</label><textarea id="f-obs" name="observaciones" maxlength="600"></textarea>
 <label class="ck"><input type="checkbox" name="autoriza" value="1"> Si dejo mi correo, autorizo su tratamiento para recibir invitaciones y novedades de Bogotá Capital GovTech, según la Ley 1581 de 2012. Puedo pedir que lo borren cuando quiera.</label>
 <button type="submit">Enviar</button></form>
 <script>document.querySelector('form').addEventListener('submit',function(ev){var f=ev.target,m=f.email.value.trim(),e=f.querySelector('.err');
@@ -213,7 +214,7 @@ const server = http.createServer(async (req, res) => {
       if (req.method === 'POST') {
         const origin = req.headers.origin; if (origin && origin !== 'null' && new URL(origin).host !== req.headers.host) return send(res, 403, 'Origen no válido', 'text/plain; charset=utf-8');
         if (limited(ip)) return send(res, 429, 'Intenta de nuevo en un minuto', 'text/plain; charset=utf-8');
-        let raw = ''; for await (const ch of req) { raw += ch; if (raw.length > 8000) return send(res, 413, 'Texto muy largo', 'text/plain; charset=utf-8'); }
+        let raw = ''; for await (const ch of req) { raw += ch; if (raw.length > 24000) return send(res, 413, 'Texto muy largo', 'text/plain; charset=utf-8'); }
         const f = Object.fromEntries(new URLSearchParams(raw)); f.autoriza = f.autoriza === '1'; delete f.agregaria;
         const err = saveContact(randomUUID(), f, 'datos-stand');
         return send(res, 303, '', 'text/plain', { Location: `/datos?${err ? 'error=' + err : 'gracias=1'}` });
@@ -226,7 +227,7 @@ const server = http.createServer(async (req, res) => {
       if (limited(ip)) return send(res, 429, 'Intenta de nuevo en un minuto', 'text/plain; charset=utf-8');
       const c = db.prepare('SELECT id, recorrido FROM tarjetas WHERE id = ?').get(card[1]);
       if (!c) return send(res, 404, 'Esta tarjeta no existe', 'text/plain; charset=utf-8');
-      let raw = ''; for await (const ch of req) { raw += ch; if (raw.length > 8000) return send(res, 413, 'Texto muy largo', 'text/plain; charset=utf-8'); }
+      let raw = ''; for await (const ch of req) { raw += ch; if (raw.length > 24000) return send(res, 413, 'Texto muy largo', 'text/plain; charset=utf-8'); }
       const f = Object.fromEntries(new URLSearchParams(raw)); f.autoriza = f.autoriza === '1';
       const err = saveContact(c.id, f, c.recorrido);
       return send(res, 303, '', 'text/plain', { Location: `/t/${c.id}?${err ? 'error=' + err : 'gracias=1'}` });

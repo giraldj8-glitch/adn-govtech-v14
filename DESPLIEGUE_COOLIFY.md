@@ -7,7 +7,7 @@ Una sola aplicación y un volumen. No hace falta crear una base de datos aparte 
 - **La base de datos:** guarda cada respuesta al llegar al resultado y la actualiza si la persona cambia su opinión o el nombre de la organización.
 - **`/admin`, protegido con usuario y clave:**
   - conteos por recorrido, por quiosco y por arquetipo;
-  - descarga en Excel con tres hojas: *Respuestas* (una fila por persona), *Detalle por pregunta* (letra original, arquetipo de la opción, puntaje y posición en pantalla) y *Empresas y contactos* (nombre, correo autorizado, página web, descripción, qué le interesaría a futuro y qué le agregaría a la experiencia);
+  - descarga en Excel con tres hojas: *Respuestas* (una fila por persona), *Detalle por pregunta* (letra original, arquetipo de la opción, puntaje y posición en pantalla) y *Empresas y contactos* (nombre, correo autorizado, página web, descripción, qué le interesaría a futuro, qué le agregaría a la experiencia y observaciones adicionales);
   - descarga en JSON;
   - un formulario para borrar los datos de una persona, incluida su tarjeta.
 - **La dirección principal abre el Summit.** Para que abra el completo, usa la variable `RECORRIDO_INICIAL=completo`.
@@ -31,12 +31,13 @@ Una sola aplicación y un volumen. No hace falta crear una base de datos aparte 
 - **Pantalla vertical:** abre `https://TU-DOMINIO/quiosco` en Chrome a pantalla completa (modo quiosco).
 - **Al terminar**, en «Llévatelo» la persona escribe el nombre de su empresa (opcional) con el teclado de la pantalla y toca «Generar el QR de mi tarjeta».
   - La tarjeta se guarda en el servidor y aparece un QR que abre `TU-DOMINIO/t/<id>` en el celular: ahí descarga su tarjeta.
-  - En esa misma página, con el teclado de su celular, puede contarnos de su empresa. Todo es opcional: nombre, correo (con autorización), página web, descripción, qué le interesaría a futuro y qué le agregaría a la experiencia. Por eso, en el quiosco ya no se pide el texto abierto de la opinión.
+  - En esa misma página, con el teclado de su celular, puede contarnos de su empresa. Todo es opcional: nombre, correo (con autorización), página web, descripción, qué le interesaría a futuro, qué le agregaría a la experiencia y observaciones adicionales. Por eso, en el quiosco ya no se pide el texto abierto de la opinión.
   - También puede abrir su resultado completo y descargar el informe PDF.
   - Si cambia el nombre, debe volver a generar el QR.
+- **Casos ficticios en el quiosco:** el botón «Ver un caso en 1 minuto» (pantalla de espera e inicio) muestra cuatro empresas inventadas, su revelación, rol, radar, ruta y los componentes del servicio. No se guardan en la base de datos.
 - **QR de datos, para quien no alcanza a hacer el recorrido:**
   - en el quiosco, una tarjeta flotante con un QR («¿Sin tiempo?») está a la vista desde el inicio y durante todo el formulario. Al tocarla se amplía;
-  - el QR abre `https://TU-DOMINIO/datos` en el celular. Esa página solo capta los datos de la empresa: nombre, correo con autorización, página web, descripción y qué le interesaría a futuro;
+  - el QR abre `https://TU-DOMINIO/datos` en el celular. Esa página solo capta los datos de la empresa: nombre, correo con autorización, página web, descripción, qué le interesaría a futuro y observaciones adicionales;
   - en el Excel, esos registros aparecen en *Empresas y contactos* con el recorrido «QR de datos (sin recorrido)».
 - **QR para el stand**, para que cada persona lo haga en su celular: `https://TU-DOMINIO/summit`.
 - **El quiosco necesita internet** para guardar. Si se cae la red, la persona igual ve su resultado, pero esa respuesta no se guarda.

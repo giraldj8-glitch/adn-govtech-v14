@@ -66,12 +66,12 @@ const FLOW=['chapter','question','review','tie','intra'];
 /* 23-oct: «Tu ADN» deja de ser un paso; su contenido se explica dentro de «Tu rol», en «¿Por qué este rol?». */
 const JOURNEY=[['rol','Tu rol'],['ruta','Tu ruta'],['opinion','Tu opinión'],['llevar','Llévatelo']];
 /* Quien abre un resultado compartido (QR del stand) ya dio su opinión en la pantalla: no se le vuelve a pedir. */
-const steps=()=>shared?JOURNEY.filter(([id])=>id!=='opinion'):JOURNEY;
+const steps=()=>tour?JOURNEY.slice(0,2):shared?JOURNEY.filter(([id])=>id!=='opinion'):JOURNEY;
 /* C07 sin texto libre: listas cerradas (el Excel ya preveía selección múltiple para los territorios). Opciones de trabajo, por validar. */
 const TERRITORY=[['Bogotá','Otra ciudad de Colombia','Fuera de Colombia'],['Bogotá','Bogotá-Región (Cundinamarca)','Otras regiones de Colombia','América Latina','Otros países']];
 const isJourney=s=>JOURNEY.some(([id])=>id===s);
 
-let answers={},seed=0,priority='',org='',feedback={rank:[],unsure:false,add:''},screen='',current='',editing=false,shared=false,isDemo=false,startedAt=0,finishedAt=0,rid='';
+let answers={},seed=0,priority='',org='',feedback={rank:[],unsure:false,add:''},screen='',current='',editing=false,shared=false,isDemo=false,tour=false,startedAt=0,finishedAt=0,rid='';
 let busy=false,queued=null,lastPoint=null;
 const scenes=new Map();
 
@@ -92,7 +92,7 @@ function save(){if(shared||isDemo)return;try{store.setItem(KEY,JSON.stringify({a
 let remoteT=0;
 function queueRemote(){if(!rid)rid=newId();clearTimeout(remoteT);remoteT=setTimeout(flushRemote,900);}
 function flushRemote(){if(!remoteT)return;clearTimeout(remoteT);remoteT=0;if(rid&&finishedAt&&!shared&&!isDemo)sendRemote('respuestas',remotePayload());}
-function wipe(){flushRemote();document.querySelector('#kbd')?.remove();rid='';answers={};seed=newSeed();priority='';org='';feedback={rank:[],unsure:false,add:''};startedAt=0;finishedAt=0;editing=false;shared=false;isDemo=false;try{store.removeItem(KEY);}catch{}}
+function wipe(){flushRemote();document.querySelector('#kbd')?.remove();rid='';answers={};seed=newSeed();priority='';org='';feedback={rank:[],unsure:false,add:''};startedAt=0;finishedAt=0;editing=false;shared=false;isDemo=false;tour=false;try{store.removeItem(KEY);}catch{}}
 const hasSaved=()=>Object.keys(load().answers).length>0;
 
 /* ---------- Utilidades de vista ---------- */
@@ -116,6 +116,10 @@ function qrSVG(url,label){
 function phSteps(n){return `<nav class="ph-steps" aria-label="Etapas del diagnóstico"><ol>${phases.map((p,i)=>`<li class="${i<n?'done':i===n?'now':''}" ${i===n?'aria-current="step"':''}><span class="ph-dot" aria-hidden="true">${i<n?CHECK:i+1}</span><span>${p.label}</span></li>`).join('')}</ol><p class="ph-of">Etapa ${n+1} de 4 <span class="ph-dna">${DNA}</span></p></nav>`;}
 
 /* ---------- Pantallas ---------- */
+/* 4-nov · Summit en celular o tableta: la misma pantalla animada del quiosco, una vez por sesión y sin QR. Sigue sola a los
+   pocos segundos o al tocarla; con movimiento reducido espera el toque. */
+const INTRO_MS=4500;let introT=0;
+function introSeen(){try{if(sessionStorage.getItem('adn-intro'))return true;sessionStorage.setItem('adn-intro','1');}catch{}return false;}
 function attract(){
  return `<section class="sm-attract" data-action="welcome"><div class="sa-glow" aria-hidden="true"></div>
  <p class="sa-brand"><small>Bogotá Capital</small><strong>GOVTECH</strong></p>
@@ -123,7 +127,23 @@ function attract(){
  <div class="sa-arch" aria-hidden="true"><div class="sa-3d" data-helix></div></div>
  <p class="sa-lede">${SHORT_ROUTE?'Descubre el ADN GovTech de tu empresa: tu rol, tus capacidades y qué fortalecer.':'Descubre tu ADN: lo que te mueve, cómo lo haces y con qué cuentas.'}</p>
  <button class="pill-btn solid sa-cta" type="button" data-action="welcome">Toca para empezar</button>
- ${KIOSK&&REMOTE?'<div class="sa-qrs">':''}${qrSVG(SITE?(SITE+(SHORT_ROUTE?'?recorrido=summit':'?recorrido=completo')):'','¿Prefieres tu celular? Escanea y hazlo allí')}${KIOSK&&REMOTE?qrSVG(location.origin+'/datos','¿Sin tiempo? Escanea y déjanos los datos de tu empresa')+'</div>':''}</section>`;
+ ${KIOSK?'<button class="pill-btn ghost sa-demo" type="button" data-action="casos">Ver un caso en 1 minuto</button>':''}
+ ${!KIOSK?'':(REMOTE?'<div class="sa-qrs">':'')+qrSVG(SITE?(SITE+(SHORT_ROUTE?'?recorrido=summit':'?recorrido=completo')):'','¿Prefieres tu celular? Escanea y hazlo allí')+(REMOTE?qrSVG(location.origin+'/datos','¿Sin tiempo? Escanea y déjanos los datos de tu empresa')+'</div>':'')}</section>`;
+}
+/* 4-nov · Quiosco: casos ficticios para quien no hace el recorrido. Muestran la revelación, el rol, el radar, la ruta y los
+   componentes del servicio. Las empresas y sus respuestas son inventadas; no se guardan ni llegan a la base de datos. */
+const CASES=[['Plataforma Ciudad','Software con operación amplia y procesos definidos'],['Trámite Ágil','Equipo que crea soluciones a la medida de un reto'],['Datos con Propósito','Consultora que aporta un saber especializado'],['Semilla Digital','Empresa que apenas explora el sector público']];
+function casos(){
+ return `<section class="page light sm-page v14-casos"><p class="eyebrow">Míralo en un minuto</p><h1>Mira cómo funciona con un caso</h1>
+ <p class="lead">Son empresas ficticias. Toca una y verás cómo se revela su ADN, su radar, su ruta y los componentes del servicio.</p>
+ <ul>${CASES.map(([n,d],i)=>`<li><button type="button" class="v14-caso" data-action="caso:${i}" style="--c:${ARCH_COLORS[i]}"><small>Caso ficticio ${i+1}</small><b>${n}</b><span>${d}</span><em>${archetypes[i]}</em></button></li>`).join('')}</ul></section>
+ ${bar(btn('← Volver','welcome','ghost'),'',btn('Hacer mi ADN →','start','solid big'))}`;
+}
+/* Mayoría clara para el arquetipo del caso, con un tercio de otro para que la hélice y el radar tengan contraste: sin empates. */
+function startTour(i){
+ wipe();const base=demo(i),other=archetypes[(i+1)%4];
+ diagnostic.forEach((q,k)=>{const a=k%3===2?other:archetypes[i],o=q.opciones.find(x=>x.arquetipo===a)||q.opciones[0];base[q.id]={values:[o.letra]};});
+ answers=base;org=CASES[i][0];isDemo=true;tour=true;show('revelar');
 }
 /* v14 · 2-nov (solo Summit): pantalla inicial con el contexto del Word «Pantalla inicial del Sello» y la fórmula de la
    «Ficha de Valor y Narrativa», muy resumidos. No cambia preguntas, selección ni reglas. Lo que aún no existe
@@ -151,7 +171,7 @@ function summitWelcome(){
    <li>No es solo para quien ya trabajó con el Estado.</li><li>No pide documentos, propuestas ni saber de contratación.</li></ul></article>
  </section>
  <p class="v14-close"><b>¿Es para tu empresa?</b> Sí, si quieres aportar a resolver retos de la ciudad, no solo vender. <span>${REMOTE?'Guardamos tus respuestas, sin tu nombre, para analizar y mejorar el servicio':'Tus respuestas solo se usan para construir tu resultado'}${KIOSK?'; esta pantalla se borra al terminar':REMOTE?'':'; no se envían a ninguna entidad'}.</span></p>
- ${bar(saved?btn('Continuar donde iba','resume','ghost'):'','',btn('Descubrir mi ADN GovTech →','start','solid big'))}`;
+ ${bar(saved?btn('Continuar donde iba','resume','ghost'):KIOSK?btn('Ver un caso en 1 minuto','casos','ghost'):'','',btn('Descubrir mi ADN GovTech →','start','solid big'))}`;
 }
 function welcome(){
  if(SHORT_ROUTE)return summitWelcome();
@@ -346,12 +366,15 @@ function bindReveal(){
  }
  const onScroll=()=>{if(!raf)raf=requestAnimationFrame(paint);};
  addEventListener('scroll',onScroll,{passive:true});addEventListener('resize',onScroll);
- scenes.set(sec,()=>{removeEventListener('scroll',onScroll);removeEventListener('resize',onScroll);cancelAnimationFrame(raf);});
+ /* En un caso ficticio la revelación avanza sola; un toque la detiene y se sigue con el dedo. */
+ let auto=0;const stop=()=>{cancelAnimationFrame(auto);auto=0;removeEventListener('pointerdown',stop);removeEventListener('wheel',stop);};
+ if(tour&&motionOK()){const t0=performance.now()+900,step=t=>{const k=clamp((t-t0)/11000);scrollTo({top:(sec.offsetHeight-innerHeight)*k,behavior:'instant'});auto=k<1?requestAnimationFrame(step):0;};auto=requestAnimationFrame(step);addEventListener('pointerdown',stop,{passive:true});addEventListener('wheel',stop,{passive:true});}
+ scenes.set(sec,()=>{stop();removeEventListener('scroll',onScroll);removeEventListener('resize',onScroll);cancelAnimationFrame(raf);});
  paint();
 }
 
 /* ---------- Resultado en cinco pasos ---------- */
-function stepper(id){const J=steps(),n=J.findIndex(([s])=>s===id);return bar(n>0?btn('← Anterior',J[n-1][0],'ghost'):shared?'':btn('Revisar respuestas','review','ghost'),`<span class="sm-step">${n+1} / ${J.length}</span>`,n<J.length-1?btn(J[n+1][1]+' →',J[n+1][0],'solid big'):btn(KIOSK?'Terminar y borrar':shared?'Hacer mi propio ADN':'Volver al inicio',KIOSK?'finish':shared?'own':'home','solid big'));}
+function stepper(id){const J=steps(),n=J.findIndex(([s])=>s===id);return bar(n>0?btn('← Anterior',J[n-1][0],'ghost'):tour?btn('← Otros casos','casos','ghost'):shared?'':btn('Revisar respuestas','review','ghost'),`<span class="sm-step">${n+1} / ${J.length}</span>`,n<J.length-1?btn(J[n+1][1]+' →',J[n+1][0],'solid big'):tour?btn('Hacer mi ADN →','tour-end','solid big'):btn(KIOSK?'Terminar y borrar':shared?'Hacer mi propio ADN':'Volver al inicio',KIOSK?'finish':shared?'own':'home','solid big'));}
 function countsBlock(){
  const p=profile(answers),nc=notConsidered(answers).length;
  const rows=archetypes.map((a,i)=>({a,i,n:p.counts[a]})).sort((x,y)=>y.n-x.n);
@@ -452,6 +475,7 @@ function summitRoute(){
  <h2 class="sm-h2">Insignias que tu ADN puede empezar a sustentar</h2>
  <div id="badge-row">${badgeRow(caps)}</div>
  <div class="sm-seal"><p class="eyebrow">Tu camino al Sello B-GovTech</p><ol>${path.map(([t,sub,here],k)=>`<li class="${here?'here':''}"><span>${here?CHECK:k+1}</span>${t}<small>${sub}</small>${here?'<em>Aquí estás</em>':''}</li>`).join('')}</ol><p class="fine">Las insignias y el sello se obtienen con evidencia y verificación; sus reglas y niveles siguen en definición. Responder no los otorga.</p></div>
+ ${tour?`<div class="v14-comp"><p class="eyebrow">Componentes del servicio</p><ol>${byId.C08.opciones.filter(o=>C08_COMPONENT[o.letra]).map(o=>`<li><b>${e(o.texto)}</b><small>${e(C08_COMPONENT[o.letra])}</small></li>`).join('')}</ol></div>`:''}
  <p class="fine">Lectura orientativa de lo que declaraste: no es una calificación ni un sello. Propuesta de puntajes en revisión.</p></section>${stepper('ruta')}`;
 }
 /* v14 · QR de la tarjeta (quiosco): la tarjeta, con el nombre de la empresa, se guarda en el servidor y el QR abre
@@ -487,13 +511,14 @@ function llevar(){
   <label for="contact-desc">Descripción de la empresa</label><textarea id="contact-desc" maxlength="600" placeholder="¿Qué hace tu empresa y a quién sirve?"></textarea>
   <label for="contact-int">¿Qué le interesaría a futuro?</label><textarea id="contact-int" maxlength="600" placeholder="Temas, apoyos o conexiones que les gustaría encontrar"></textarea>
   <label for="contact-add">¿Qué le agregarían a esta experiencia?</label><textarea id="contact-add" maxlength="600"></textarea>
+  <label for="contact-obs">Observaciones adicionales</label><textarea id="contact-obs" maxlength="600"></textarea>
   <label class="v14-check"><input id="contact-ok" type="checkbox"> Si dejo mi correo, autorizo su tratamiento para recibir invitaciones y novedades del ecosistema, según la Ley 1581 de 2012. Puedo pedir que lo borren cuando quiera.</label>
   <button class="pill-btn solid" type="submit">Enviar</button>
   <p class="v14-contact-msg" id="contact-msg" role="status"></p></form>`:''}
  <details class="v14-data"><summary>Tratamiento de datos</summary>${REMOTE?`<ul>
   <li>Guardamos tus respuestas del ADN y tu opinión para analizar y mejorar el servicio. No pedimos tu nombre.</li>
   <li>El nombre de tu empresa solo se guarda si lo escribes. Si generas el QR, tu tarjeta se guarda para que la descargues.</li>
-  <li>Lo que nos cuentes de tu empresa (página web, descripción, intereses) se guarda con tus respuestas. Tu correo, solo si lo dejas y lo autorizas.</li>
+  <li>Lo que nos cuentes de tu empresa (página web, descripción, intereses, observaciones) se guarda con tus respuestas. Tu correo, solo si lo dejas y lo autorizas.</li>
   <li>Los datos los consulta únicamente el equipo de Bogotá Capital GovTech y no se usan para calificar ni contratar.</li>
   <li>Puedes pedir consultar, corregir o borrar tus datos al equipo de Bogotá Capital GovTech.</li></ul>`:`<p>Esta versión no envía tus respuestas: todo se genera en tu dispositivo.</p>`}</details>
  <p class="fine">${KIOSK?`${REMOTE?'Escanea el QR antes de terminar.':`El enlace solo lleva tus ${TOTAL} respuestas del ADN.`} Al terminar, esta pantalla se borra.`:'Tu tarjeta y tu informe se generan en tu dispositivo.'}${mins?` · Tu recorrido tomó ${mins===1?'1 minuto':`unos ${mins} minutos`}.`:''}</p></div></section>${stepper('llevar')}`;
@@ -529,7 +554,7 @@ function refreshOpinion(focus){const r=document.querySelector('#rank'),a=documen
 
 function render(next,arg){
  switch(next){
-  case 'attract':return attract();case 'chapter':return chapter(arg);case 'question':return question(arg);case 'intra':return intra();
+  case 'attract':return attract();case 'casos':return casos();case 'chapter':return chapter(arg);case 'question':return question(arg);case 'intra':return intra();
   case 'review':return review();case 'revelar':return revelar();case 'tie':return tieView();case 'rol':return rol();case 'ruta':return ruta();case 'opinion':return opinion();case 'llevar':return llevar();
   default:return welcome();
  }
@@ -608,12 +633,12 @@ function pick(prev,next,arg,push,opts){
  return {kind:'curtain',color:ph?COLORS[ph][0]:'#211744',dir:back?-1:1};
 }
 function swap(next,arg,push){
- disposeAll();cleanup();
+ disposeAll();cleanup();clearTimeout(introT);
  screen=next;current=arg;
  const ph=phaseOf(next,arg),cs=COLORS[ph]||COLORS.perfil;
  const dark=['chapter','attract','rol','revelar'].includes(next);
  document.body.dataset.theme=dark?'stage':'light';document.body.dataset.screen=next;document.body.dataset.layout=layout;
- infoQRClose();const iq=document.querySelector('#info-qr');if(iq){iq.hidden=next==='llevar'||next==='attract';if(next==='attract'){infoPos.side='left';infoPos.top=null;iq.classList.remove('min');}requestAnimationFrame(()=>placeInfoQR(false));}
+ document.body.toggleAttribute('data-tour',tour);infoQRClose();const iq=document.querySelector('#info-qr');if(iq){iq.hidden=['llevar','attract','revelar'].includes(next);if(tour){iq.classList.add('min');iq.dataset.tour='1';}else if(iq.dataset.tour){iq.classList.remove('min');delete iq.dataset.tour;}if(next==='attract'){infoPos.side='left';infoPos.top=null;iq.classList.remove('min');}requestAnimationFrame(()=>placeInfoQR(false));}
  document.body.style.setProperty('--g1',cs[0]);document.body.style.setProperty('--g2',cs[1]);
  document.querySelector('meta[name="theme-color"]').content=dark?cs[0]:'#ffffff';
  main.innerHTML=render(next,arg);
@@ -658,8 +683,8 @@ function bind(next){
   on?.addEventListener('input',ev=>{org=ev.target.value.trim().slice(0,40);save();clearTimeout(t);t=setTimeout(paint,350);const q=document.querySelector('#qr-card');if(q)q.innerHTML=qrCardIdle();});
   document.querySelector('#contact-form')?.addEventListener('submit',async ev=>{ev.preventDefault();
    const v=k=>document.querySelector('#contact-'+k).value.trim(),mail=v('mail'),ok=document.querySelector('#contact-ok').checked,msg=document.querySelector('#contact-msg');
-   const data={organizacion:org,email:mail,web:v('web'),descripcion:v('desc'),interes:v('int'),agregaria:v('add')};
-   if(!data.email&&!data.web&&!data.descripcion&&!data.interes&&!data.agregaria){msg.textContent='Escribe al menos un dato.';return;}
+   const data={organizacion:org,email:mail,web:v('web'),descripcion:v('desc'),interes:v('int'),agregaria:v('add'),observaciones:v('obs')};
+   if(!data.email&&!data.web&&!data.descripcion&&!data.interes&&!data.agregaria&&!data.observaciones){msg.textContent='Escribe al menos un dato.';return;}
    if(mail&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail)){msg.textContent='Revisa tu correo.';return;}
    if(mail&&!ok){msg.textContent='Para guardar tu correo necesitamos tu autorización.';return;}
    msg.textContent='Enviando…';const sent=await sendRemote('contacto',{id:shared?sharedId:rid,...data,autoriza:!!(mail&&ok),recorrido:SHORT_ROUTE?'summit':'completo'});
@@ -792,6 +817,9 @@ async function handle(action,arg){
  else if(action==='finish'){if(await ask('¿Terminar y borrar?','Tus respuestas se borrarán de esta pantalla para la siguiente persona.','Sí, terminar')){wipe();show('attract');}}
  else if(action==='own'){wipe();shared=false;history.replaceState(null,'',location.pathname+location.search);show('welcome');}
  else if(action==='home')home();
+ else if(action==='casos'){wipe();show('casos');}
+ else if(action==='caso')startTour(+arg);
+ else if(action==='tour-end'){wipe();show('welcome');}
  else if(action==='result')show('rol');
  else if(action==='sello')show('ruta');
  else if(action==='adn')show('rol');
@@ -946,7 +974,7 @@ function syncMotion(){document.querySelector('#motion-toggle').setAttribute('ari
 applyMotionAttr();syncMotion();onSystemMotionChange(syncMotion);
 document.querySelector('#motion-toggle').onclick=()=>{toggleMotion();syncMotion();show(screen,current,false,{instant:true});};
 document.querySelector('#home').onclick=async()=>{if(KIOSK&&screen!=='attract'){if(await ask('¿Volver al inicio?','Se borrarán las respuestas de esta sesión.','Sí, volver')){wipe();show('attract');}}else if(!KIOSK)show('welcome');};
-window.addEventListener('popstate',ev=>{const s=ev.state;if(!s)return;if(s.next==='question'&&!visible(answers).some(q=>q.id===s.arg)){show('review','',false);return;}show(s.next||'welcome',s.arg||'',false);});
+window.addEventListener('popstate',ev=>{const s=ev.state;if(!s)return;if(s.next==='attract'&&!KIOSK){show('welcome','',false);return;}if(s.next==='question'&&!visible(answers).some(q=>q.id===s.arg)){show('review','',false);return;}show(s.next||'welcome',s.arg||'',false);});
 addEventListener('resize',()=>placeIndicator());
 document.documentElement.classList.toggle('kiosk',KIOSK);
 
@@ -954,7 +982,7 @@ document.documentElement.classList.toggle('kiosk',KIOSK);
 const hashCode=/[#&]r=([A-Dx.\-0-3]+)/.exec(location.hash)?.[1];
 const decoded=hashCode?decodeResult(hashCode):null;
 const sharedId=/[#&]s=([A-Za-z0-9-]{8,64})/.exec(location.hash)?.[1]||'';
-let first=KIOSK?'attract':'welcome';
+let first=KIOSK||(SHORT_ROUTE&&!introSeen())?'attract':'welcome';
 if(decoded){answers=decoded;shared=true;first='rol';}
 else if(params.has('demo')){answers=demo(+params.get('demo')||0);isDemo=true;first=params.has('revelar')?'revelar':'rol';}
 else ({answers,seed,priority,org,feedback,startedAt,finishedAt,rid}=load());
@@ -964,4 +992,4 @@ history.replaceState({next:first,arg:''},'',location.hash||'#'+first);
 const example=LAB&&byId[params.get('ejemplo')]?params.get('ejemplo'):'';
 if(example){isDemo=true;answers=example==='C05'?{C04:{values:['B']}}:{};first=example==='C08'?'opinion':'question';}
 infoQR();
-show(first,example,false,{instant:true,noEnter:true}).then(()=>loader(()=>{animateIn(first);idleReset();}));
+show(first,example,false,{instant:true,noEnter:true}).then(()=>loader(()=>{animateIn(first);idleReset();if(screen==='attract'&&!KIOSK&&motionOK())introT=setTimeout(()=>show('welcome'),INTRO_MS);}));
