@@ -10,6 +10,7 @@ import { fileURLToPath } from 'node:url';
 import { timingSafeEqual, createHash, randomUUID } from 'node:crypto';
 import { DatabaseSync } from 'node:sqlite';
 import { xlsxBlob } from '../src/xlsx.js';
+import { panelData, delSummit } from './panel-data.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const PORT = +process.env.PORT || 3000;
@@ -64,6 +65,7 @@ function saveContact(id, b, recorrido) {
   return '';
 }
 
+const PANEL = readFileSync(join(ROOT, 'server', 'panel.html'), 'utf8');
 const INDEX = readFileSync(join(ROOT, 'dist', 'index.html'), 'utf8').replace('</head>', '<meta name="adn-api" content="1"></head>');
 const ID = /^[A-Za-z0-9-]{8,64}$/;
 const MAIL = /^[^\s@]{1,64}@[^\s@]{1,190}\.[^\s@]{2,}$/;
@@ -100,8 +102,8 @@ function isAdmin(req) {
 
 /* ---------- Exportación para el análisis ---------- */
 function rows() { return db.prepare('SELECT * FROM respuestas ORDER BY creado').all().map(r => ({ ...r, datos: r.datos ? JSON.parse(r.datos) : null })); }
-function workbook() {
-  const all = rows(), keys = [];
+function workbook(all = rows()) {
+  const keys = [];
   for (const r of all) for (const k of Object.keys(r.datos?.resumen || {})) if (!keys.includes(k)) keys.push(k);
   const base = ['ID', 'Creado (Bogotá)', 'Actualizado (Bogotá)', 'Recorrido', 'Modo', 'Versión', 'Inicio', 'Fin'];
   const respuestas = [[...base, ...keys], ...all.filter(r => r.datos).map(r => [r.id, bogota(r.creado), bogota(r.actualizado), r.recorrido, r.modo, r.version,
@@ -131,7 +133,7 @@ input{font:inherit;padding:10px;border:1px solid #cfc4ee;border-radius:8px;min-w
 <tr><th>Summit / Completo</th><td>${c.summit || 0} / ${c.completo || 0}</td></tr><tr><th>Desde el quiosco</th><td>${c.quiosco || 0}</td></tr>
 <tr><th>Correos autorizados</th><td>${c.contactos || 0}</td></tr><tr><th>Empresas que dejaron sus datos</th><td>${c.perfiles || 0}</td></tr><tr><th>…de ellas, con el QR de datos del stand (sin recorrido)</th><td>${c.stand || 0}</td></tr><tr><th>Tarjetas generadas con QR</th><td>${tarjetas}</td></tr><tr><th>Última actualización</th><td>${bogota(c.ultimo)}</td></tr></table>
 <table><tr><th>Arquetipo</th><th>Respuestas</th></tr>${arch.map(a => `<tr><td>${(a.arquetipo || 'Sin arquetipo').replace(/[<&]/g, '')}</td><td>${a.n}</td></tr>`).join('')}</table>
-<p><a class="b" href="/admin/respuestas.xlsx">Descargar Excel</a><a class="b" href="/admin/respuestas.json">Descargar JSON</a></p>
+<p><a class="b" href="/panel">Abrir el panel del Summit</a><a class="b" href="/admin/respuestas.xlsx">Descargar Excel</a><a class="b" href="/admin/respuestas.json">Descargar JSON</a></p>
 <h2>Borrar datos de una persona</h2><form method="post" action="/admin/borrar"><input name="q" placeholder="Correo o ID de respuesta" required> <button>Borrar</button></form>
 <p><small>Para atender solicitudes de consulta o supresión. No se puede deshacer.</small></p></body></html>`;
 }
@@ -254,8 +256,13 @@ const server = http.createServer(async (req, res) => {
       }
       return send(res, 200, { ok: true });
     }
-    if (path === '/admin' || path.startsWith('/admin/')) {
+    if (path === '/admin' || path.startsWith('/admin/') || path === '/panel' || path.startsWith('/panel/')) {
       if (!isAdmin(req)) return send(res, 401, ADMIN_PASSWORD ? 'Acceso restringido' : 'Configura ADMIN_PASSWORD para activar /admin', 'text/plain; charset=utf-8', { 'WWW-Authenticate': 'Basic realm="ADN GovTech", charset="UTF-8"' });
+      if (req.method === 'GET' && (path === '/panel' || path === '/panel/')) return send(res, 200, PANEL.replace('/*__DATOS__*/null', () => JSON.stringify(panelData(rows())).replace(/</g, '\\u003c')), 'text/html; charset=utf-8', { 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex' });
+      if (req.method === 'GET' && path === '/panel/summit.xlsx') {
+        const buf = Buffer.from(await workbook(rows().filter(delSummit)).arrayBuffer());
+        return send(res, 200, buf, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', { 'Content-Disposition': 'attachment; filename="ADN_GovTech_Summit_3y4_noviembre.xlsx"', 'Cache-Control': 'no-store' });
+      }
       if (req.method === 'GET' && path === '/admin') return send(res, 200, adminPage(), 'text/html; charset=utf-8', { 'Cache-Control': 'no-store' });
       if (req.method === 'GET' && path === '/admin/respuestas.json') return send(res, 200, JSON.stringify(rows(), null, 1), 'application/json; charset=utf-8', { 'Content-Disposition': 'attachment; filename="adn-govtech-respuestas.json"', 'Cache-Control': 'no-store' });
       if (req.method === 'GET' && path === '/admin/respuestas.xlsx') {

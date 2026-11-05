@@ -43,6 +43,8 @@ Una sola aplicación y un volumen. No hace falta crear una base de datos aparte 
 - **El quiosco necesita internet** para guardar. Si se cae la red, la persona igual ve su resultado, pero esa respuesta no se guarda.
 
 ## Para analizar
+- **Panel del Summit:** `https://TU-DOMINIO/panel`, con el mismo usuario y clave de `/admin`. Muestra solo el 3 y 4 de noviembre, sin pruebas, y tiene filtros, gráficos, respuestas abiertas y directorio. Lo excluido se explica al final del panel; las reglas están en `server/panel-data.mjs`.
+- `/datos` sigue siendo el formulario público del QR del stand: no lo uses para el panel.
 - Entra a `https://TU-DOMINIO/admin` y descarga el Excel.
 - El archivo de la base es `/data/adn-govtech.sqlite`. Como respaldo, descarga el Excel o el JSON después de cada jornada.
 

@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">
+<title>Panel ADN GovTech</title>
+<style>
+:root{color-scheme:light;--page:#f6f4fb;--surface:#fff;--ink:#1c1438;--ink2:#514a6b;--muted:#7a7391;--line:#e6e2f1;--axis:#c9c3dc;--brand:#3b1f96;
+--a1:#5b3fd6;--a2:#d81f7a;--a3:#eb6834;--a4:#1baf7a;--a0:#b4afc4;--bar:#5b3fd6;--bar2:#b3a6f0;
+--o1:#36209c;--o2:#5f47d8;--o3:#8470e6;--o4:#a99bf0;--oi1:#fff;--oi2:#fff;--oi3:#14102b;--oi4:#14102b;--none:#e9e7f0;--noneink:#514a6b;--heat:#4a2fc4;--heatink:#fff;--note:#fff7e6;--noteline:#f0dcae}
+@media (prefers-color-scheme:dark){:root{color-scheme:dark;--page:#120e24;--surface:#1b1633;--ink:#f1eefb;--ink2:#c5bfdc;--muted:#958ead;--line:#2f2850;--axis:#463e68;--brand:#a99bf2;
+--a1:#8f7bf0;--a2:#e0529a;--a3:#d95926;--a4:#199e70;--a0:#6d6688;--bar:#8f7bf0;--bar2:#463a8c;
+--o1:#d6cffa;--o2:#a99bf2;--o3:#7d69e8;--o4:#5b45c9;--oi1:#14102b;--oi2:#14102b;--oi3:#fff;--oi4:#fff;--none:#2f2850;--noneink:#c5bfdc;--heat:#a99bf2;--heatink:#14102b;--note:#2b2415;--noteline:#574a26}}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--page);color:var(--ink);font:15px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif}
+header.hd{background:linear-gradient(120deg,#160b4f,#3b1f96 60%,#8a2ba8);color:#fff;padding:26px 24px 22px}
+.wrap{max-width:1240px;margin:0 auto}
+.hd small{display:block;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#ffc6e1}
+.hd h1{margin:4px 0 6px;font-size:30px;line-height:1.1;letter-spacing:-.02em}.hd p{margin:0;color:#e4dcff;max-width:74ch}
+.hd-a{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}.hd-a a{color:#fff;font-weight:600;font-size:14px;padding:8px 14px;border:1px solid rgba(255,255,255,.5);border-radius:999px;text-decoration:none}
+.filters{position:sticky;top:0;z-index:20;background:var(--surface);border-bottom:1px solid var(--line);padding:10px 24px}
+.filters .wrap{display:flex;flex-wrap:wrap;gap:10px 12px;align-items:end}
+.filters label{display:grid;gap:2px;font-size:12px;font-weight:600;color:var(--ink2)}
+select{font:inherit;font-size:14px;min-height:38px;max-width:178px;padding:6px 8px;border:1px solid var(--axis);border-radius:9px;background:var(--surface);color:var(--ink)}
+.filters .ck{display:flex;align-items:center;gap:7px;min-height:38px;font-size:13px}.filters .ck input{width:18px;height:18px;margin:0}
+button.clear{font:inherit;font-size:13px;font-weight:600;min-height:38px;padding:6px 12px;border:1px solid var(--axis);border-radius:9px;background:none;color:var(--brand);cursor:pointer}
+.count{margin-left:auto;font-size:13px;color:var(--ink2);align-self:center}
+nav.toc{display:flex;flex-wrap:wrap;gap:6px 14px;padding:12px 24px 0}nav.toc .wrap{display:flex;flex-wrap:wrap;gap:6px 14px}nav.toc a{font-size:13px;font-weight:600;color:var(--brand);text-decoration:none}
+main{padding:10px 24px 48px}section.sec{margin-top:26px;scroll-margin-top:90px}section.sec>h2{font-size:21px;margin:0 0 2px;letter-spacing:-.01em}section.sec>p.sub{margin:0 0 12px;color:var(--ink2);max-width:80ch}
+.grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:14px}.c12{grid-column:span 12}.c8{grid-column:span 8}.c6{grid-column:span 6}.c4{grid-column:span 4}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;min-width:0}.card h3{margin:0;font-size:15px}.card .cs{margin:2px 0 10px;font-size:13px;color:var(--ink2)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:12px;margin-top:14px}.kpi{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.kpi b{display:block;font-size:30px;line-height:1.1;font-weight:650;letter-spacing:-.02em}.kpi.hero b{font-size:50px}.kpi span{display:block;font-size:13px;color:var(--ink2);margin-top:3px}
+.ins{margin:14px 0 0;padding:14px 18px;background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--brand);border-radius:12px}.ins h2{margin:0 0 6px;font-size:15px}.ins ul{margin:0;padding-left:18px;display:grid;gap:3px}
+.note{background:var(--note);border:1px solid var(--noteline);border-radius:10px;padding:9px 12px;font-size:13px;margin:12px 0 0}
+.rows{display:grid;gap:7px}.row{display:grid;grid-template-columns:minmax(0,42%) minmax(0,1fr);gap:10px;align-items:center;border-radius:6px}.row:focus-visible,[data-tv]:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+.row .lb{font-size:13px;line-height:1.25;color:var(--ink)}.track{display:flex;align-items:center;gap:7px;min-width:0;min-height:18px}
+.fill{height:14px;min-width:2px;border-radius:0 4px 4px 0;background:var(--bar)}.row:hover .fill{filter:brightness(1.12)}
+.val{font-size:12.5px;color:var(--ink2);white-space:nowrap;font-variant-numeric:tabular-nums}
+.pair .fill{height:9px}.pair .track{min-height:11px}.pair .stack2{display:grid;gap:2px}
+.seg{display:flex;gap:2px;height:22px;min-width:0;flex:1}.seg i{display:flex;align-items:center;padding-left:5px;font:600 11.5px/1 system-ui,sans-serif;border-radius:3px;min-width:0;white-space:nowrap;font-variant-numeric:tabular-nums}
+.seg i:hover{filter:brightness(1.1)}.seg.thin{height:9px}.seg.thin i{padding:0}
+.legend{display:flex;flex-wrap:wrap;gap:4px 12px;margin:0 0 10px;font-size:12.5px;color:var(--ink2)}.legend span{display:inline-flex;align-items:center;gap:5px}.legend i{width:11px;height:11px;border-radius:3px;display:inline-block}
+.heat{display:grid;gap:2px;font-size:12.5px}.heat .h{color:var(--ink2);font-size:12px;line-height:1.2;padding:3px 4px;align-self:end}.heat .r{font-size:12.5px;line-height:1.2;padding:3px 6px 3px 0;align-self:center}
+.heat .x{min-height:32px;display:grid;place-items:center;border-radius:3px;font-variant-numeric:tabular-nums;font-weight:600}
+.cols{display:flex;align-items:flex-end;gap:5px;border-bottom:1px solid var(--axis);padding-top:18px}.col{flex:1;min-width:0;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:2px}
+.col b{font-size:11.5px;font-weight:600;color:var(--ink2);font-variant-numeric:tabular-nums}.col i{display:block;width:min(100%,24px);background:var(--bar);border-radius:4px 4px 0 0;min-height:2px}.col:hover i{filter:brightness(1.12)}
+.axis{display:flex;gap:5px;margin-top:4px}.axis span{flex:1;min-width:0;text-align:center;font-size:11.5px;color:var(--muted);line-height:1.15}
+.mini{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.mini h4{margin:0 0 4px;font-size:13px;color:var(--ink2)}
+details.tv{margin-top:10px;font-size:13px}details.tv summary,details.q summary{cursor:pointer}details.tv summary{color:var(--brand);font-weight:600}
+.tw{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:13px}th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line);vertical-align:top}th{color:var(--ink2);font-weight:600}td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+details.q{border-bottom:1px solid var(--line);padding:9px 0}details.q:last-child{border:0}details.q summary{display:grid;grid-template-columns:minmax(0,1fr) minmax(120px,30%);gap:12px;align-items:center;list-style:none}details.q summary::-webkit-details-marker{display:none}
+details.q summary b{font-weight:600;font-size:14px}details.q summary small{display:block;color:var(--muted);font-size:12px}details.q .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px}
+.quote{list-style:none;margin:0;padding:0;display:grid;gap:8px}.quote li{padding-left:10px;border-left:2px solid var(--axis)}.quote small{display:block;color:var(--muted);font-size:12px}
+.search{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:10px}.search input{font:inherit;font-size:14px;min-height:38px;width:min(100%,320px);padding:6px 10px;border:1px solid var(--axis);border-radius:9px;background:var(--surface);color:var(--ink)}
+#dir{min-width:1080px}#dir th{cursor:pointer;white-space:nowrap}#dir td{max-width:240px;overflow-wrap:anywhere}.clamp{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:4;overflow:hidden;cursor:pointer}.clamp.open{display:block}#dir a{color:var(--brand)}
+#tip{position:fixed;z-index:50;pointer-events:none;max-width:280px;background:#14102b;color:#fff;border-radius:9px;padding:7px 10px;font-size:12.5px;line-height:1.3;box-shadow:0 8px 24px rgba(0,0,0,.3)}#tip b{display:block;font-size:15px}#tip[hidden]{display:none}
+.empty{color:var(--muted);font-size:13px;margin:0}
+svg text{fill:var(--ink2);font:12px system-ui,sans-serif}
+@media(max-width:900px){.c8,.c6,.c4{grid-column:span 12}.row{grid-template-columns:minmax(0,46%) minmax(0,1fr)}.mini{grid-template-columns:1fr}}
+@media(max-width:560px){svg text{font-size:19px}.heat .h{font-size:10.5px;overflow-wrap:anywhere;padding:3px 1px}main,.filters,header.hd,nav.toc{padding-left:16px;padding-right:16px}.hd h1{font-size:25px}select{max-width:100%;width:100%}.filters label{flex:1 1 44%}.count{margin-left:0;width:100%}.filters{position:static}.kpi.hero b{font-size:44px}details.q summary{grid-template-columns:1fr}}
+</style></head><body>
+<header class="hd"><div class="wrap"><small>Bogotá Capital GovTech · Sello B-GovTech</small><h1>Panel del ADN GovTech en el Summit</h1>
+<p>Quién pasó por el stand el 3 y 4 de noviembre de 2026, cómo se ve su ADN y qué esperan del servicio.</p>
+<div class="hd-a"><a href="/panel/summit.xlsx">Descargar Excel del Summit</a><a href="/admin">Panel de administración</a></div></div></header>
+<div class="filters"><div class="wrap" id="filters"></div></div>
+<nav class="toc" aria-label="Secciones"><div class="wrap"><a href="#resumen">Resumen</a><a href="#participacion">Participación</a><a href="#perfil">Perfil</a><a href="#adn">ADN</a><a href="#capacidades">Capacidades</a><a href="#preguntas">Preguntas</a><a href="#valor">Valor del servicio</a><a href="#experiencia">Experiencia</a><a href="#voz">Lo que dijeron</a><a href="#directorio">Directorio</a><a href="#calidad">Calidad de datos</a></div></nav>
+<main><div class="wrap" id="app"></div></main>
+<div id="tip" role="status" hidden></div>
+<script id="datos" type="application/json">/*__DATOS__*/null</script>
+<script>
+'use strict';
+const DATA=JSON.parse(document.getElementById('datos').textContent);
+const ARQ=['Proveedor Tecnológico de Escala','Solucionador GovTech','Aliado Especializado','Potencial GovTech'];
+const ARQC={[ARQ[0]]:['var(--a1)','#fff'],[ARQ[1]]:['var(--a2)','#fff'],[ARQ[2]]:['var(--a3)','#14102b'],[ARQ[3]]:['var(--a4)','#14102b'],'Otro':['var(--a0)','#14102b']};
+const BANDAS=[['Por fortalecer','var(--o4)','var(--oi4)'],['En desarrollo','var(--o3)','var(--oi3)'],['Sólida','var(--o1)','var(--oi1)'],['Sin datos','var(--none)','var(--noneink)']];
+const CAPN={Propósito:'Propósito y valor público',Experimentación:'Experimentación y colaboración',Preparación:'Preparación para lo público',Tecnología:'Tecnología responsable',Recursos:'Recursos y continuidad'};
+const TEMAS=[['Conexiones y alianzas',/conexi|alianz|colabor|ecosistema|networking|mesas/i],['Trabajar con el sector público',/licit|contrat|gobierno|sector p[úu]blic|entidades|distrito|estado|homolog|proveedor/i],['Aprender y prepararse',/aprend|conocimiento|ruta|inspiraci/i],['Campus 2600 y visibilidad',/campus|visibilidad|reconocimiento/i],['Crecer y escalar',/expand|crecer|rentabil|fortalec/i]];
+const F={dia:'',modo:'',tipo:'',arq:'',sector:'',dudosos:false};
+const el=(t,a={},...k)=>{const n=document.createElement(t);for(const[x,v]of Object.entries(a)){if(x==='class')n.className=v;else if(x==='style')n.style.cssText=v;else if(x.startsWith('on'))n.addEventListener(x.slice(2),v);else if(v!=null&&v!==false)n.setAttribute(x,v);}for(const c of k.flat())if(c!=null&&c!==false)n.append(c);return n;};
+const sv=(t,a={},...k)=>{const n=document.createElementNS('http://www.w3.org/2000/svg',t);for(const[x,v]of Object.entries(a))n.setAttribute(x,v);n.append(...k);return n;};
+const pct=(a,b)=>b?Math.round(a/b*100):0,mean=v=>v.length?v.reduce((a,b)=>a+b,0)/v.length:null,num=(x,d=1)=>x==null?'–':x.toLocaleString('es-CO',{maximumFractionDigits:d,minimumFractionDigits:d});
+const median=v=>{if(!v.length)return null;const s=[...v].sort((a,b)=>a-b),m=s.length>>1;return s.length%2?s[m]:(s[m-1]+s[m])/2;};
+const count=(list,fn)=>{const m=new Map();for(const r of list)for(const k of [fn(r)].flat())if(k)m.set(k,(m.get(k)||0)+1);return [...m].map(([label,value])=>({label,value})).sort((a,b)=>b.value-a.value||a.label.localeCompare(b.label));};
+const tip=(n,v,l)=>{n.dataset.tv=v;n.dataset.tl=l;if(!n.hasAttribute('tabindex'))n.tabIndex=0;n.setAttribute('aria-label',l+': '+v);return n;};
+const dia=d=>d==='2026-11-03'?'3 de noviembre':d==='2026-11-04'?'4 de noviembre':d;
+const norm=s=>s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/\b(s\.?a\.?s\.?|s\.?a\.?|ltda|de colombia)\b/g,'').replace(/[^a-z0-9]+/g,' ').trim();
+
+function card(span,title,sub,body,table){return el('div',{class:'card '+span},el('h3',{},title),sub?el('p',{class:'cs'},sub):el('div',{style:'height:10px'}),body,table?tableView(table):null);}
+function tableView([head,rows]){return el('details',{class:'tv'},el('summary',{},'Ver tabla'),el('div',{class:'tw'},el('table',{},el('thead',{},el('tr',{},head.map((h,i)=>el('th',{class:i?'n':'',scope:'col'},h)))),el('tbody',{},rows.map(r=>el('tr',{},r.map((c,i)=>el('td',{class:i?'n':''},String(c)))))))));}
+const legend=items=>el('div',{class:'legend'},items.map(([l,c])=>el('span',{},el('i',{style:'background:'+c}),l)));
+const none=()=>el('p',{class:'empty'},'Sin datos para este filtro.');
+/* Barras ordenadas: una sola serie y un solo color. */
+function bars(items,base,o={}){if(!items.length)return none();const max=Math.max(...items.map(i=>i.value));return el('div',{class:'rows'},items.map(i=>{const txt=`${i.value}${base?' · '+pct(i.value,base)+'%':''}`;return tip(el('div',{class:'row'},el('div',{class:'lb'},i.label),el('div',{class:'track'},el('div',{class:'fill',style:`width:calc((100% - 62px)*${i.value/max});background:${i.color||'var(--bar)'}`}),el('span',{class:'val'},txt))),txt,i.label);}));}
+const barTable=(items,base,h='Categoría')=>[[h,'Respuestas',...(base?['%']:[])],items.map(i=>[i.label,i.value,...(base?[pct(i.value,base)+'%']:[])])];
+/* Barras apiladas: partes = [{label,value,color,ink}]. El número solo se imprime si cabe. */
+function seg(parts,thin,scale=1){const t=parts.reduce((a,p)=>a+p.value,0);return el('div',{class:'seg'+(thin?' thin':''),style:scale<1?`flex:0 0 ${Math.max(2,scale*100)}%`:null},parts.filter(p=>p.value).map(p=>{const w=p.value/t*100*scale,s=el('i',{style:`flex:${p.value} 1 0;background:${p.color};color:${p.ink||'#fff'}`},!thin&&w>=9?String(p.value):'');return tip(s,`${p.value} · ${pct(p.value,t)}%`,p.label);}));}
+const total=r=>r.parts.reduce((a,p)=>a+p.value,0);
+/* abs: el largo de cada fila muestra cuántas organizaciones tiene; así un grupo de 1 no parece igual a uno de 47. */
+const stacks=(rows,abs)=>{if(!rows.length)return none();const max=Math.max(...rows.map(total));return el('div',{class:'rows'},rows.map(r=>el('div',{class:'row'},el('div',{class:'lb'},r.label),el('div',{class:'track'},seg(r.parts,false,abs?total(r)/max:1),abs?el('span',{class:'val'},String(total(r))):null))));};
+/* Mapa de calor: un solo tono, más oscuro = más respuestas. */
+function heat(rows,cols,val,o={}){const vals=rows.flatMap(r=>cols.map(c=>val(r,c))).filter(v=>v!=null),max=Math.max(1,...vals),g=el('div',{class:'heat',style:`grid-template-columns:minmax(110px,1.5fr) repeat(${cols.length},minmax(0,1fr))`});g.append(el('div'));cols.forEach(c=>g.append(el('div',{class:'h'},o.colLabel?o.colLabel(c):c)));
+ for(const r of rows){g.append(el('div',{class:'r'},o.rowLabel?o.rowLabel(r):r));for(const c of cols){const v=val(r,c),k=v==null?0:(v-(o.min||0))/(max-(o.min||0)),x=Math.round(Math.max(0,k)*88);const n=el('div',{class:'x',style:`background:color-mix(in oklab,var(--heat) ${x}%,var(--surface));color:${x>52?'var(--heatink)':'var(--ink)'}`},v==null?'–':o.fmt?o.fmt(v):String(v));g.append(tip(n,v==null?'Sin datos':o.fmt?o.fmt(v):String(v),`${o.rowLabel?o.rowLabel(r):r} · ${o.colLabel?o.colLabel(c):c}`));}}return el('div',{class:'tw'},g);}
+/* Columnas en orden (horas, duración, claridad). */
+function cols(items,h=120){const max=Math.max(1,...items.map(i=>i.value));return el('div',{},el('div',{class:'cols',style:`height:${h}px`},items.map(i=>tip(el('div',{class:'col'},i.value?el('b',{},String(i.value)):null,el('i',{style:`height:${i.value/max*(h-40)}px`})),String(i.value),i.tip||i.label))),el('div',{class:'axis'},items.map(i=>el('span',{},i.label))));}
+function radar(caps){const W=560,H=320,cx=W/2,cy=H/2+6,R=112,n=caps.length,pt=(i,v)=>{const a=-Math.PI/2+i*2*Math.PI/n;return[cx+Math.cos(a)*R*v/3,cy+Math.sin(a)*R*v/3];};const s=sv('svg',{viewBox:`0 0 ${W} ${H}`,role:'img','aria-label':'Radar del promedio de capacidades de 0 a 3',style:'width:100%;max-width:560px;display:block;margin:auto'});
+ for(const v of[1,2,3])s.append(sv('polygon',{points:caps.map((_,i)=>pt(i,v).join()).join(' '),fill:'none',stroke:'var(--line)'}));caps.forEach((c,i)=>{const[x,y]=pt(i,3);s.append(sv('line',{x1:cx,y1:cy,x2:x,y2:y,stroke:'var(--line)'}));const[lx,ly]=pt(i,3.42),t=sv('text',{x:lx,y:ly+4,'text-anchor':lx<cx-12?'end':lx>cx+12?'start':'middle'});t.textContent=`${c.label} ${num(c.value)}`;s.append(t);});
+ s.append(sv('polygon',{points:caps.map((c,i)=>pt(i,c.value||0).join()).join(' '),fill:'var(--a1)','fill-opacity':.12,stroke:'var(--a1)','stroke-width':2,'stroke-linejoin':'round'}));caps.forEach((c,i)=>{const[x,y]=pt(i,c.value||0),g=sv('g',{tabindex:0}),h=sv('circle',{cx:x,cy:y,r:13,fill:'transparent'});g.append(h,sv('circle',{cx:x,cy:y,r:5,fill:'var(--a1)',stroke:'var(--surface)','stroke-width':2}));g.dataset.tv=num(c.value)+' de 3';g.dataset.tl=c.label;s.append(g);});return s;}
+const arqParts=list=>[...ARQ,'Otro'].map(a=>({label:a==='Otro'?'Sin arquetipo':a,value:list.filter(r=>a==='Otro'?!ARQ.includes(r.arq):r.arq===a).length,color:ARQC[a][0],ink:ARQC[a][1]}));
+const arqLegend=()=>legend(ARQ.map(a=>[a,ARQC[a][0]]));
+const short=s=>s.replace(/ \(.*\)$/,'');
+const comp=s=>(/\(([^)]*)\)$/.exec(s)||[,s])[1];
+
+function select(key,label,opts){const s=el('select',{onchange:e=>{F[key]=e.target.value;render();}},el('option',{value:''},'Todos'),opts.map(([v,t])=>el('option',{value:v},t)));s.value=F[key];return el('label',{},label,s);}
+function buildFilters(){const all=DATA.incluidos,box=document.getElementById('filters');box.replaceChildren(
+ select('dia','Día',DATA.dias.map(d=>[d,dia(d)])),select('modo','Dónde',['Quiosco','Celular o tableta','QR de datos'].map(x=>[x,x])),
+ select('tipo','Tipo de organización',count(all,r=>r.c01).map(x=>[x.label,x.label])),select('arq','Arquetipo',ARQ.map(a=>[a,a])),select('sector','Sector',count(all,r=>r.c03).map(x=>[x.label,x.label])),
+ el('label',{class:'ck'},el('input',{type:'checkbox',onchange:e=>{F.dudosos=e.target.checked;render();}}),'Incluir casos dudosos'),
+ el('button',{class:'clear',type:'button',onclick:()=>{Object.assign(F,{dia:'',modo:'',tipo:'',arq:'',sector:'',dudosos:false});buildFilters();render();}},'Limpiar'),el('span',{class:'count',id:'count','aria-live':'polite'}));}
+function pick(){return DATA.incluidos.filter(r=>(F.dudosos||!r.posible)&&(!F.dia||r.dia===F.dia)&&(!F.modo||r.modo===F.modo)&&(!F.tipo||r.c01===F.tipo)&&(!F.arq||r.arq===F.arq)&&(!F.sector||r.c03.includes(F.sector)));}
+const sec=(id,title,sub,...k)=>el('section',{class:'sec',id},el('h2',{},title),sub?el('p',{class:'sub'},sub):null,el('div',{class:'grid'},k));
+
+function render(){
+ const R=pick(),D=R.filter(r=>r.tipo==='diagnostico'),n=D.length,solo=R.filter(r=>r.tipo==='datos');
+ document.getElementById('count').textContent=`${n} diagnósticos · ${solo.length} con solo datos`;
+ const orgs=new Set(R.map(r=>norm(r.org)).filter(Boolean)),mails=new Set(R.map(r=>r.mail.toLowerCase()).filter(Boolean));
+ const durs=D.map(r=>r.min).filter(v=>v!=null),clar=D.map(r=>r.claridad).filter(Boolean),arqs=count(D,r=>r.arq).filter(a=>ARQ.includes(a.label));
+ const capM=DATA.caps.map(c=>({key:c,label:c,value:mean(D.map(r=>r.caps[c]).filter(v=>v!=null))}));
+ const top1=count(D,r=>r.valor[0]),sorted=[...capM].filter(c=>c.value!=null).sort((a,b)=>a.value-b.value),ele=count(D,r=>r.ele),tipos=count(D,r=>r.c01);
+ const app=document.getElementById('app');app.replaceChildren();
+ const ins=[];if(n){if(tipos[0])ins.push(`${pct(tipos[0].value,n)}% de los diagnósticos vino de: ${tipos[0].label}.`);if(arqs[0])ins.push(`Arquetipo más frecuente: ${arqs[0].label} (${arqs[0].value} de ${n})${arqs[1]&&arqs[0].value-arqs[1].value<=2?`, casi igual a ${arqs[1].label} (${arqs[1].value})`:''}.`);if(sorted[0])ins.push(`Capacidad con el promedio más bajo: ${CAPN[sorted[0].key]} (${num(sorted[0].value)} de 3). La más alta: ${CAPN[sorted.at(-1).key]} (${num(sorted.at(-1).value)}).`);if(top1[0])ins.push(`Lo que más valoran en primer lugar: ${short(top1[0].label)} (${top1[0].value} personas).`);if(ele[0])ins.push(`Lo que más eligen fortalecer: ${ele[0].label} (${ele[0].value}).`);}
+ app.append(el('section',{class:'sec',id:'resumen'},
+  el('div',{class:'kpis'},el('div',{class:'kpi hero'},el('b',{},String(n)),el('span',{},'diagnósticos completos')),kpi(orgs.size,'organizaciones con nombre'),kpi(mails.size,'correos autorizados'),kpi(solo.length,'dejaron solo sus datos (QR)'),kpi(num(median(durs),1)+' min','duración mediana'),kpi(clar.length?num(mean(clar),1)+' / 5':'–',`claridad (${clar.length} respuestas)`)),
+  ins.length?el('div',{class:'ins'},el('h2',{},'Lo más importante'),el('ul',{},ins.map(t=>el('li',{},t)))):null,
+  el('p',{class:'note'},'Son autodiagnósticos de quienes pasaron por el stand: describen a ese grupo, no a todo el ecosistema. En cruces con pocas personas, un caso mueve mucho el porcentaje.')));
+ /* Participación */
+ const hours=[8,9,10,11,12,13,14,15,16,17],byH=d=>cols(hours.map(h=>({label:h+'h',value:R.filter(r=>r.dia===d&&r.hora===h).length,tip:`${dia(d)} · ${h}:00`})));
+ const funnel=[['Diagnósticos completos',n],['Dejaron el nombre de su organización',D.filter(r=>r.org).length],['Dejaron correo con autorización',D.filter(r=>r.mail).length],['Contaron de su empresa',D.filter(r=>r.desc||r.interes).length]].map(([label,value])=>({label,value}));
+ const modos=count(R,r=>r.modo);
+ app.append(sec('participacion','Participación','Cuándo y por dónde llegaron las personas.',
+  card('c8','Registros por hora','Hora de Bogotá. Misma escala en los dos días.',el('div',{class:'mini'},DATA.dias.map(d=>el('div',{},el('h4',{},`${dia(d)} · ${R.filter(r=>r.dia===d).length}`),byH(d)))),[['Hora',...DATA.dias.map(dia)],hours.map(h=>[h+':00',...DATA.dias.map(d=>R.filter(r=>r.dia===d&&r.hora===h).length)])]),
+  card('c4','Por dónde entraron','',bars(modos,R.length),barTable(modos,R.length)),
+  card('c12','De diagnóstico a contacto',`Sobre ${n} diagnósticos.`,bars(funnel,n),barTable(funnel,n,'Paso'))));
+ /* Perfil */
+ const apor=count(D,r=>r.c02),sect=count(D,r=>r.c03),topS=sect.slice(0,8).map(s=>s.label);
+ app.append(sec('perfil','Perfil de las organizaciones','Qué tipo de organizaciones participaron. En aporte y sectores cada persona podía marcar varias opciones, así que los porcentajes suman más de 100%.',
+  card('c6','Tipo de organización',`${n} diagnósticos`,bars(tipos,n),barTable(tipos,n)),card('c6','Qué aportan',`${n} diagnósticos, varias opciones`,bars(apor,n),barTable(apor,n)),
+  card('c12','Sectores donde aplica su oferta',`${n} diagnósticos, varias opciones`,bars(sect,n),barTable(sect,n))));
+ /* ADN */
+ const tipoRows=tipos.slice(0,7).map(t=>t.label),arqItems=arqParts(D).filter(p=>p.value).sort((a,b)=>b.value-a.value).map(p=>({label:p.label,value:p.value,color:p.color}));
+ app.append(sec('adn','ADN: arquetipos','El rol que resultó para cada organización. Es una afinidad inicial con 9 preguntas, no una clasificación definitiva.',
+  card('c4','Arquetipos',`${n} diagnósticos`,bars(arqItems,n),barTable(arqItems,n,'Arquetipo')),
+  card('c8','Arquetipo por tipo de organización','Número de organizaciones.',el('div',{},arqLegend(),stacks(tipoRows.map(t=>({label:t,parts:arqParts(D.filter(r=>r.c01===t))})),true)),[['Tipo',...ARQ],tipoRows.map(t=>[t,...ARQ.map(a=>D.filter(r=>r.c01===t&&r.arq===a).length)])]),
+  card('c8','Arquetipo por sector','Número de organizaciones en los 8 sectores más marcados.',heat(topS,ARQ,(s,a)=>D.filter(r=>r.c03.includes(s)&&r.arq===a).length),[['Sector',...ARQ],topS.map(s=>[s,...ARQ.map(a=>D.filter(r=>r.c03.includes(s)&&r.arq===a).length)])]),
+  card('c4','Resultados con empate','',el('div',{},el('p',{style:'font-size:30px;font-weight:650;margin:0'},String(D.filter(r=>r.empate).length)),el('p',{class:'cs'},`de ${n} tuvieron empate entre arquetipos. Con 9 preguntas los empates son más probables.`)))));
+ /* Capacidades */
+ const bandRows=DATA.caps.map(c=>({label:CAPN[c],parts:BANDAS.map(([b,col,ink])=>({label:b,value:D.filter(r=>r.bandas[c]===b).length,color:col,ink}))}));
+ const fort=[...new Set([...D.map(r=>r.sug),...D.map(r=>r.ele)].filter(Boolean))].map(d=>({label:d,sug:D.filter(r=>r.sug===d).length,ele:D.filter(r=>r.ele===d).length})).sort((a,b)=>b.ele-a.ele),fmax=Math.max(1,...fort.flatMap(f=>[f.sug,f.ele]));
+ const fortEl=fort.length?el('div',{},legend([['Sugerida por el ADN','var(--bar2)'],['Elegida por la persona','var(--bar)']]),el('div',{class:'rows pair'},fort.map(f=>el('div',{class:'row'},el('div',{class:'lb'},f.label),el('div',{class:'stack2'},[['Sugerida',f.sug,'var(--bar2)'],['Elegida',f.ele,'var(--bar)']].map(([l,v,c])=>tip(el('div',{class:'track'},el('div',{class:'fill',style:`width:calc((100% - 30px)*${v/fmax});background:${c}`}),el('span',{class:'val'},String(v))),String(v),`${l} · ${f.label}`))))))):none();
+ const arqPresent=ARQ.filter(a=>D.some(r=>r.arq===a));
+ app.append(sec('capacidades','Capacidades','Cada capacidad va de 0 a 3 y se arma con 1 o 2 respuestas: es una lectura orientativa y los puntajes siguen en revisión.',
+  card('c6','Radar del grupo','Promedio de 0 a 3.',n?radar(capM):none(),[['Capacidad','Promedio'],capM.map(c=>[CAPN[c.key],num(c.value)])]),
+  card('c6','Nivel en cada capacidad','Número de organizaciones por banda.',el('div',{},legend(BANDAS.map(([b,c])=>[b,c])),stacks(bandRows)),[['Capacidad',...BANDAS.map(b=>b[0])],bandRows.map(r=>[r.label,...r.parts.map(p=>p.value)])]),
+  card('c6','Capacidades por arquetipo','Promedio de 0 a 3. Más oscuro = más alto.',heat(DATA.caps,arqPresent,(c,a)=>mean(D.filter(r=>r.arq===a).map(r=>r.caps[c]).filter(v=>v!=null)),{fmt:v=>num(v),rowLabel:c=>c,colLabel:a=>a.split(' ')[0].replace('Solucionador','Soluciona.')}),[['Capacidad',...arqPresent],DATA.caps.map(c=>[c,...arqPresent.map(a=>num(mean(D.filter(r=>r.arq===a).map(r=>r.caps[c]).filter(v=>v!=null))))])]),
+  card('c6','Qué fortalecer primero','Lo que sugirió el ADN y lo que la persona eligió.',fortEl,[['Dimensión','Sugerida','Elegida'],fort.map(f=>[f.label,f.sug,f.ele])])));
+ /* Preguntas */
+ const qBody=DATA.preguntas.map(q=>{const A=D.map(r=>r.resp[q.id]).filter(Boolean),ops=new Map();for(const a of A){const k=a.t;ops.set(k,{t:k,a:a.a,n:(ops.get(k)?.n||0)+1});}const list=[...ops.values()].sort((x,y)=>y.n-x.n),parts=[...ARQ,''].map(ar=>({label:ar||'Aún no contemplado o no aplica',value:A.filter(x=>(x.a||'')===ar).length,color:ar?ARQC[ar][0]:'var(--a0)'}));
+  return el('details',{class:'q'},el('summary',{},el('span',{},el('b',{},q.pregunta),el('small',{},`${q.id} · ${q.fase} · ${q.dimension}`)),A.length?seg(parts,true):el('span')),el('div',{class:'tw',style:'margin-top:8px'},el('table',{},el('thead',{},el('tr',{},el('th',{},'Respuesta'),el('th',{},'Arquetipo de la opción'),el('th',{class:'n'},'Personas'),el('th',{class:'n'},'%'))),el('tbody',{},list.map(o=>el('tr',{},el('td',{},o.t),el('td',{},o.a?el('span',{class:'dot',style:'background:'+ARQC[o.a][0]}):null,o.a||'–'),el('td',{class:'n'},String(o.n)),el('td',{class:'n'},pct(o.n,A.length)+'%')))))));});
+ const pos=[1,2,3,4].map(p=>({label:'Posición '+p,value:D.flatMap(r=>Object.values(r.resp)).filter(a=>a.p===p).length}));
+ const skip=DATA.preguntas.map(q=>({label:`${q.id} · ${q.dimension}`,value:D.filter(r=>r.resp[q.id]&&!r.resp[q.id].a).length})).filter(x=>x.value).sort((a,b)=>b.value-a.value);
+ app.append(sec('preguntas','Pregunta por pregunta','Toca una pregunta para ver sus respuestas. La franja de color muestra a qué arquetipo apuntaron.',
+  card('c12','Las 9 preguntas del ADN','',el('div',{},arqLegend(),qBody)),
+  card('c6','¿Influyó el orden de las opciones?','Las opciones salen en orden al azar: lo esperado es cerca de 25% en cada posición.',bars(pos,pos.reduce((a,b)=>a+b.value,0)),barTable(pos,pos.reduce((a,b)=>a+b.value,0),'Posición')),
+  card('c6','Preguntas sin respuesta de arquetipo','Marcadas como «aún no contemplado» o «no aplica».',skip.length?bars(skip):el('p',{class:'empty'},'Ninguna en este filtro.'),skip.length?barTable(skip):null)));
+ /* Valor */
+ const comps=[...new Set(D.flatMap(r=>r.valor))],G=[['Puesto 1','var(--o1)','var(--oi1)',0,0],['Puesto 2','var(--o2)','var(--oi2)',1,1],['Puesto 3','var(--o3)','var(--oi3)',2,2],['Puesto 4 o 5','var(--o4)','var(--oi4)',3,4]];
+ const vrows=comps.map(c=>({label:short(c),full:c,parts:[...G.map(([l,col,ink,a,b])=>({label:l,value:D.filter(r=>{const i=r.valor.indexOf(c);return i>=a&&i<=b;}).length,color:col,ink})),{label:'No lo eligió',value:D.filter(r=>!r.valor.includes(c)).length,color:'var(--none)',ink:'var(--noneink)'}]})).sort((a,b)=>b.parts[0].value-a.parts[0].value||b.parts[1].value-a.parts[1].value);
+ const vArq=vrows.map(v=>v.full);
+ app.append(sec('valor','Valor del servicio','Qué parte del servicio les aporta más. Cada persona ordenó los componentes.',
+  card('c12','Componentes del servicio por puesto',`${n} diagnósticos, ordenados por quienes los pusieron en primer lugar.`,el('div',{},legend([...G.map(g=>[g[0],g[1]]),['No lo eligió','var(--none)']]),stacks(vrows)),[['Componente',...G.map(g=>g[0]),'No lo eligió'],vrows.map(v=>[v.label,...v.parts.map(p=>p.value)])]),
+  card('c12','Primer lugar por arquetipo','Número de organizaciones que lo pusieron en el puesto 1.',heat(vArq,arqPresent,(c,a)=>D.filter(r=>r.arq===a&&r.valor[0]===c).length,{rowLabel:short,colLabel:a=>a.split(' ')[0].replace('Solucionador','Soluciona.')}),[['Componente',...arqPresent],vArq.map(c=>[short(c),...arqPresent.map(a=>D.filter(r=>r.arq===a&&r.valor[0]===c).length)])])));
+ /* Experiencia */
+ const bins=[['0–2',0,2.999],['3–4',3,4.999],['5–6',5,6.999],['7–8',7,8.999],['9–10',9,10.999],['11–15',11,15.999],['Más de 15',16,1e9]].map(([label,a,b])=>({label,value:durs.filter(v=>v>=a&&v<=b).length,tip:label+' minutos'}));
+ const cl=[1,2,3,4,5].map(v=>({label:String(v),value:clar.filter(x=>x===v).length,tip:'Claridad '+v}));
+ app.append(sec('experiencia','Experiencia','Cuánto tomó el recorrido y qué tan claro fue.',
+  card('c6','Duración del recorrido',`Minutos. Mediana ${num(median(durs),1)}.`,cols(bins,150),[['Minutos','Personas'],bins.map(b=>[b.label,b.value])]),
+  card('c6','Claridad de la experiencia',`${clar.length} de ${n} la calificaron. Promedio ${clar.length?num(mean(clar),1):'–'} de 5.`,cols(cl,150),[['Calificación','Personas'],cl.map(b=>[b.label,b.value])])));
+ /* Voz */
+ const quotes=(field)=>R.filter(r=>r[field]&&!/^(n\/?a|…|\.+)$/i.test(r[field].trim()));
+ const ints=quotes('interes'),temas=[...TEMAS.map(([label,re])=>({label,value:ints.filter(r=>re.test(r.interes)).length})),{label:'Otros',value:ints.filter(r=>!TEMAS.some(([,re])=>re.test(r.interes))).length}].filter(t=>t.value).sort((a,b)=>b.value-a.value);
+ const qList=(list,f)=>list.length?el('ul',{class:'quote'},list.map(r=>el('li',{},r[f],el('small',{},r.org||'Sin nombre')))):el('p',{class:'empty'},'Sin comentarios en este filtro.');
+ const obs=quotes('obs');
+ app.append(sec('voz','Lo que dijeron','Respuestas abiertas, tal como las escribieron.',
+  card('c4','Qué les interesa a futuro',`${ints.length} respuestas. Temas por palabras clave: una respuesta puede contar en varios y puede haber errores.`,bars(temas,ints.length),barTable(temas,ints.length,'Tema')),
+  card('c8','Qué les interesaría a futuro','',qList(ints,'interes')),card('c6','Qué le agregarían a la experiencia','',qList(quotes('agrega'),'agrega')),card('c6','Observaciones adicionales','',qList(obs,'obs'))));
+ /* Directorio */
+ const dirSec=el('section',{class:'sec',id:'directorio'},el('h2',{},'Directorio'),el('p',{class:'sub'},'Organizaciones que dejaron nombre o correo. Los correos se autorizaron para invitaciones y novedades del ecosistema.'));dirSec.append(directory(R));app.append(dirSec);
+ /* Calidad */
+ const ex=count(DATA.excluidos,r=>r.razon),dud=DATA.incluidos.filter(r=>r.posible),rep=[...new Map(R.filter(r=>r.org).map(r=>[norm(r.org),R.filter(x=>norm(x.org)===norm(r.org))])).values()].filter(l=>l.length>1);
+ app.append(sec('calidad','Calidad de los datos','Qué quedó fuera y por qué. Nada se borró: sigue en la base y en el Excel completo.',
+  card('c6','Registros fuera del panel',`${DATA.excluidos.length} registros`,bars(ex),barTable(ex,0,'Razón')),
+  card('c6','Casos dudosos',`${dud.length} excluidos por defecto. Actívalos arriba con «Incluir casos dudosos».`,dud.length?el('div',{class:'tw'},el('table',{},el('thead',{},el('tr',{},el('th',{},'Hora'),el('th',{},'Organización'),el('th',{},'Razón'))),el('tbody',{},dud.map(r=>el('tr',{},el('td',{},`${r.dia.slice(8)} nov ${r.reloj}`),el('td',{},r.org||'Sin nombre'),el('td',{},r.posible)))))):none()),
+  rep.length?card('c12','Organizaciones que aparecen más de una vez','Cuentan como una en «organizaciones con nombre», pero cada registro cuenta en sus gráficos.',el('ul',{class:'quote'},rep.map(l=>el('li',{},l[0].org,el('small',{},l.map(r=>`${r.modo} ${r.reloj}`).join(' · ')))))):null));
+}
+const kpi=(v,l)=>el('div',{class:'kpi'},el('b',{},String(v)),el('span',{},l));
+const url=w=>{const s=w.trim().replace(/^https?:\/\//i,'').replace(/\/.*$/,'');return /^[a-z0-9.-]+\.[a-z]{2,}$/i.test(s)?'https://'+s:'';};
+let dirSort='org',dirDir=1;
+function directory(R){const list=R.filter(r=>r.org||r.mail),q=el('input',{type:'search',placeholder:'Buscar empresa, correo o texto','aria-label':'Buscar en el directorio'}),info=el('span',{class:'val'}),tb=el('tbody');
+ const C=[['org','Organización'],['arq','Arquetipo'],['c01','Tipo'],['c03','Sectores'],['mail','Correo'],['web','Web'],['desc','Descripción'],['interes','Interés a futuro'],['modo','Dónde']];
+ const paint=()=>{const t=q.value.toLowerCase(),rows=list.filter(r=>!t||[r.org,r.mail,r.desc,r.interes,r.web,r.arq,r.c01,r.c03.join(' ')].join(' ').toLowerCase().includes(t)).sort((a,b)=>{const x=String(a[dirSort]||''),y=String(b[dirSort]||'');return !x-!y||x.localeCompare(y,'es',{sensitivity:'base'})*dirDir;});info.textContent=`${rows.length} de ${list.length}`;
+  tb.replaceChildren(...rows.map(r=>el('tr',{},C.map(([k])=>{const v=r[k];if(k==='mail'&&v)return el('td',{},el('a',{href:'mailto:'+encodeURIComponent(v).replace('%40','@')},v));if(k==='web'&&v&&url(v))return el('td',{},el('a',{href:url(v),target:'_blank',rel:'noopener noreferrer'},v));const t=Array.isArray(v)?v.join(' · '):v||'–';return el('td',{},t.length>110?el('div',{class:'clamp',title:'Toca para ver todo',onclick:e=>e.currentTarget.classList.toggle('open')},t):t);}))));};
+ q.addEventListener('input',paint);paint();
+ return el('div',{class:'card'},el('div',{class:'search'},q,info),el('div',{class:'tw'},el('table',{id:'dir'},el('thead',{},el('tr',{},C.map(([k,l])=>el('th',{scope:'col',onclick:()=>{dirDir=dirSort===k?-dirDir:1;dirSort=k;paint();}},l)))),tb)));}
+/* Un solo tooltip para todo: al pasar el cursor y al enfocar con teclado. */
+const T=document.getElementById('tip');
+function show(n,x,y){T.replaceChildren(el('b',{},n.dataset.tv),n.dataset.tl);T.hidden=false;const w=T.offsetWidth,h=T.offsetHeight;T.style.left=Math.max(8,Math.min(innerWidth-w-8,x+12))+'px';T.style.top=Math.max(8,y-h-10)+'px';}
+addEventListener('pointermove',e=>{const n=e.target.closest?.('[data-tv]');if(n)show(n,e.clientX,e.clientY);else T.hidden=true;});
+addEventListener('focusin',e=>{const n=e.target.closest?.('[data-tv]');if(n){const r=n.getBoundingClientRect();show(n,r.left,r.top);}else T.hidden=true;});
+addEventListener('scroll',()=>{T.hidden=true;},{passive:true});
+buildFilters();render();
+</script></body></html>
